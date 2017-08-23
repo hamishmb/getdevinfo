@@ -66,7 +66,7 @@ def GetInfo(Standalone=False):
 
         if not DiskIsPartition:
             #These are devices.
-            HostDisk = GetDeviceInfo(Plist)
+            HostDisk = GetDeviceInfo(Disk)
 
         else:
             #These are Partitions.
