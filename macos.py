@@ -45,6 +45,8 @@ def GetInfo(Standalone=False):
     logger.debug("GetDevInfo: Main().GetInfo(): Done.")
 
     #Parse the plist (Property List).
+    global Plist
+
     Plist = plistlib.readPlistFromString(stdout)
 
     UnitList = [None, "B", "KB", "MB", "GB", "TB", "PB"]
