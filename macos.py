@@ -51,11 +51,8 @@ def GetInfo(Standalone=False):
 
     UnitList = [None, "B", "KB", "MB", "GB", "TB", "PB"]
 
-    #Get disk info.
+    #Find the disks.
     for Disk in Plist["AllDisks"]:
-        DiskInfo["/dev/"+Disk] = {}
-        DiskInfo["/dev/"+Disk]["Name"] = "/dev/"+Disk
-
         #Run diskutil info to get Disk info.
         logger.debug("GetDevInfo: Main().GetInfo(): Running 'diskutil info -plist "+Disk+"'...")
         runcmd = subprocess.Popen("diskutil info -plist "+Disk, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
@@ -67,68 +64,13 @@ def GetInfo(Standalone=False):
         #Check if the Disk is a partition.
         DiskIsPartition = IsPartition(Disk)
 
-        if DiskIsPartition:
-            DiskInfo["/dev/"+Disk]["Type"] = "Partition"
-            DiskInfo["/dev/"+Disk]["HostDevice"] = "/dev/disk"+Disk.split("disk")[1].split("s")[0]
-            DiskInfo["/dev/"+Disk]["Partitions"] = []
-            DiskInfo[DiskInfo["/dev/"+Disk]["HostDevice"]]["Partitions"].append("/dev/"+Disk)
+        if not DiskIsPartition:
+            #These are devices.
+            HostDisk = GetDeviceInfo(Plist)
 
         else:
-            DiskInfo["/dev/"+Disk]["Type"] = "Device"
-            DiskInfo["/dev/"+Disk]["HostDevice"] = "N/A"
-            DiskInfo["/dev/"+Disk]["Partitions"] = []
-
-        #Get all other information, making sure it remains stable even if we found no info at all.
-        Vendor = GetVendor(Disk=Disk)
-
-        if Vendor != None:
-            DiskInfo["/dev/"+Disk]["Vendor"] = Vendor
-
-        else:
-            DiskInfo["/dev/"+Disk]["Vendor"] = "Unknown"
-
-        Product = GetProduct(Disk=Disk)
-
-        if Product != None:
-            DiskInfo["/dev/"+Disk]["Product"] = Product
-
-        else:
-            DiskInfo["/dev/"+Disk]["Product"] = "Unknown"
-
-        Size = GetCapacity()
-
-        if Size != None:
-            DiskInfo["/dev/"+Disk]["Capacity"] = Size
-
-        else:
-            DiskInfo["/dev/"+Disk]["Capacity"] = "Unknown"
-
-        #Round the sizes to make them human-readable. *** Move to get capacity and update test ***
-        Unit = "B"
-
-        #Catch an error in case Size is unknown.
-        try:
-            HumanSize = int(Size)
-
-        except ValueError:
-            DiskInfo["/dev/"+Disk]["HumanCapacity"] = "Unknown"
-
-        else:
-            while len(unicode(HumanSize)) > 3:
-                #Shift up one unit.
-                Unit = UnitList[UnitList.index(Unit)+1]
-                HumanSize = HumanSize//1000
-
-            #Include the unit in the result for both exact and human-readable sizes.
-            DiskInfo["/dev/"+Disk]["HumanCapacity"] = unicode(HumanSize)+" "+Unit
-
-        Description = GetDescription(Disk)
-
-        if Description != None:
-            DiskInfo["/dev/"+Disk]["Description"] = Description
-
-        else:
-            DiskInfo["/dev/"+Disk]["Description"] = "Unknown"
+            #These are Partitions.
+            Volume = GetPartitionInfo("/dev/"+Disk, "/dev/"+Disk[:-2])
 
     #Check we found some disks.
     if len(DiskInfo) == 0:
@@ -138,6 +80,49 @@ def GetInfo(Standalone=False):
     logger.info("GetDevInfo: Main().GetInfo(): Finished!")
 
     return DiskInfo
+
+def GetDeviceInfo(Disk):
+    """Get Device Information"""
+    HostDisk = "/dev/"+Disk
+    DiskInfo[HostDisk] = {}
+    DiskInfo[HostDisk]["Name"] = HostDisk
+    DiskInfo[HostDisk]["Type"] = "Device"
+    DiskInfo[HostDisk]["HostDevice"] = "N/A"
+    DiskInfo[HostDisk]["Partitions"] = []
+    DiskInfo[HostDisk]["Vendor"] = GetVendor(Disk)
+    DiskInfo[HostDisk]["Product"] = GetProduct(Disk)
+    DiskInfo[HostDisk]["RawCapacity"], DiskInfo[HostDisk]["Capacity"] = GetCapacity()
+    DiskInfo[HostDisk]["Description"] = GetDescription(Disk)
+    DiskInfo[HostDisk]["Flags"] = GetCapabilities(Disk)
+    DiskInfo[HostDisk]["Partitioning"] = GetPartitioning(Disk)
+    DiskInfo[HostDisk]["FileSystem"] = "N/A"
+    DiskInfo[HostDisk]["UUID"] = "N/A"
+    DiskInfo[HostDisk]["ID"] = GetID(Disk)
+    DiskInfo[HostDisk]["BootRecord"], DiskInfo[HostDisk]["BootRecordStrings"] = GetBootRecord(Disk)
+
+    return HostDisk
+
+def GetPartitionInfo(Volume, HostDisk):
+    """Get Partition Information"""
+    DiskInfo[Volume] = {}
+    DiskInfo[Volume]["Name"] = Volume
+    DiskInfo[Volume]["Type"] = "Partition"
+    DiskInfo[Volume]["HostDevice"] = HostDisk
+    DiskInfo[Volume]["Partitions"] = []
+    DiskInfo[HostDisk]["Partitions"].append(Volume)
+    DiskInfo[Volume]["Vendor"] = GetVendor(Volume)
+    DiskInfo[Volume]["Product"] = "Host Device: "+DiskInfo[HostDisk]["Product"]
+    DiskInfo[Volume]["RawCapacity"], DiskInfo[Volume]["Capacity"] = GetCapacity()
+    DiskInfo[Volume]["Description"] = GetDescription(Volume)
+    DiskInfo[Volume]["Flags"] = []
+    DiskInfo[Volume]["Flags"] = GetCapabilities(Volume)
+    DiskInfo[Volume]["FileSystem"] = GetFileSystem(Volume)
+    DiskInfo[Volume]["Partitioning"] = "N/A"
+    DiskInfo[Volume]["UUID"] = GetUUID(Volume)
+    DiskInfo[Volume]["ID"] = GetID(Volume)
+    DiskInfo[Volume]["BootRecord"], DiskInfo[Volume]["BootRecordStrings"] = GetBootRecord(Volume)
+
+    return Volume
 
 #TODO Try and get rid of this.
 def IsPartition(Disk):
@@ -201,7 +186,7 @@ def GetCapacity():
         Size = "Unknown"
         logger.warning("GetDevInfo: Main().GetCapacity(): Couldn't find size info!")
 
-    return Size
+    return Size, Size #FIXME
 
 def GetDescription(Disk):
     """Find description information for the given Disk."""
@@ -247,27 +232,27 @@ def GetDescription(Disk):
     else:
         return "N/A"
 
-def GetCapabilities():
+def GetCapabilities(Disk):
     #TODO
     return "Unknown"
 
-def GetPartitioning():
+def GetPartitioning(Disk):
     #TODO
     return "Unknown"
 
-def GetFileSystem():
+def GetFileSystem(Disk):
     #TODO
     return "Unknown"
 
-def GetUUID():
+def GetUUID(Disk):
     #TODO
     return "Unknown"
 
-def GetID():
+def GetID(Disk):
     #TODO
     return "Unknown"
 
-def GetBootRecord():
+def GetBootRecord(Disk):
     #TODO
     return "Unknown"
 
