@@ -254,7 +254,7 @@ def GetID(Disk):
 
 def GetBootRecord(Disk):
     #TODO
-    return "Unknown"
+    return "Unknown", "Unknown"
 
 def GetBlockSize(Disk):
     """Run the command to get the block size, and pass it to ComputeBlockSize()"""
