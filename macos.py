@@ -70,7 +70,7 @@ def GetInfo(Standalone=False):
 
         else:
             #These are Partitions.
-            Volume = GetPartitionInfo("/dev/"+Disk, "/dev/"+Disk[:-2])
+            Volume = GetPartitionInfo(Disk, "/dev/"+Disk[:-2])
 
     #Check we found some disks.
     if len(DiskInfo) == 0:
@@ -102,25 +102,26 @@ def GetDeviceInfo(Disk):
 
     return HostDisk
 
-def GetPartitionInfo(Volume, HostDisk):
+def GetPartitionInfo(Disk, HostDisk):
     """Get Partition Information"""
+    Volume = "/dev/"+Disk
     DiskInfo[Volume] = {}
     DiskInfo[Volume]["Name"] = Volume
     DiskInfo[Volume]["Type"] = "Partition"
     DiskInfo[Volume]["HostDevice"] = HostDisk
     DiskInfo[Volume]["Partitions"] = []
     DiskInfo[HostDisk]["Partitions"].append(Volume)
-    DiskInfo[Volume]["Vendor"] = GetVendor(Volume)
+    DiskInfo[Volume]["Vendor"] = GetVendor(Disk)
     DiskInfo[Volume]["Product"] = "Host Device: "+DiskInfo[HostDisk]["Product"]
     DiskInfo[Volume]["RawCapacity"], DiskInfo[Volume]["Capacity"] = GetCapacity()
-    DiskInfo[Volume]["Description"] = GetDescription(Volume)
+    DiskInfo[Volume]["Description"] = GetDescription(Disk)
     DiskInfo[Volume]["Flags"] = []
-    DiskInfo[Volume]["Flags"] = GetCapabilities(Volume)
-    DiskInfo[Volume]["FileSystem"] = GetFileSystem(Volume)
+    DiskInfo[Volume]["Flags"] = GetCapabilities(Disk)
+    DiskInfo[Volume]["FileSystem"] = GetFileSystem(Disk)
     DiskInfo[Volume]["Partitioning"] = "N/A"
-    DiskInfo[Volume]["UUID"] = GetUUID(Volume)
-    DiskInfo[Volume]["ID"] = GetID(Volume)
-    DiskInfo[Volume]["BootRecord"], DiskInfo[Volume]["BootRecordStrings"] = GetBootRecord(Volume)
+    DiskInfo[Volume]["UUID"] = GetUUID(Disk)
+    DiskInfo[Volume]["ID"] = GetID(Disk)
+    DiskInfo[Volume]["BootRecord"], DiskInfo[Volume]["BootRecordStrings"] = GetBootRecord(Disk)
 
     return Volume
 
