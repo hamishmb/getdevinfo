@@ -139,7 +139,7 @@ def GetInfo(Standalone=False):
 
     return DiskInfo
 
-#TODO try and get rid of this.
+#TODO Try and get rid of this.
 def IsPartition(Disk):
     """Check if the given Disk is a partition"""
     logger.debug("GetDevInfo: Main().IsPartition(): Checking if Disk: "+Disk+" is a partition...")
