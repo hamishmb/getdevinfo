@@ -137,6 +137,21 @@ def GetInfo(Standalone=False):
 
     return DiskInfo
 
+#TODO try and get rid of this.
+def IsPartition(self, Disk, DiskList=None):
+    """Check if the given Disk is a partition"""
+    logger.debug("GetDevInfo: Main().IsPartition(): Checking if Disk: "+Disk+" is a partition...")
+
+    if "s" in Disk.split("disk")[1]:
+        Result = True
+
+    else:
+        Result = False
+
+    logger.info("GetDevInfo: Main().IsPartition(): Result: "+str(Result)+"...")
+
+    return Result
+
 def GetVendor(Disk):
     """Get the vendor"""
     if DiskInfo["/dev/"+Disk]["Type"] == "Partition":
