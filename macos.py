@@ -137,7 +137,7 @@ def GetVendor(Disk):
         logger.debug("GetDevInfo: Main().GetVendor(): Using vendor info from host Disk, because this is a partition...")
         return DiskInfo[DiskInfo["/dev/"+Disk]["HostDevice"]]["Vendor"]
  
-   else:
+    else:
         try:
             Vendor = Plist["MediaName"].split()[0]
             logger.info("GetDevInfo: Main().GetVendor(): Found vendor info: "+Vendor)
