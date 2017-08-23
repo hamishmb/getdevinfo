@@ -21,6 +21,13 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import subprocess
+import os
+from bs4 import BeautifulSoup
+import re
+import platform
+import plistlib
+
 #TODO This is more limited than the Linux version. Might be good to change that.
 def GetInfo(Standalone=False):
     """Get Disk Information."""
