@@ -190,7 +190,7 @@ def GetProduct(Disk):
 
         return Product
 
-def GetCapacity(self):
+def GetCapacity():
     """Get the capacity and human-readable capacity"""
     try:
         Size = Plist["TotalSize"]
