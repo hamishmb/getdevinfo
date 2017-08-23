@@ -24,9 +24,6 @@ from __future__ import unicode_literals
 import platform
 
 if __name__ == "__main__":
-    #Import modules.
-    import logging
-
     #Determine if running on Linux or Mac.
     if platform.system() == 'Linux':
         LINUX = True
@@ -34,21 +31,13 @@ if __name__ == "__main__":
     elif platform.system() == "Darwin":
         LINUX = False
 
-    #Set up basic logging to stdout.
-    logger = logging
-    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s: %(message)s', datefmt='%d/%m/%Y %I:%M:%S %p', level=logging.DEBUG)
-
-    logger.info("Running on Linux: "+str(LINUX))
-
     if LINUX:
         import linux
-        linux.logger = logger
         linux.get_info()
         diskinfo = linux.DISKINFO
 
     else:
         import macos
-        macos.logger = logger
         macos.GetInfo()
         diskinfo = macos.DiskInfo
 

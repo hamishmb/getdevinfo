@@ -27,10 +27,8 @@ from bs4 import BeautifulSoup
 
 def get_info():
     """Get disk Information."""
-    logger.info("GetDevInfo: Main().get_info(): Preparing to get disk info...")
 
     #Run lshw to try and get disk information.
-    logger.debug("GetDevInfo: Main().get_info(): Running 'LC_ALL=C lshw -sanitize -class disk -class volume -xml'...")
     runcmd = subprocess.Popen("LC_ALL=C lshw -sanitize -class disk -class volume -xml", stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
 
     #Get the output.
@@ -51,8 +49,6 @@ def get_info():
 
     cmd = subprocess.Popen("ls -l /dev/disk/by-id/", stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
     LSOUTPUT = cmd.communicate()[0]
-
-    logger.debug("GetDevInfo: Main().get_info(): Done.")
 
     #Parse XML as HTML to support Ubuntu 12.04 LTS. Otherwise output is cut off.
     output = BeautifulSoup(stdout, "html.parser")
@@ -84,20 +80,15 @@ def get_info():
             get_partition_info(subnode, host_disk)
 
     #Find any LVM disks. Don't use -c because it doesn't give us enough information.
-    logger.debug("GetDevInfo: Main().get_info(): Running 'LC_ALL=C lvdisplay --maps'...")
     cmd = subprocess.Popen("LC_ALL=C lvdisplay --maps", stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
     global LVMOUTPUT
     LVMOUTPUT = cmd.communicate()[0].split("\n")
-    logger.debug("GetDevInfo: Main().get_info(): Done!")
 
     parse_lvm_output()
 
     #Check we found some disks.
     if len(DISKINFO) == 0:
-        logger.info("GetDevInfo: Main().get_info(): Didn't find any disks, throwing RuntimeError!")
         raise RuntimeError("No Disks found!")
-
-    logger.info("GetDevInfo: Main().get_info(): Finished!")
 
 def get_device_info(node):
     """Get Device Information"""
@@ -349,17 +340,10 @@ def get_uuid(disk):
             else:
                 break
 
-    if uuid != "Unknown":
-        logger.info("GetDevInfo: Main().get_uuid(): Found UUID ("+uuid+") for: "+disk+"...")
-
-    else:
-        logger.warning("GetDevInfo: Main().get_uuid(): Couldn't find UUID for: "+disk+"! This may cause problems down the line.")
-
     return uuid
 
 def get_id(disk):
     """Retrive the given partition's/device's ID."""
-    logger.info("GetDevInfo: Main().get_id(): Getting ID for: "+disk+"...")
 
     disk_id = "Unknown"
 
@@ -375,40 +359,27 @@ def get_id(disk):
         except:
             pass
 
-    if disk_id != "Unknown":
-        logger.info("GetDevInfo: Main().get_id(): Found ID ("+disk_id+") for: "+disk+"...")
-
-    else:
-        logger.warning("GetDevInfo: Main().get_id(): Couldn't find ID for: "+disk+"! This may cause problems down the line.")
-
     return disk_id
 
 def get_boot_record(disk):
     """Get the MBR or PBR of the given disk."""
-    logger.info("GetDevInfo: Main().get_boot_record(): Getting MBR/PBR for: "+disk+"...")
-    logger.info("GetDevInfo: Main().get_boot_record(): Reading boot record from "+disk+"...")
-
     #Use status=noxfer to try to avoid getting status messages from dd in our boot record (status=none not supported on Ubuntu 12.04).
     cmd = subprocess.Popen("dd if="+disk+" bs=512 count=1 status=noxfer", stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
     boot_record = cmd.communicate()[0]
     return_value = cmd.returncode
 
     if return_value != 0:
-        logger.error("GetDevInfo: Main().get_boot_record(): Couldn't read boot record from "+disk+"! Returning 'Unknown' for all boot record information for this disk...")
         return ("Unknown", ["Unknown"])
 
     #Get the readable strings in the boot record.
-    logger.info("GetDevInfo: Main().get_boot_record(): Finding strings in boot record...")
     cmd = subprocess.Popen("strings", stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
     cmd.stdin.write(boot_record)
     boot_record_strings = cmd.communicate()[0].replace(" ", "").split("\n")
     return_value = cmd.returncode
 
     if return_value != 0:
-        logger.error("GetDevInfo: Main().get_boot_record(): Couldn't find strings in boot record of "+disk+"! Returning boot record, but no boot record strings...")
         return (boot_record, ["Unknown"])
 
-    logger.info("GetDevInfo: Main().get_boot_record(): Done! Returning information...")
     return (boot_record, boot_record_strings)
 
 def get_lv_file_system(disk):
@@ -474,19 +445,16 @@ def get_lv_and_vg_name(volume):
 
 def get_block_size(disk):
     """Run the command to get the block size, and pass it to compute_block_size()"""
-    logger.debug("GetDevInfo: Main().get_block_size(): Finding blocksize for disk: "+disk+"...")
-
     #Run /sbin/blockdev to try and get blocksize information.
     command = "blockdev --getpbsz "+disk
 
-    logger.debug("GetDevInfo: Main().get_block_size(): Running '"+command+"'...")
     runcmd = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
 
     #Get the output and pass it to compute_block_size.
-    return compute_block_size(disk, runcmd.communicate()[0])
+    return compute_block_size(runcmd.communicate()[0])
 
-def compute_block_size(disk, stdout):
-    """Called with stdout from blockdev (Linux), or dickutil (Mac) and gets block size"""
+def compute_block_size(stdout):
+    """Called with stdout from blockdev (Linux), or diskutil (Mac) and gets block size"""
     result = stdout.replace('\n', '')
 
     #Check it worked (it should be convertable to an integer if it did).
@@ -495,12 +463,10 @@ def compute_block_size(disk, stdout):
 
     except ValueError:
         #It didn't, this is probably a file, not a disk.
-        logger.warning("GetDevInfo: Main().get_block_size(): Couldn't get blocksize for disk: "+disk+"! Returning None...")
         return None
 
     else:
         #It did.
-        logger.info("GetDevInfo: Main().get_block_size(): Blocksize for disk: "+disk+": "+result+". Returning it...")
         return result
 
 #End Main Class.
