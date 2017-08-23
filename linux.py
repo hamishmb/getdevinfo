@@ -24,6 +24,11 @@ from __future__ import unicode_literals
 import subprocess
 import os
 from bs4 import BeautifulSoup
+import sys
+
+#Make unicode an alias for str in Python 3.
+if sys.version_info[0] == 3:
+    unicode = str
 
 def get_info():
     """Get disk Information."""
@@ -82,7 +87,7 @@ def get_info():
     #Find any LVM disks. Don't use -c because it doesn't give us enough information.
     cmd = subprocess.Popen("LC_ALL=C lvdisplay --maps", stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
     global LVMOUTPUT
-    LVMOUTPUT = cmd.communicate()[0].split("\n")
+    LVMOUTPUT = cmd.communicate()[0].split(b"\n")
 
     parse_lvm_output()
 
@@ -168,6 +173,7 @@ def parse_lvm_output(testing=False):
 
     for line in LVMOUTPUT:
         line_counter += 1
+        line = unicode(line)
         if "--- Logical volume ---" in line:
             assemble_lvm_disk_info(line_counter, testing=testing)
 
@@ -177,6 +183,7 @@ def assemble_lvm_disk_info(line_counter, testing=False):
     raw_lvm_info = []
 
     for line in LVMOUTPUT[line_counter:]:
+        line = unicode(line)
         raw_lvm_info.append(line)
 
         #When we get to the next volume, stop adding stuff to this entry's data variable.
@@ -329,7 +336,8 @@ def get_uuid(disk):
     uuid = "Unknown"
 
     #Try to get the UUID from blkid's output.
-    for line in BLKIDOUTPUT.split('\n'):
+    for line in BLKIDOUTPUT.split(b'\n'):
+        line = unicode(line)
         if disk in line:
             uuid = line.split()[-1]
 
@@ -348,7 +356,7 @@ def get_id(disk):
     disk_id = "Unknown"
 
     #Try to get the ID from ls's output.
-    for line in LSOUTPUT.split('\n'):
+    for line in LSOUTPUT.split(b'\n'):
         try:
             split_line = line.split()
 
@@ -374,7 +382,7 @@ def get_boot_record(disk):
     #Get the readable strings in the boot record.
     cmd = subprocess.Popen("strings", stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
     cmd.stdin.write(boot_record)
-    boot_record_strings = cmd.communicate()[0].replace(" ", "").split("\n")
+    boot_record_strings = cmd.communicate()[0].replace(b" ", b"").split(b"\n")
     return_value = cmd.returncode
 
     if return_value != 0:

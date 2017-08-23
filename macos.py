@@ -23,6 +23,11 @@ from __future__ import unicode_literals
 
 import subprocess
 import plistlib
+import sys
+
+#Make unicode an alias for str in Python 3.
+if sys.version_info[0] == 3:
+    unicode = str
 
 #TODO This is more limited than the Linux version. Might be good to change that.
 def get_info():

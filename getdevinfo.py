@@ -22,6 +22,11 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import platform
+import sys
+
+#Make unicode an alias for str in Python 3.
+if sys.version_info[0] == 3:
+    unicode = str
 
 if __name__ == "__main__":
     #Determine if running on Linux or Mac.
@@ -42,7 +47,7 @@ if __name__ == "__main__":
         diskinfo = macos.DISKINFO
 
     #Print the info in a (semi :D) readable way.
-    keys = diskinfo.keys()
+    keys = list(diskinfo)
     keys.sort()
 
     for key in keys:
