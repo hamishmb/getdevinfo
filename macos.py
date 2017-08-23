@@ -29,6 +29,9 @@ import sys
 if sys.version_info[0] == 3:
     unicode = str
 
+    #Plist hack for Python 3.
+    plistlib.readPlistFromString = plistlib.readPlistFromBytes
+
 #TODO This is more limited than the Linux version. Might be good to change that.
 def get_info():
     """Get disk Information."""
