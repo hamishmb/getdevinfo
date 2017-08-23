@@ -49,8 +49,6 @@ def GetInfo(Standalone=False):
 
     Plist = plistlib.readPlistFromString(stdout)
 
-    UnitList = [None, "B", "KB", "MB", "GB", "TB", "PB"]
-
     #Find the disks.
     for Disk in Plist["AllDisks"]:
         #Run diskutil info to get Disk info.

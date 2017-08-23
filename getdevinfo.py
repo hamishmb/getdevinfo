@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
 # Device Information Obtainer 1.0
 # This file is part of GetDevInfo.
 # Copyright (C) 2013-2017 Hamish McIntyre-Bhatty
@@ -21,47 +21,40 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import subprocess
-import os
-from bs4 import BeautifulSoup
-import re
 import platform
-import plistlib
 
 if __name__ == "__main__":
     #Import modules.
     import logging
 
     #Determine if running on Linux or Mac.
-    global Linux
-
     if platform.system() == 'Linux':
-        Linux = True
+        LINUX = True
 
     elif platform.system() == "Darwin":
-        Linux = False
+        LINUX = False
 
     #Set up basic logging to stdout.
     logger = logging
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s: %(message)s', datefmt='%d/%m/%Y %I:%M:%S %p', level=logging.DEBUG)
 
-    logger.info("Running on Linux: "+str(Linux))
+    logger.info("Running on Linux: "+str(LINUX))
 
-    if Linux:
+    if LINUX:
         import linux
         linux.logger = logger
-        linux.GetInfo(Standalone=True)
-        DiskInfo = linux.DiskInfo
+        linux.get_info()
+        diskinfo = linux.DISKINFO
 
     else:
         import macos
         macos.logger = logger
-        macos.GetInfo(Standalone=True)
-        DiskInfo = macos.DiskInfo
+        macos.GetInfo()
+        diskinfo = macos.DiskInfo
 
     #Print the info in a (semi :D) readable way.
-    Keys = DiskInfo.keys()
-    Keys.sort()
+    keys = diskinfo.keys()
+    keys.sort()
 
-    for Key in Keys:
-        print("\n\n", DiskInfo[Key], "\n\n")
+    for key in keys:
+        print("\n\n", diskinfo[key], "\n\n")
