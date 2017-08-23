@@ -48,12 +48,16 @@ if __name__ == "__main__":
     logger.info("Running on Linux: "+str(Linux))
 
     if Linux:
-        from . import linux
+        import linux
+        linux.logger = logger
         linux.GetInfo(Standalone=True)
+        DiskInfo = linux.DiskInfo
 
     else:
-        from . import macos
+        import macos
+        macos.logger = logger
         macos.GetInfo(Standalone=True)
+        DiskInfo = macos.DiskInfo
 
     #Print the info in a (semi :D) readable way.
     Keys = DiskInfo.keys()
@@ -61,4 +65,3 @@ if __name__ == "__main__":
 
     for Key in Keys:
         print("\n\n", DiskInfo[Key], "\n\n")
-        print(Main().GetBlockSize(Key))

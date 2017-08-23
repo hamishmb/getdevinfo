@@ -42,10 +42,14 @@ def GetInfo(Standalone=False):
 
     #Save some info for later use.
     #UUIDs.
+    global BlkidOutput
+
     cmd = subprocess.Popen("blkid -o list", stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
     BlkidOutput = cmd.communicate()[0]
 
     #IDs.
+    global LsOutput
+
     cmd = subprocess.Popen("ls -l /dev/disk/by-id/", stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
     LsOutput = cmd.communicate()[0]
 
@@ -83,6 +87,7 @@ def GetInfo(Standalone=False):
     #Find any LVM disks. Don't use -c because it doesn't give us enough information.
     logger.debug("GetDevInfo: Main().GetInfo(): Running 'LC_ALL=C lvdisplay --maps'...")
     cmd = subprocess.Popen("LC_ALL=C lvdisplay --maps", stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+    global LVMOutput
     LVMOutput = cmd.communicate()[0].split("\n")
     logger.debug("GetDevInfo: Main().GetInfo(): Done!")
 
