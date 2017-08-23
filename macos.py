@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
 # macOS Functions For The Device Information Obtainer 1.0
 # This file is part of GetDevInfo.
 # Copyright (C) 2013-2017 Hamish McIntyre-Bhatty
@@ -22,273 +22,241 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import subprocess
-import os
-from bs4 import BeautifulSoup
-import re
-import platform
 import plistlib
 
 #TODO This is more limited than the Linux version. Might be good to change that.
-def GetInfo(Standalone=False):
-    """Get Disk Information."""
-    logger.info("GetDevInfo: Main().GetInfo(): Preparing to get Disk info...")
+def get_info():
+    """Get disk Information."""
+    global DISKINFO
+    DISKINFO = {}
 
-    global DiskInfo
-    DiskInfo = {}
-
-    #Run diskutil list to get Disk names.
-    logger.debug("GetDevInfo: Main().GetInfo(): Running 'diskutil list -plist'...")
+    #Run diskutil list to get disk names.
     runcmd = subprocess.Popen("diskutil list -plist", stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
 
     #Get the output.
-    stdout, stderr = runcmd.communicate()
-    logger.debug("GetDevInfo: Main().GetInfo(): Done.")
+    stdout = runcmd.communicate()[0]
 
     #Parse the plist (Property List).
-    global Plist
+    global PLIST
 
-    Plist = plistlib.readPlistFromString(stdout)
+    PLIST = plistlib.readPlistFromString(stdout)
 
     #Find the disks.
-    for Disk in Plist["AllDisks"]:
-        #Run diskutil info to get Disk info.
-        logger.debug("GetDevInfo: Main().GetInfo(): Running 'diskutil info -plist "+Disk+"'...")
-        runcmd = subprocess.Popen("diskutil info -plist "+Disk, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
-        stdout, stderr = runcmd.communicate()
+    for disk in PLIST["AllDisks"]:
+        #Run diskutil info to get disk info.
+        runcmd = subprocess.Popen("diskutil info -plist "+disk, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+        stdout = runcmd.communicate()[0]
 
         #Parse the plist (Property List).
-        Plist = plistlib.readPlistFromString(stdout)
+        PLIST = plistlib.readPlistFromString(stdout)
 
-        #Check if the Disk is a partition.
-        DiskIsPartition = IsPartition(Disk)
+        #Check if the disk is a partition.
+        disk_is_partition = is_partition(disk)
 
-        if not DiskIsPartition:
+        if not disk_is_partition:
             #These are devices.
-            HostDisk = GetDeviceInfo(Disk)
+            get_device_info(disk)
 
         else:
             #These are Partitions.
-            Volume = GetPartitionInfo(Disk, "/dev/"+Disk[:-2])
+            get_partition_info(disk, "/dev/"+disk[:-2])
 
     #Check we found some disks.
-    if len(DiskInfo) == 0:
-        logger.info("GetDevInfo: Main().GetInfo(): Didn't find any disks, throwing RuntimeError!")
+    if len(DISKINFO) == 0:
         raise RuntimeError("No Disks found!")
 
-    logger.info("GetDevInfo: Main().GetInfo(): Finished!")
+    return DISKINFO
 
-    return DiskInfo
-
-def GetDeviceInfo(Disk):
+def get_device_info(disk):
     """Get Device Information"""
-    HostDisk = "/dev/"+Disk
-    DiskInfo[HostDisk] = {}
-    DiskInfo[HostDisk]["Name"] = HostDisk
-    DiskInfo[HostDisk]["Type"] = "Device"
-    DiskInfo[HostDisk]["HostDevice"] = "N/A"
-    DiskInfo[HostDisk]["Partitions"] = []
-    DiskInfo[HostDisk]["Vendor"] = GetVendor(Disk)
-    DiskInfo[HostDisk]["Product"] = GetProduct(Disk)
-    DiskInfo[HostDisk]["RawCapacity"], DiskInfo[HostDisk]["Capacity"] = GetCapacity()
-    DiskInfo[HostDisk]["Description"] = GetDescription(Disk)
-    DiskInfo[HostDisk]["Flags"] = GetCapabilities(Disk)
-    DiskInfo[HostDisk]["Partitioning"] = GetPartitioning(Disk)
-    DiskInfo[HostDisk]["FileSystem"] = "N/A"
-    DiskInfo[HostDisk]["UUID"] = "N/A"
-    DiskInfo[HostDisk]["ID"] = GetID(Disk)
-    DiskInfo[HostDisk]["BootRecord"], DiskInfo[HostDisk]["BootRecordStrings"] = GetBootRecord(Disk)
+    host_disk = "/dev/"+disk
+    DISKINFO[host_disk] = {}
+    DISKINFO[host_disk]["Name"] = host_disk
+    DISKINFO[host_disk]["Type"] = "Device"
+    DISKINFO[host_disk]["HostDevice"] = "N/A"
+    DISKINFO[host_disk]["Partitions"] = []
+    DISKINFO[host_disk]["Vendor"] = get_vendor(disk)
+    DISKINFO[host_disk]["Product"] = get_product(disk)
+    DISKINFO[host_disk]["RawCapacity"], DISKINFO[host_disk]["Capacity"] = get_capacity()
+    DISKINFO[host_disk]["Description"] = get_description(disk)
+    DISKINFO[host_disk]["Flags"] = get_capabilities(disk)
+    DISKINFO[host_disk]["Partitioning"] = get_partitioning(disk)
+    DISKINFO[host_disk]["FileSystem"] = "N/A"
+    DISKINFO[host_disk]["UUID"] = "N/A"
+    DISKINFO[host_disk]["ID"] = get_id(disk)
+    DISKINFO[host_disk]["BootRecord"], DISKINFO[host_disk]["BootRecordStrings"] = get_boot_record(disk)
 
-    return HostDisk
+    return host_disk
 
-def GetPartitionInfo(Disk, HostDisk):
+def get_partition_info(disk, host_disk):
     """Get Partition Information"""
-    Volume = "/dev/"+Disk
-    DiskInfo[Volume] = {}
-    DiskInfo[Volume]["Name"] = Volume
-    DiskInfo[Volume]["Type"] = "Partition"
-    DiskInfo[Volume]["HostDevice"] = HostDisk
-    DiskInfo[Volume]["Partitions"] = []
-    DiskInfo[HostDisk]["Partitions"].append(Volume)
-    DiskInfo[Volume]["Vendor"] = GetVendor(Disk)
-    DiskInfo[Volume]["Product"] = "Host Device: "+DiskInfo[HostDisk]["Product"]
-    DiskInfo[Volume]["RawCapacity"], DiskInfo[Volume]["Capacity"] = GetCapacity()
-    DiskInfo[Volume]["Description"] = GetDescription(Disk)
-    DiskInfo[Volume]["Flags"] = []
-    DiskInfo[Volume]["Flags"] = GetCapabilities(Disk)
-    DiskInfo[Volume]["FileSystem"] = GetFileSystem(Disk)
-    DiskInfo[Volume]["Partitioning"] = "N/A"
-    DiskInfo[Volume]["UUID"] = GetUUID(Disk)
-    DiskInfo[Volume]["ID"] = GetID(Disk)
-    DiskInfo[Volume]["BootRecord"], DiskInfo[Volume]["BootRecordStrings"] = GetBootRecord(Disk)
+    volume = "/dev/"+disk
+    DISKINFO[volume] = {}
+    DISKINFO[volume]["Name"] = volume
+    DISKINFO[volume]["Type"] = "Partition"
+    DISKINFO[volume]["HostDevice"] = host_disk
+    DISKINFO[volume]["Partitions"] = []
+    DISKINFO[host_disk]["Partitions"].append(volume)
+    DISKINFO[volume]["Vendor"] = get_vendor(disk)
+    DISKINFO[volume]["Product"] = "Host Device: "+DISKINFO[host_disk]["Product"]
+    DISKINFO[volume]["RawCapacity"], DISKINFO[volume]["Capacity"] = get_capacity()
+    DISKINFO[volume]["Description"] = get_description(disk)
+    DISKINFO[volume]["Flags"] = []
+    DISKINFO[volume]["Flags"] = get_capabilities(disk)
+    DISKINFO[volume]["FileSystem"] = get_file_system(disk)
+    DISKINFO[volume]["Partitioning"] = "N/A"
+    DISKINFO[volume]["UUID"] = get_uuid(disk)
+    DISKINFO[volume]["ID"] = get_id(disk)
+    DISKINFO[volume]["BootRecord"], DISKINFO[volume]["BootRecordStrings"] = get_boot_record(disk)
 
-    return Volume
+    return volume
 
 #TODO Try and get rid of this.
-def IsPartition(Disk):
-    """Check if the given Disk is a partition"""
-    logger.debug("GetDevInfo: Main().IsPartition(): Checking if Disk: "+Disk+" is a partition...")
+def is_partition(disk):
+    """Check if the given disk is a partition"""
 
-    if "s" in Disk.split("disk")[1]:
-        Result = True
+    if "s" in disk.split("disk")[1]:
+        result = True
 
     else:
-        Result = False
+        result = False
 
-    logger.info("GetDevInfo: Main().IsPartition(): Result: "+str(Result)+"...")
+    return result
 
-    return Result
-
-def GetVendor(Disk):
+def get_vendor(disk):
     """Get the vendor"""
-    if DiskInfo["/dev/"+Disk]["Type"] == "Partition":
-        #We need to use the info from the host Disk, which will be whatever came before.
-        logger.debug("GetDevInfo: Main().GetVendor(): Using vendor info from host Disk, because this is a partition...")
-        return DiskInfo[DiskInfo["/dev/"+Disk]["HostDevice"]]["Vendor"]
- 
+    if DISKINFO["/dev/"+disk]["Type"] == "Partition":
+        #We need to use the info from the host disk, which will be whatever came before.
+        return DISKINFO[DISKINFO["/dev/"+disk]["HostDevice"]]["Vendor"]
+
     else:
         try:
-            Vendor = Plist["MediaName"].split()[0]
-            logger.info("GetDevInfo: Main().GetVendor(): Found vendor info: "+Vendor)
+            vendor = PLIST["MediaName"].split()[0]
 
         except KeyError:
-            Vendor = "Unknown"
-            logger.warning("GetDevInfo: Main().GetVendor(): Couldn't find vendor info!")
+            vendor = "Unknown"
 
-        return Vendor
+        return vendor
 
-def GetProduct(Disk):
+def get_product(disk):
     """Get the product"""
-    if DiskInfo["/dev/"+Disk]["Type"] == "Partition":
-        #We need to use the info from the host Disk, which will be whatever came before.
-        logger.debug("GetDevInfo: Main().GetProduct(): Using product info from host Disk, because this is a partition...")
-        return DiskInfo[DiskInfo["/dev/"+Disk]["HostDevice"]]["Product"]
+    if DISKINFO["/dev/"+disk]["Type"] == "Partition":
+        #We need to use the info from the host disk, which will be whatever came before.
+        return DISKINFO[DISKINFO["/dev/"+disk]["HostDevice"]]["Product"]
 
     else:
         try:
-            Product = ' '.join(Plist["MediaName"].split()[1:])
-            logger.info("GetDevInfo: Main().GetProduct(): Found product info: "+Product)
+            product = ' '.join(PLIST["MediaName"].split()[1:])
 
         except KeyError:
-            Product = "Unknown"
-            logger.warning("GetDevInfo: Main().GetVendor(): Couldn't find product info!")
+            product = "Unknown"
 
-        return Product
+        return product
 
-def GetCapacity():
+def get_capacity():
     """Get the capacity and human-readable capacity"""
     try:
-        Size = Plist["TotalSize"]
-        Size = unicode(Size)
-        logger.info("GetDevInfo: Main().GetCapacity(): Found size info: "+Size)
+        size = PLIST["TotalSize"]
+        size = unicode(size)
 
     except KeyError:
-        Size = "Unknown"
-        logger.warning("GetDevInfo: Main().GetCapacity(): Couldn't find size info!")
+        size = "Unknown"
 
-    return Size, Size #FIXME
+    return size, size #FIXME
 
-def GetDescription(Disk):
-    """Find description information for the given Disk."""
-    logger.info("GetDevInfo: Main().GetDescription(): Getting description info for Disk: "+Disk+"...")
-
+def get_description(disk):
+    """Find description information for the given disk."""
     #Gather info from diskutil to create some descriptions.
     #Internal or external.
     try:
-        if Plist["Internal"]:
-            InternalOrExternal = "Internal "
+        if PLIST["Internal"]:
+            internal_or_external = "Internal "
 
         else:
-            InternalOrExternal = "External "
+            internal_or_external = "External "
 
     except KeyError:
-        InternalOrExternal = ""
+        internal_or_external = ""
 
     #Type SSD or HDD.
     try:
-        if Plist["SolidState"]:
-            Type = "Solid State Drive "
+        if PLIST["SolidState"]:
+            disk_type = "Solid State Drive "
 
         else:
-            Type = "Hard Disk Drive "
+            disk_type = "Hard disk Drive "
 
     except KeyError:
-        Type = ""
+        disk_type = ""
 
     #Bus protocol.
     try:
-        BusProtocol = unicode(Plist["BusProtocol"])
+        bus_protocol = unicode(PLIST["BusProtocol"])
 
     except KeyError:
-        BusProtocol = "Unknown"
+        bus_protocol = "Unknown"
 
-    if InternalOrExternal != "" and Type != "":
-        if BusProtocol != "Unknown":
-            return InternalOrExternal+Type+"(Connected through "+BusProtocol+")"
+    if internal_or_external != "" and disk_type != "":
+        if bus_protocol != "Unknown":
+            return internal_or_external+disk_type+"(Connected through "+bus_protocol+")"
 
         else:
-            return InternalOrExternal+Type
+            return internal_or_external+disk_type
 
     else:
         return "N/A"
 
-def GetCapabilities(Disk):
+def get_capabilities(disk):
     #TODO
     return "Unknown"
 
-def GetPartitioning(Disk):
+def get_partitioning(disk):
     #TODO
     return "Unknown"
 
-def GetFileSystem(Disk):
+def get_file_system(disk):
     #TODO
     return "Unknown"
 
-def GetUUID(Disk):
+def get_uuid(disk):
     #TODO
     return "Unknown"
 
-def GetID(Disk):
+def get_id(disk):
     #TODO
     return "Unknown"
 
-def GetBootRecord(Disk):
+def get_boot_record(disk):
     #TODO
     return "Unknown", "Unknown"
 
-def GetBlockSize(Disk):
-    """Run the command to get the block size, and pass it to ComputeBlockSize()"""
-    logger.debug("GetDevInfo: Main().GetBlockSize(): Finding blocksize for Disk: "+Disk+"...")
+def get_block_size(disk):
+    """Run the command to get the block size, and pass it to compute_block_size()"""
+    #Run diskutil list to get disk names.
+    Command = "diskutil info -plist "+disk
 
-    #Run diskutil list to get Disk names.
-    Command = "diskutil info -plist "+Disk
-
-    logger.debug("GetDevInfo: Main().GetBlockSize(): Running '"+Command+"'...")
     runcmd = subprocess.Popen(Command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
 
-    #Get the output and pass it to ComputeBlockSize.
-    return ComputeBlockSize(Disk, runcmd.communicate()[0])
+    #Get the output and pass it to compute_block_size.
+    return compute_block_size(disk, runcmd.communicate()[0])
 
-def ComputeBlockSize(Disk, stdout):
+def compute_block_size(disk, stdout):
     """Called with stdout from blockdev (Linux), or dickutil (Mac) and gets block size"""
     #Parse the plist (Property List).
     try:
-        Plist = plistlib.readPlistFromString(stdout)
+        plist = plistlib.readPlistFromString(stdout)
 
     except:
-        logger.warning("GetDevInfo: Main().GetBlockSize(): Couldn't get blocksize for Disk: "+Disk+"! Returning None...")
         return None
 
     else:
-        if "DeviceBlockSize" in Plist:
-            Result = unicode(Plist["DeviceBlockSize"])
-            logger.info("GetDevInfo: Main().GetBlockSize(): Blocksize for Disk: "+Disk+": "+Result+". Returning it...")
+        if "DeviceBlockSize" in plist:
+            result = unicode(plist["DeviceBlockSize"])
 
-        elif "VolumeBlockSize" in Plist:
-            Result = unicode(Plist["VolumeBlockSize"])
-            logger.info("GetDevInfo: Main().GetBlockSize(): Blocksize for Disk: "+Disk+": "+Result+". Returning it...")
+        elif "VolumeBlockSize" in plist:
+            result = unicode(plist["VolumeBlockSize"])
 
         else:
-            logger.warning("GetDevInfo: Main().GetBlockSize(): Couldn't get blocksize for Disk: "+Disk+"! Returning None...")
-            Result = None
+            result = None
 
-        return Result
+        return result

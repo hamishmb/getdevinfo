@@ -38,8 +38,8 @@ if __name__ == "__main__":
 
     else:
         import macos
-        macos.GetInfo()
-        diskinfo = macos.DiskInfo
+        macos.get_info()
+        diskinfo = macos.DISKINFO
 
     #Print the info in a (semi :D) readable way.
     keys = diskinfo.keys()
