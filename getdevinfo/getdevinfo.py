@@ -37,12 +37,12 @@ def get_info():
         LINUX = False
 
     if LINUX:
-        import linux
+        from . import linux
         linux.get_info()
         diskinfo = linux.DISKINFO
 
     else:
-        import macos
+        from . import macos
         macos.get_info()
         diskinfo = macos.DISKINFO
 
