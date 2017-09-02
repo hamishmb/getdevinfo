@@ -28,7 +28,7 @@ import sys
 if sys.version_info[0] == 3:
     unicode = str
 
-if __name__ == "__main__":
+def get_info():
     #Determine if running on Linux or Mac.
     if platform.system() == 'Linux':
         LINUX = True
@@ -45,6 +45,12 @@ if __name__ == "__main__":
         import macos
         macos.get_info()
         diskinfo = macos.DISKINFO
+
+    return diskinfo
+
+#For development only.
+if __name__ == "__main__":
+    diskinfo = get_info()
 
     #Print the info in a (semi :D) readable way.
     keys = list(diskinfo)

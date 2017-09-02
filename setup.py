@@ -46,6 +46,6 @@ setup(
 
     keywords='devices hardware',
     packages=find_packages(),
-    install_requires=['bs4', 'plistlib'],
+    install_requires=['bs4'],
     python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
 )
