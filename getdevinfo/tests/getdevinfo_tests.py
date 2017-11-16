@@ -274,4 +274,4 @@ class TestComputeBlockSizeMac(unittest.TestCase):
 
     def test_compute_block_size(self):
         for testdata in self.block_sizes:
-            self.assertEqual(macos.compute_block_size("FakeDisk", testdata), self.correct_results[self.block_sizes.index(testdata)])
+            self.assertEqual(macos.compute_block_size("FakeDisk", to_bytestring(testdata)), self.correct_results[self.block_sizes.index(testdata)])
