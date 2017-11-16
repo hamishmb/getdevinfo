@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with GetDevInfo.  If not, see <http://www.gnu.org/licenses/>.
 
-#Do future imports to prepare to support python 3. Use unicode strings rather than ASCII strings, as they fix potential problems.
+#Do future imports to support python 3.
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
