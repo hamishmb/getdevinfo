@@ -173,26 +173,26 @@ class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
         macos.PLIST = self.plist0s3
         self.assertEqual(macos.get_product(disk="disk0s3"), "FakeDisk")
 
-    def test_get_capacity(self):
+    def test_get_capacity(self): #TODO Update when human readable sizes are computed.
         #baddisk0
         macos.PLIST = self.badplist0
-        self.assertEqual(macos.get_capacity(), "Unknown")
+        self.assertEqual(macos.get_capacity()[0], "Unknown")
 
         #disk0
         macos.PLIST = self.plist0
-        self.assertEqual(macos.get_capacity(), "42948853248")
+        self.assertEqual(macos.get_capacity()[0], "42948853248")
 
         #disk0s1
         macos.PLIST = self.plist0s1
-        self.assertEqual(macos.get_capacity(), "209715200")
+        self.assertEqual(macos.get_capacity()[0], "209715200")
 
         #disk0s2
         macos.PLIST = self.plist0s2
-        self.assertEqual(macos.get_capacity(), "42089095168")
+        self.assertEqual(macos.get_capacity()[0], "42089095168")
 
         #disk0s3
         macos.PLIST = self.plist0s3
-        self.assertEqual(macos.get_capacity(), "650002432")
+        self.assertEqual(macos.get_capacity()[0], "650002432")
 
     def test_get_description(self):
         #baddisk0

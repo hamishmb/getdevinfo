@@ -170,7 +170,7 @@ def get_capacity():
     except KeyError:
         size = "Unknown"
 
-    return size, size #FIXME
+    return size, size #FIXME actaully compute human readable capacity.
 
 def get_description(disk):
     """Find description information for the given disk."""
@@ -192,7 +192,7 @@ def get_description(disk):
             disk_type = "Solid State Drive "
 
         else:
-            disk_type = "Hard disk Drive "
+            disk_type = "Hard Disk Drive "
 
     except KeyError:
         disk_type = ""
