@@ -32,10 +32,18 @@ from . import getdevinfo_test_data as data
 from . import getdevinfo_test_functions as functions
 
 #Make unicode an alias for str in Python 3.
-#And make plistlib.readPlistFromString an alias for plistlib.loads.
+#Workaround for python 3 support.
 if sys.version_info[0] == 3:
     unicode = str
     plistlib.readPlistFromString = plistlib.loads
+
+#Plistlib workaround for python 3.x  support.
+def to_bytestring(string):
+    if sys.version_info[0] == 3:
+        return bytes(string, "utf-8")
+
+    else:
+        return string
 
 #import the linux module so we can test it.
 sys.path.insert(0, os.path.abspath('../'))
@@ -117,11 +125,11 @@ class TestGetVendorProductCapacityLinux(unittest.TestCase):
 class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
     def setUp(self):
         macos.DISKINFO = data.return_fake_disk_info_mac()
-        self.badplist0 = plistlib.readPlistFromString(data.return_fake_diskutil_info_bad_disk0_plist())
-        self.plist0 = plistlib.readPlistFromString(data.return_fake_diskutil_info_disk0_plist())
-        self.plist0s1 = plistlib.readPlistFromString(data.return_fake_diskutil_info_disk0s1_plist())
-        self.plist0s2 = plistlib.readPlistFromString(data.return_fake_diskutil_info_disk0s2_plist())
-        self.plist0s3 = plistlib.readPlistFromString(data.return_fake_diskutil_info_disk0s3_plist())
+        self.badplist0 = plistlib.readPlistFromString(to_bytestring(data.return_fake_diskutil_info_bad_disk0_plist()))
+        self.plist0 = plistlib.readPlistFromString(to_bytestring(data.return_fake_diskutil_info_disk0_plist()))
+        self.plist0s1 = plistlib.readPlistFromString(to_bytestring(data.return_fake_diskutil_info_disk0s1_plist()))
+        self.plist0s2 = plistlib.readPlistFromString(to_bytestring(data.return_fake_diskutil_info_disk0s2_plist()))
+        self.plist0s3 = plistlib.readPlistFromString(to_bytestring(data.return_fake_diskutil_info_disk0s3_plist()))
 
     def tearDown(self):
         del macos.DISKINFO
