@@ -1,21 +1,21 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*- 
-# GetDevInfo test data for WxFixBoot Version 2.0.2
-# This file is part of WxFixBoot.
+# -*- coding: utf-8 -*-
+# Test data for GetDevInfo Version 1.0.1
+# This file is part of GetDevInfo.
 # Copyright (C) 2013-2017 Hamish McIntyre-Bhatty
-# WxFixBoot is free software: you can redistribute it and/or modify it
+# GetDevInfo is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License version 3 or,
 # at your option, any later version.
 #
-# WxFixBoot is distributed in the hope that it will be useful,
+# GetDevInfo is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with WxFixBoot.  If not, see <http://www.gnu.org/licenses/>.
+# along with GetDevInfo.  If not, see <http://www.gnu.org/licenses/>.
 
-#Do future imports to prepare to support python 3. Use unicode strings rather than ASCII strings, as they fix potential problems.
+#Do future imports to support python 3.
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -23,7 +23,7 @@ from __future__ import unicode_literals
 
 #Classes for test cases.
 class Node1:
-    def GetCopy(self):
+    def get_copy(self):
         return self
 
     class vendor:
@@ -36,7 +36,7 @@ class Node1:
         string = 100000000000
 
 class Node2:
-    def GetCopy(self):
+    def get_copy(self):
         return self
 
     class vendor:
@@ -49,7 +49,7 @@ class Node2:
         string = 10000000000000000000
 
 class BadNode1:
-    def GetCopy(self):
+    def get_copy(self):
         return self
 
     class vendor:
@@ -59,7 +59,7 @@ class BadNode1:
         notstring = ""
 
 class BadNode2:
-    def GetCopy(self):
+    def get_copy(self):
         return self
 
     class vendor:
@@ -73,7 +73,7 @@ class BadNode2:
         string = 1000000000000000000000000000000000000000000000000
 
 class BadNode3:
-    def GetCopy(self):
+    def get_copy(self):
         return self
 
     class vendor:
@@ -85,118 +85,118 @@ class BadNode3:
     class size:
         string = "fghjk"
 
-#Functions to return fake DiskInfo dictionary.
-def ReturnFakeDiskInfoLinux():
-    DiskInfo = {}
+#Functions to return fake diskinfo dictionary.
+def return_fake_disk_info_linux():
+    diskinfo = {}
 
     #Fictional /dev/sda.
-    DiskInfo["/dev/sda"] = {}
-    DiskInfo["/dev/sda"]["Product"] = "FakeDisk"
-    DiskInfo["/dev/sda"]["Vendor"] = "ThereIsNone"
-    DiskInfo["/dev/sda"]["Name"] = "/dev/sda"
-    DiskInfo["/dev/sda"]["Description"] = "Fake Hard Disk Drive"
-    DiskInfo["/dev/sda"]["RawCapacity"] = "56483132"
-    DiskInfo["/dev/sda"]["HostDevice"] = "N/A"
-    DiskInfo["/dev/sda"]["Capacity"] = "200GB"
-    DiskInfo["/dev/sda"]["Type"] = "Device"
-    DiskInfo["/dev/sda"]["Partitions"] = ["/dev/sda1", "/dev/sda2"]
+    diskinfo["/dev/sda"] = {}
+    diskinfo["/dev/sda"]["Product"] = "FakeDisk"
+    diskinfo["/dev/sda"]["Vendor"] = "ThereIsNone"
+    diskinfo["/dev/sda"]["Name"] = "/dev/sda"
+    diskinfo["/dev/sda"]["Description"] = "Fake Hard Disk Drive"
+    diskinfo["/dev/sda"]["RawCapacity"] = "56483132"
+    diskinfo["/dev/sda"]["HostDevice"] = "N/A"
+    diskinfo["/dev/sda"]["Capacity"] = "200GB"
+    diskinfo["/dev/sda"]["Type"] = "Device"
+    diskinfo["/dev/sda"]["Partitions"] = ["/dev/sda1", "/dev/sda2"]
 
     #Fictional /dev/sda1
-    DiskInfo["/dev/sda1"] = {}
-    DiskInfo["/dev/sda1"]["Product"] = "Host Device: FakeDisk"
-    DiskInfo["/dev/sda1"]["Vendor"] = "FakeOS v3"
-    DiskInfo["/dev/sda1"]["Name"] = "/dev/sda1"
-    DiskInfo["/dev/sda1"]["Description"] = "EXT4 Volume"
-    DiskInfo["/dev/sda1"]["RawCapacity"] = "5648313"
-    DiskInfo["/dev/sda1"]["HostDevice"] = "/dev/sda"
-    DiskInfo["/dev/sda1"]["Capacity"] = "20GB"
-    DiskInfo["/dev/sda1"]["Type"] = "Partition"
-    DiskInfo["/dev/sda1"]["Partitions"] = []
+    diskinfo["/dev/sda1"] = {}
+    diskinfo["/dev/sda1"]["Product"] = "Host Device: FakeDisk"
+    diskinfo["/dev/sda1"]["Vendor"] = "FakeOS v3"
+    diskinfo["/dev/sda1"]["Name"] = "/dev/sda1"
+    diskinfo["/dev/sda1"]["Description"] = "EXT4 Volume"
+    diskinfo["/dev/sda1"]["RawCapacity"] = "5648313"
+    diskinfo["/dev/sda1"]["HostDevice"] = "/dev/sda"
+    diskinfo["/dev/sda1"]["Capacity"] = "20GB"
+    diskinfo["/dev/sda1"]["Type"] = "Partition"
+    diskinfo["/dev/sda1"]["Partitions"] = []
 
     #Fictional /dev/sda2
-    DiskInfo["/dev/sda2"] = {}
-    DiskInfo["/dev/sda2"]["Product"] = "Host Device: FakeDisk"
-    DiskInfo["/dev/sda2"]["Vendor"] = "FakeOS v3"
-    DiskInfo["/dev/sda2"]["Name"] = "/dev/sda2"
-    DiskInfo["/dev/sda2"]["Description"] = "EXT3 Volume"
-    DiskInfo["/dev/sda2"]["RawCapacity"] = "564313"
-    DiskInfo["/dev/sda2"]["HostDevice"] = "/dev/sda"
-    DiskInfo["/dev/sda2"]["Capacity"] = "2.5GB"
-    DiskInfo["/dev/sda2"]["Type"] = "Partition"
-    DiskInfo["/dev/sda2"]["Partitions"] = []
+    diskinfo["/dev/sda2"] = {}
+    diskinfo["/dev/sda2"]["Product"] = "Host Device: FakeDisk"
+    diskinfo["/dev/sda2"]["Vendor"] = "FakeOS v3"
+    diskinfo["/dev/sda2"]["Name"] = "/dev/sda2"
+    diskinfo["/dev/sda2"]["Description"] = "EXT3 Volume"
+    diskinfo["/dev/sda2"]["RawCapacity"] = "564313"
+    diskinfo["/dev/sda2"]["HostDevice"] = "/dev/sda"
+    diskinfo["/dev/sda2"]["Capacity"] = "2.5GB"
+    diskinfo["/dev/sda2"]["Type"] = "Partition"
+    diskinfo["/dev/sda2"]["Partitions"] = []
 
     #Fictional /dev/sda3
-    DiskInfo["/dev/sda3"] = {}
-    DiskInfo["/dev/sda3"]["Product"] = "Host Device: FakeDisk"
-    DiskInfo["/dev/sda3"]["Vendor"] = "FakeOS v3"
-    DiskInfo["/dev/sda3"]["Name"] = "/dev/sda3"
-    DiskInfo["/dev/sda3"]["Description"] = "BTRFS Volume"
-    DiskInfo["/dev/sda3"]["RawCapacity"] = "564456313"
-    DiskInfo["/dev/sda3"]["HostDevice"] = "/dev/sda"
-    DiskInfo["/dev/sda3"]["Capacity"] = "25.5GB"
-    DiskInfo["/dev/sda3"]["Type"] = "Partition"
-    DiskInfo["/dev/sda3"]["Partitions"] = []
+    diskinfo["/dev/sda3"] = {}
+    diskinfo["/dev/sda3"]["Product"] = "Host Device: FakeDisk"
+    diskinfo["/dev/sda3"]["Vendor"] = "FakeOS v3"
+    diskinfo["/dev/sda3"]["Name"] = "/dev/sda3"
+    diskinfo["/dev/sda3"]["Description"] = "BTRFS Volume"
+    diskinfo["/dev/sda3"]["RawCapacity"] = "564456313"
+    diskinfo["/dev/sda3"]["HostDevice"] = "/dev/sda"
+    diskinfo["/dev/sda3"]["Capacity"] = "25.5GB"
+    diskinfo["/dev/sda3"]["Type"] = "Partition"
+    diskinfo["/dev/sda3"]["Partitions"] = []
 
-    return DiskInfo
+    return diskinfo
 
-def ReturnFakeDiskInfoMac():
-    DiskInfo = {}
+def return_fake_disk_info_mac():
+    diskinfo = {}
 
     #Fictional /dev/disk0.
-    DiskInfo["/dev/disk0"] = {}
-    DiskInfo["/dev/disk0"]["Product"] = "FakeDisk"
-    DiskInfo["/dev/disk0"]["Vendor"] = "ThereIsNone"
-    DiskInfo["/dev/disk0"]["Name"] = "/dev/disk0"
-    DiskInfo["/dev/disk0"]["Description"] = "Fake Hard Disk Drive"
-    DiskInfo["/dev/disk0"]["RawCapacity"] = "56483132"
-    DiskInfo["/dev/disk0"]["HostDevice"] = "N/A"
-    DiskInfo["/dev/disk0"]["Capacity"] = "200GB"
-    DiskInfo["/dev/disk0"]["Type"] = "Device"
-    DiskInfo["/dev/disk0"]["Partitions"] = ["/dev/disk0s1", "/dev/disk0s2", "/dev/disk0s3"]
+    diskinfo["/dev/disk0"] = {}
+    diskinfo["/dev/disk0"]["Product"] = "FakeDisk"
+    diskinfo["/dev/disk0"]["Vendor"] = "ThereIsNone"
+    diskinfo["/dev/disk0"]["Name"] = "/dev/disk0"
+    diskinfo["/dev/disk0"]["Description"] = "Fake Hard Disk Drive"
+    diskinfo["/dev/disk0"]["RawCapacity"] = "56483132"
+    diskinfo["/dev/disk0"]["HostDevice"] = "N/A"
+    diskinfo["/dev/disk0"]["Capacity"] = "200GB"
+    diskinfo["/dev/disk0"]["Type"] = "Device"
+    diskinfo["/dev/disk0"]["Partitions"] = ["/dev/disk0s1", "/dev/disk0s2", "/dev/disk0s3"]
 
     #Fictional /dev/disk0s1
-    DiskInfo["/dev/disk0s1"] = {}
-    DiskInfo["/dev/disk0s1"]["Product"] = "Host Device: FakeDisk"
-    DiskInfo["/dev/disk0s1"]["Vendor"] = "FakeOS v3"
-    DiskInfo["/dev/disk0s1"]["Name"] = "/dev/disk0s1"
-    DiskInfo["/dev/disk0s1"]["Description"] = "HFS+ Volume"
-    DiskInfo["/dev/disk0s1"]["RawCapacity"] = "5648313"
-    DiskInfo["/dev/disk0s1"]["HostDevice"] = "/dev/disk0"
-    DiskInfo["/dev/disk0s1"]["Capacity"] = "20GB"
-    DiskInfo["/dev/disk0s1"]["Type"] = "Partition"
-    DiskInfo["/dev/disk0s1"]["Partitions"] = []
+    diskinfo["/dev/disk0s1"] = {}
+    diskinfo["/dev/disk0s1"]["Product"] = "Host Device: FakeDisk"
+    diskinfo["/dev/disk0s1"]["Vendor"] = "FakeOS v3"
+    diskinfo["/dev/disk0s1"]["Name"] = "/dev/disk0s1"
+    diskinfo["/dev/disk0s1"]["Description"] = "HFS+ Volume"
+    diskinfo["/dev/disk0s1"]["RawCapacity"] = "5648313"
+    diskinfo["/dev/disk0s1"]["HostDevice"] = "/dev/disk0"
+    diskinfo["/dev/disk0s1"]["Capacity"] = "20GB"
+    diskinfo["/dev/disk0s1"]["Type"] = "Partition"
+    diskinfo["/dev/disk0s1"]["Partitions"] = []
 
     #Fictional /dev/disk0s2
-    DiskInfo["/dev/disk0s2"] = {}
-    DiskInfo["/dev/disk0s2"]["Product"] = "Host Device: FakeDisk"
-    DiskInfo["/dev/disk0s2"]["Vendor"] = "FakeOS v3"
-    DiskInfo["/dev/disk0s2"]["Name"] = "/dev/disk0s2"
-    DiskInfo["/dev/disk0s2"]["Description"] = "NTFS Volume"
-    DiskInfo["/dev/disk0s2"]["RawCapacity"] = "564313"
-    DiskInfo["/dev/disk0s2"]["HostDevice"] = "/dev/disk0"
-    DiskInfo["/dev/disk0s2"]["Capacity"] = "2.5GB"
-    DiskInfo["/dev/disk0s2"]["Type"] = "Partition"
-    DiskInfo["/dev/disk0s2"]["Partitions"] = []
+    diskinfo["/dev/disk0s2"] = {}
+    diskinfo["/dev/disk0s2"]["Product"] = "Host Device: FakeDisk"
+    diskinfo["/dev/disk0s2"]["Vendor"] = "FakeOS v3"
+    diskinfo["/dev/disk0s2"]["Name"] = "/dev/disk0s2"
+    diskinfo["/dev/disk0s2"]["Description"] = "NTFS Volume"
+    diskinfo["/dev/disk0s2"]["RawCapacity"] = "564313"
+    diskinfo["/dev/disk0s2"]["HostDevice"] = "/dev/disk0"
+    diskinfo["/dev/disk0s2"]["Capacity"] = "2.5GB"
+    diskinfo["/dev/disk0s2"]["Type"] = "Partition"
+    diskinfo["/dev/disk0s2"]["Partitions"] = []
 
     #Fictional /dev/disk0s3
-    DiskInfo["/dev/disk0s3"] = {}
-    DiskInfo["/dev/disk0s3"]["Product"] = "Host Device: FakeDisk"
-    DiskInfo["/dev/disk0s3"]["Vendor"] = "FakeOS v3"
-    DiskInfo["/dev/disk0s3"]["Name"] = "/dev/disk0s3"
-    DiskInfo["/dev/disk0s3"]["Description"] = "FAT Volume"
-    DiskInfo["/dev/disk0s3"]["RawCapacity"] = "564313"
-    DiskInfo["/dev/disk0s3"]["HostDevice"] = "/dev/disk0"
-    DiskInfo["/dev/disk0s3"]["Capacity"] = "24.5GB"
-    DiskInfo["/dev/disk0s3"]["Type"] = "Partition"
-    DiskInfo["/dev/disk0s3"]["Partitions"] = []
+    diskinfo["/dev/disk0s3"] = {}
+    diskinfo["/dev/disk0s3"]["Product"] = "Host Device: FakeDisk"
+    diskinfo["/dev/disk0s3"]["Vendor"] = "FakeOS v3"
+    diskinfo["/dev/disk0s3"]["Name"] = "/dev/disk0s3"
+    diskinfo["/dev/disk0s3"]["Description"] = "FAT Volume"
+    diskinfo["/dev/disk0s3"]["RawCapacity"] = "564313"
+    diskinfo["/dev/disk0s3"]["HostDevice"] = "/dev/disk0"
+    diskinfo["/dev/disk0s3"]["Capacity"] = "24.5GB"
+    diskinfo["/dev/disk0s3"]["Type"] = "Partition"
+    diskinfo["/dev/disk0s3"]["Partitions"] = []
 
-    return DiskInfo
+    return diskinfo
 
 #Functions to return other data.
-def ReturnFakeLVMDiskInfo():
+def return_fake_lvm_disk_info():
     return {u'/dev/sda': {u'Product': u'FakeDisk', u'Vendor': u'ThereIsNone', u'Name': u'/dev/sda', u'RawCapacity': u'56483132', u'HostDevice': u'N/A', u'Capacity': u'200GB', u'Partitions': [u'/dev/sda1', u'/dev/sda2'], u'Type': u'Device', u'Description': u'Fake Hard Disk Drive'}, u'/dev/mapper/fakefedora-root': {u'LVName': u'root', u'VGName': u'fakefedora', u'HostPartition': u'/dev/sda3', u'Vendor': u'Linux', u'Name': u'/dev/mapper/fakefedora-root', u'Capacity': u'13.20 GiB', u'Product': u'LVM Partition', u'UUID': u'TWxt1j-g62o-GYju-3UpB-A4g3-9ZbB-HWb7jf', u'Partitioning': u'N/A', u'HostDevice': u'/dev/sda', u'BootRecord': u'Unknown', u'Flags': [], u'RawCapacity': u'13.20 GiB', u'BootRecordStrings': [u'Unknown'], u'FileSystem': u'', u'Description': u'LVM partition root in volume group fakefedora', u'Aliases': [u'/dev/mapper/fakefedora-root', u'/dev/fakefedora/root'], u'Type': u'Partition', u'ID': u'dm-name-fakefedora-root', u'Partitions': []}, u'/dev/sda3': {u'Product': u'Host Device: FakeDisk', u'Vendor': u'FakeOS v3', u'Name': u'/dev/sda3', u'RawCapacity': u'564456313', u'HostDevice': u'/dev/sda', u'Capacity': u'25.5GB', u'Partitions': [], u'Type': u'Partition', u'Description': u'BTRFS Volume'}, u'/dev/sda1': {u'Product': u'Host Device: FakeDisk', u'Vendor': u'FakeOS v3', u'Name': u'/dev/sda1', u'RawCapacity': u'5648313', u'HostDevice': u'/dev/sda', u'Capacity': u'20GB', u'Partitions': [], u'Type': u'Partition', u'Description': u'EXT4 Volume'}, u'/dev/sda2': {u'Product': u'Host Device: FakeDisk', u'Vendor': u'FakeOS v3', u'Name': u'/dev/sda2', u'RawCapacity': u'564313', u'HostDevice': u'/dev/sda', u'Capacity': u'2.5GB', u'Partitions': [], u'Type': u'Partition', u'Description': u'EXT3 Volume'}, u'/dev/mapper/fakefedora-swap': {u'LVName': u'swap', u'VGName': u'fakefedora', u'HostPartition': u'/dev/sda3', u'Vendor': u'Linux', u'Name': u'/dev/mapper/fakefedora-swap', u'Capacity': u'1.60 GiB', u'Product': u'LVM Partition', u'UUID': u'3e8urm-xsCG-iCAJ-Q3go-2247-OU5N-3AwlD1', u'Partitioning': u'N/A', u'HostDevice': u'/dev/sda', u'BootRecord': u'Unknown', u'Flags': [], u'RawCapacity': u'1.60 GiB', u'BootRecordStrings': [u'Unknown'], u'FileSystem': u'', u'Description': u'LVM partition swap in volume group fakefedora', u'Aliases': [u'/dev/mapper/fakefedora-swap', u'/dev/fakefedora/swap'], u'Type': u'Partition', u'ID': u'dm-name-fakefedora-swap', u'Partitions': []}}
 
-def ReturnFakeDiskutilListPlist():
+def return_fake_diskutil_list_plist():
     return """<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -277,7 +277,7 @@ def ReturnFakeDiskutilListPlist():
 </dict>
 </plist>"""
 
-def ReturnFakeDiskutilInfoBadDisk0Plist():
+def return_fake_diskutil_info_bad_disk0_plist():
     return """<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -355,7 +355,7 @@ def ReturnFakeDiskutilInfoBadDisk0Plist():
 </dict>
 </plist>"""
 
-def ReturnFakeDiskutilInfoDisk0Plist():
+def return_fake_diskutil_info_disk0_plist():
     return """<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -445,7 +445,7 @@ def ReturnFakeDiskutilInfoDisk0Plist():
 </dict>
 </plist>"""
 
-def ReturnFakeDiskutilInfoDisk0s1Plist():
+def return_fake_diskutil_info_disk0s1_plist():
     return """<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -533,7 +533,7 @@ def ReturnFakeDiskutilInfoDisk0s1Plist():
 </dict>
 </plist>"""
 
-def ReturnFakeDiskutilInfoDisk0s2Plist():
+def return_fake_diskutil_info_disk0s2_plist():
     return """<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -635,7 +635,7 @@ def ReturnFakeDiskutilInfoDisk0s2Plist():
 </dict>
 </plist>"""
 
-def ReturnFakeDiskutilInfoDisk0s3Plist():
+def return_fake_diskutil_info_disk0s3_plist():
     return """<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -723,7 +723,7 @@ def ReturnFakeDiskutilInfoDisk0s3Plist():
 </dict>
 </plist>"""
 
-def ReturnFakeLVMOutput():
+def return_fake_lvm_output():
     return """  --- Logical volume ---
   LV Path                /dev/fakefedora/swap
   LV Name                swap
@@ -773,5 +773,5 @@ def ReturnFakeLVMOutput():
    
    """.split("\n")
 
-def ReturnFakeBlockDevOutput():
+def return_fake_block_dev_output():
     return ["No such file or device", "512", "1024", "2048", "4096", "8192"]

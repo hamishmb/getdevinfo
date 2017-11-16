@@ -1,21 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*- 
-# GetDevInfo test data for WxFixBoot Version 2.0.2
-# This file is part of WxFixBoot.
+# Test functions for GetDevInfo Version 1.0.1
+# This file is part of GetDevInfo.
 # Copyright (C) 2013-2017 Hamish McIntyre-Bhatty
-# WxFixBoot is free software: you can redistribute it and/or modify it
+# GetDevInfo is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License version 3 or,
 # at your option, any later version.
 #
-# WxFixBoot is distributed in the hope that it will be useful,
+# GetDevInfo is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with WxFixBoot.  If not, see <http://www.gnu.org/licenses/>.
+# along with GetDevInfo.  If not, see <http://www.gnu.org/licenses/>.
 
-#Do future imports to prepare to support python 3. Use unicode strings rather than ASCII strings, as they fix potential problems.
+#Do future imports to support python 3.
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function

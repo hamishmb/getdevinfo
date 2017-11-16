@@ -36,14 +36,13 @@ if sys.version_info[0] == 3:
 VERSION = "1.0.1"
 
 #Custom made modules.
-import GetDevInfo
-
-from GetDevInfo.getdevinfo import Main as DevInfoTools
+import linux
+import macos
 
 #Import test modules.
 import tests
 
-from Tests.GetDevInfo import GetDevInfoTests
+from tests import getdevinfo_tests
 
 def usage():
     print("\nUsage: tests.py [OPTION]\n\n")
@@ -85,9 +84,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s: %(message)s'
 logger = logging
 
 #Setup test modules.
-#GetDevInfo tests.
-GetDevInfoTests.DevInfoTools = DevInfoTools
-GetDevInfoTests.GetDevInfo = GetDevInfo
+getdevinfo_tests.linux = linux
 
 if __name__ == "__main__":
     unittest.TextTestRunner(verbosity=2).run(unittest.TestLoader().loadTestsFromModule(getdevinfo_tests))
