@@ -31,13 +31,18 @@ import plistlib
 from . import getdevinfo_test_data as data
 from . import getdevinfo_test_functions as functions
 
+#Make unicode an alias for str in Python 3.
+#And make plistlib.readPlistFromString an alias for plistlib.loads.
+if sys.version_info[0] == 3:
+    unicode = str
+    plistlib.readPlistFromString = plistlib.loads
+
 #import the linux module so we can test it.
 sys.path.insert(0, os.path.abspath('../'))
 sys.path.insert(0, os.path.abspath('../..'))
 
-import getdevinfo
-from getdevinfo import linux
-from getdevinfo import macos
+import getdevinfo.linux as linux
+import getdevinfo.macos as macos
 
 #TODO *** Determine if macos or linux ***
 LINUX = True
@@ -111,104 +116,104 @@ class TestGetVendorProductCapacityLinux(unittest.TestCase):
 @unittest.skipUnless(not LINUX, "Mac-specific tests")
 class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
     def setUp(self):
-        macos.DiskInfo = data.return_fake_disk_info_mac()
-        self.BadPlist0 = plistlib.readPlistFromString(Data.ReturnFakeDiskutilInfoBadDisk0Plist())
-        self.Plist0 = plistlib.readPlistFromString(Data.ReturnFakeDiskutilInfoDisk0Plist())
-        self.Plist0s1 = plistlib.readPlistFromString(Data.ReturnFakeDiskutilInfoDisk0s1Plist())
-        self.Plist0s2 = plistlib.readPlistFromString(Data.ReturnFakeDiskutilInfoDisk0s2Plist())
-        self.Plist0s3 = plistlib.readPlistFromString(Data.ReturnFakeDiskutilInfoDisk0s3Plist())
+        macos.DISKINFO = data.return_fake_disk_info_mac()
+        self.badplist0 = plistlib.readPlistFromString(data.return_fake_diskutil_info_bad_disk0_plist())
+        self.plist0 = plistlib.readPlistFromString(data.return_fake_diskutil_info_disk0_plist())
+        self.plist0s1 = plistlib.readPlistFromString(data.return_fake_diskutil_info_disk0s1_plist())
+        self.plist0s2 = plistlib.readPlistFromString(data.return_fake_diskutil_info_disk0s2_plist())
+        self.plist0s3 = plistlib.readPlistFromString(data.return_fake_diskutil_info_disk0s3_plist())
 
     def tearDown(self):
-        del GetDevInfo.getdevinfo.DiskInfo
-        del self.BadPlist0
-        del self.Plist0
-        del self.Plist0s1
-        del self.Plist0s2
-        del self.Plist0s3
+        del macos.DISKINFO
+        del self.badplist0
+        del self.plist0
+        del self.plist0s1
+        del self.plist0s2
+        del self.plist0s3
 
-    def testGetVendor(self):
+    def test_get_vendor(self):
         #baddisk0
-        GetDevInfo.getdevinfo.Main.Plist = self.BadPlist0
-        self.assertEqual(DevInfoTools().GetVendor(Disk="disk0"), "Unknown")
+        macos.PLIST = self.badplist0
+        self.assertEqual(macos.get_vendor(disk="disk0"), "Unknown")
 
         #disk0
-        GetDevInfo.getdevinfo.Main.Plist = self.Plist0
-        self.assertEqual(DevInfoTools().GetVendor(Disk="disk0"), "VBOX")
+        macos.PLIST = self.plist0
+        self.assertEqual(macos.get_vendor(disk="disk0"), "VBOX")
 
         #disk0s1
-        GetDevInfo.getdevinfo.Main.Plist = self.Plist0s1
-        self.assertEqual(DevInfoTools().GetVendor(Disk="disk0s1"), "ThereIsNone")
+        macos.PLIST = self.plist0s1
+        self.assertEqual(macos.get_vendor(disk="disk0s1"), "ThereIsNone")
 
         #disk0s2
-        GetDevInfo.getdevinfo.Main.Plist = self.Plist0s2
-        self.assertEqual(DevInfoTools().GetVendor(Disk="disk0s2"), "ThereIsNone")
+        macos.PLIST = self.plist0s2
+        self.assertEqual(macos.get_vendor(disk="disk0s2"), "ThereIsNone")
 
         #disk0s3
-        GetDevInfo.getdevinfo.Main.Plist = self.Plist0s3
-        self.assertEqual(DevInfoTools().GetVendor(Disk="disk0s3"), "ThereIsNone")
+        macos.PLIST = self.plist0s3
+        self.assertEqual(macos.get_vendor(disk="disk0s3"), "ThereIsNone")
 
-    def testGetProduct(self):
+    def test_get_product(self):
         #baddisk0
-        GetDevInfo.getdevinfo.Main.Plist = self.BadPlist0
-        self.assertEqual(DevInfoTools().GetProduct(Disk="disk0"), "Unknown")
+        macos.PLIST = self.badplist0
+        self.assertEqual(macos.get_product(disk="disk0"), "Unknown")
 
         #disk0
-        GetDevInfo.getdevinfo.Main.Plist = self.Plist0
-        self.assertEqual(DevInfoTools().GetProduct(Disk="disk0"), "HARDDISK")
+        macos.PLIST = self.plist0
+        self.assertEqual(macos.get_product(disk="disk0"), "HARDDISK")
 
         #disk0s1
-        GetDevInfo.getdevinfo.Main.Plist = self.Plist0s1
-        self.assertEqual(DevInfoTools().GetProduct(Disk="disk0s1"), "FakeDisk")
+        macos.PLIST = self.plist0s1
+        self.assertEqual(macos.get_product(disk="disk0s1"), "FakeDisk")
 
         #disk0s2
-        GetDevInfo.getdevinfo.Main.Plist = self.Plist0s2
-        self.assertEqual(DevInfoTools().GetProduct(Disk="disk0s2"), "FakeDisk")
+        macos.PLIST = self.plist0s2
+        self.assertEqual(macos.get_product(disk="disk0s2"), "FakeDisk")
 
         #disk0s3
-        GetDevInfo.getdevinfo.Main.Plist = self.Plist0s3
-        self.assertEqual(DevInfoTools().GetProduct(Disk="disk0s3"), "FakeDisk")
+        macos.PLIST = self.plist0s3
+        self.assertEqual(macos.get_product(disk="disk0s3"), "FakeDisk")
 
-    def testGetCapacity(self):
+    def test_get_capacity(self):
         #baddisk0
-        GetDevInfo.getdevinfo.Main.Plist = self.BadPlist0
-        self.assertEqual(DevInfoTools().GetCapacity(), "Unknown")
+        macos.PLIST = self.badplist0
+        self.assertEqual(macos.get_capacity(), "Unknown")
 
         #disk0
-        GetDevInfo.getdevinfo.Main.Plist = self.Plist0
-        self.assertEqual(DevInfoTools().GetCapacity(), "42948853248")
+        macos.PLIST = self.plist0
+        self.assertEqual(macos.get_capacity(), "42948853248")
 
         #disk0s1
-        GetDevInfo.getdevinfo.Main.Plist = self.Plist0s1
-        self.assertEqual(DevInfoTools().GetCapacity(), "209715200")
+        macos.PLIST = self.plist0s1
+        self.assertEqual(macos.get_capacity(), "209715200")
 
         #disk0s2
-        GetDevInfo.getdevinfo.Main.Plist = self.Plist0s2
-        self.assertEqual(DevInfoTools().GetCapacity(), "42089095168")
+        macos.PLIST = self.plist0s2
+        self.assertEqual(macos.get_capacity(), "42089095168")
 
         #disk0s3
-        GetDevInfo.getdevinfo.Main.Plist = self.Plist0s3
-        self.assertEqual(DevInfoTools().GetCapacity(), "650002432")
+        macos.PLIST = self.plist0s3
+        self.assertEqual(macos.get_capacity(), "650002432")
 
-    def testGetDescription(self):
+    def test_get_description(self):
         #baddisk0
-        GetDevInfo.getdevinfo.Main.Plist = self.BadPlist0
-        self.assertEqual(DevInfoTools().GetDescription(Disk="disk0"), "N/A")
+        macos.PLIST = self.badplist0
+        self.assertEqual(macos.get_description(disk="disk0"), "N/A")
 
         #disk0
-        GetDevInfo.getdevinfo.Main.Plist = self.Plist0
-        self.assertEqual(DevInfoTools().GetDescription(Disk="disk0"), "Internal Hard Disk Drive (Connected through SATA)")
+        macos.PLIST = self.plist0
+        self.assertEqual(macos.get_description(disk="disk0"), "Internal Hard Disk Drive (Connected through SATA)")
 
         #disk0s1
-        GetDevInfo.getdevinfo.Main.Plist = self.Plist0s1
-        self.assertEqual(DevInfoTools().GetDescription(Disk="disk0s1"), "Internal Hard Disk Drive (Connected through SATA)")
+        macos.PLIST = self.plist0s1
+        self.assertEqual(macos.get_description(disk="disk0s1"), "Internal Hard Disk Drive (Connected through SATA)")
 
         #disk0s2
-        GetDevInfo.getdevinfo.Main.Plist = self.Plist0s2
-        self.assertEqual(DevInfoTools().GetDescription(Disk="disk0s2"), "Internal Hard Disk Drive (Connected through SATA)")
+        macos.PLIST = self.plist0s2
+        self.assertEqual(macos.get_description(disk="disk0s2"), "Internal Hard Disk Drive (Connected through SATA)")
 
         #disk0s3
-        GetDevInfo.getdevinfo.Main.Plist = self.Plist0s3
-        self.assertEqual(DevInfoTools().GetDescription(Disk="disk0s3"), "Internal Hard Disk Drive (Connected through SATA)")
+        macos.PLIST = self.plist0s3
+        self.assertEqual(macos.get_description(disk="disk0s3"), "Internal Hard Disk Drive (Connected through SATA)")
 
 @unittest.skipUnless(LINUX, "Linux-specific tests")
 class TestParseLVMOutput(unittest.TestCase):
@@ -229,19 +234,36 @@ class TestParseLVMOutput(unittest.TestCase):
         linux.parse_lvm_output(testing=True)
         self.assertEqual(linux.DISKINFO, self.correct_disk_info) #FIXME, wrong disk info here. Double check that that is the case.
 
-class TestComputeBlockSize(unittest.TestCase):
+@unittest.skipUnless(LINUX, "Linux-specific tests")
+class TestComputeBlockSizeLinux(unittest.TestCase):
     def setUp(self):
-        if Linux:
-            self.BlockSizes, self.CorrectResults = (Data.ReturnFakeBlockDevOutput(), [None, "512", "1024", "2048", "4096", "8192"])
-
-        else:
-            self.BlockSizes, self.CorrectResults = (["Not a plist", Data.ReturnFakeDiskutilInfoBadDisk0Plist(), Data.ReturnFakeDiskutilInfoDisk0Plist(), Data.ReturnFakeDiskutilInfoDisk0s1Plist(), Data.ReturnFakeDiskutilInfoDisk0s2Plist(), Data.ReturnFakeDiskutilInfoDisk0s3Plist()], [None, None, "512", "1024", "2048", "4096"])
+        self.block_sizes, self.correct_results = (data.return_fake_block_dev_output(),
+                                                  [None, "512", "1024", "2048", "4096", "8192"])
 
     def tearDown(self):
-        del self.BlockSizes
-        del self.CorrectResults
-        del GetDevInfo.getdevinfo.plistlib
+        del self.block_sizes
+        del self.correct_results
 
-    def testComputeBlockSize(self):
-        for Data in self.BlockSizes:
-            self.assertEqual(DevInfoTools().ComputeBlockSize("FakeDisk", Data), self.CorrectResults[self.BlockSizes.index(Data)])
+    def test_compute_block_size(self):
+        for testdata in self.block_sizes:
+            self.assertEqual(linux.compute_block_size(testdata),
+                             self.correct_results[self.block_sizes.index(testdata)])
+
+@unittest.skipUnless(not LINUX, "Mac-specific tests")
+class TestComputeBlockSizeMac(unittest.TestCase):
+    def setUp(self):
+        self.block_sizes, self.correct_results = (["Not a plist",
+                                                   data.return_fake_diskutil_info_bad_disk0_plist(),
+                                                   data.return_fake_diskutil_info_disk0_plist(),
+                                                   data.return_fake_diskutil_info_disk0s1_plist(),
+                                                   data.return_fake_diskutil_info_disk0s2_plist(), 
+                                                   data.return_fake_diskutil_info_disk0s3_plist()],
+                                                  [None, None, "512", "1024", "2048", "4096"])
+
+    def tearDown(self):
+        del self.block_sizes
+        del self.correct_results
+
+    def test_compute_block_size(self):
+        for testdata in self.block_sizes:
+            self.assertEqual(macos.compute_block_size("FakeDisk", testdata), self.correct_results[self.block_sizes.index(testdata)])
