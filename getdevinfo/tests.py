@@ -83,8 +83,5 @@ for o, a in opts:
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s: %(message)s', datefmt='%d/%m/%Y %I:%M:%S %p', level=loggerLevel)
 logger = logging
 
-#Setup test modules.
-getdevinfo_tests.linux = linux
-
 if __name__ == "__main__":
     unittest.TextTestRunner(verbosity=2).run(unittest.TestLoader().loadTestsFromModule(getdevinfo_tests))
