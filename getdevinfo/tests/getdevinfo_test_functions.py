@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
 # Test functions for GetDevInfo Version 1.0.1
 # This file is part of GetDevInfo.
 # Copyright (C) 2013-2017 Hamish McIntyre-Bhatty
@@ -21,33 +21,38 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-def GetLVAliases(self, Line):
-    """Obtain and verify the name of an LVM volume. Return it once found. Works the same as the normal one, but doesn't check to see if the paths exist"""
-    AliasList = []
-    DefaultName = "Unknown"
+import os
+
+def get_lv_aliases(line):
+    """Obtain and verify the name of an LVM volume. Return it once found."""
+    alias_list = []
+    default_name = "Unknown"
 
     #Get relevant part of the output line.
-    Temp = Line.split()[-1]
+    temp = line.split()[-1]
 
     #Try this way first for better compatibility with most systems.
-    AliasList.append("/dev/mapper/"+'-'.join(Temp.split("/")[2:]))
+    if os.path.exists("/dev/mapper/"+'-'.join(temp.split("/")[2:])):
+        alias_list.append("/dev/mapper/"+'-'.join(temp.split("/")[2:]))
 
     #Alternative ways of obtaining the info.
-    AliasList.append(Temp)
+    if os.path.exists(temp):
+        alias_list.append(temp)
 
     #Weird one for Ubuntu with extra - in it.
-    if "-" in Temp:
+    if "-" in temp:
         #Get volume group name and logical volume name.
-        VGName = Temp.split("/")[2]
-        LVName = Temp.split("/")[3]
+        vg_name = temp.split("/")[2]
+        lv_name = temp.split("/")[3]
 
         #Insert another "-" in the middle (if possible).
-        VGName = VGName.replace("-", "--")
+        vg_name = vg_name.replace("-", "--")
 
         #Check whether this works.
-        AliasList.append("/dev/mapper/"+VGName+"-"+LVName)
+        if os.path.exists("/dev/mapper/"+vg_name+"-"+lv_name):
+            alias_list.append("/dev/mapper/"+vg_name+"-"+lv_name)
 
-    if len(AliasList) >= 1:
-        DefaultName = AliasList[0]
+    if len(alias_list) >= 1:
+        default_name = alias_list[0]
 
-    return DefaultName, AliasList
+    return default_name, alias_list
