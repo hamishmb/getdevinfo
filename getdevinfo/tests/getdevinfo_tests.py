@@ -44,8 +44,8 @@ sys.path.insert(0, os.path.abspath('../..'))
 import getdevinfo.linux as linux
 import getdevinfo.macos as macos
 
-#TODO *** Determine if macos or linux ***
-LINUX = True
+#Determine the platform.
+LINUX = ("linux" in sys.platform)
 
 @unittest.skipUnless(not LINUX, "Mac-specific tests")
 class TestIsPartition(unittest.TestCase):
