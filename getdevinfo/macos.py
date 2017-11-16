@@ -249,7 +249,7 @@ def get_block_size(disk):
     return compute_block_size(disk, runcmd.communicate()[0])
 
 def compute_block_size(disk, stdout):
-    """Called with stdout from blockdev (Linux), or dickutil (Mac) and gets block size"""
+    """Called with stdout from blockdev (Linux), or diskutil (Mac) and gets block size"""
     #Parse the plist (Property List).
     try:
         plist = plistlib.readPlistFromString(stdout)
