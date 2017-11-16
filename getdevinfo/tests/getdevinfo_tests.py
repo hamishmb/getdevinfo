@@ -111,7 +111,7 @@ class TestGetVendorProductCapacityLinux(unittest.TestCase):
 @unittest.skipUnless(not LINUX, "Mac-specific tests")
 class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
     def setUp(self):
-        GetDevInfo.getdevinfo.DiskInfo = Data.ReturnFakeDiskInfoMac()
+        macos.DiskInfo = data.return_fake_disk_info_mac()
         self.BadPlist0 = plistlib.readPlistFromString(Data.ReturnFakeDiskutilInfoBadDisk0Plist())
         self.Plist0 = plistlib.readPlistFromString(Data.ReturnFakeDiskutilInfoDisk0Plist())
         self.Plist0s1 = plistlib.readPlistFromString(Data.ReturnFakeDiskutilInfoDisk0s1Plist())
@@ -236,8 +236,6 @@ class TestComputeBlockSize(unittest.TestCase):
 
         else:
             self.BlockSizes, self.CorrectResults = (["Not a plist", Data.ReturnFakeDiskutilInfoBadDisk0Plist(), Data.ReturnFakeDiskutilInfoDisk0Plist(), Data.ReturnFakeDiskutilInfoDisk0s1Plist(), Data.ReturnFakeDiskutilInfoDisk0s2Plist(), Data.ReturnFakeDiskutilInfoDisk0s3Plist()], [None, None, "512", "1024", "2048", "4096"])
-        
-        GetDevInfo.getdevinfo.plistlib = plistlib
 
     def tearDown(self):
         del self.BlockSizes
