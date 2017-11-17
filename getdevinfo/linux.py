@@ -662,8 +662,8 @@ def get_boot_record(disk):
     >>> boot_record, boot_record_strings = get_boot_record(<aDiskName>)
     """
 
-    #Use status=noxfer to try to avoid getting status messages from dd in our boot record (status=none not supported on Ubuntu 12.04). TODO Change?
-    cmd = subprocess.Popen("dd if="+disk+" bs=512 count=1 status=noxfer", stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+    #Use status=none to avoid getting status messages from dd in our boot record.
+    cmd = subprocess.Popen("dd if="+disk+" bs=512 count=1 status=none", stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
     boot_record = cmd.communicate()[0]
     return_value = cmd.returncode
 
