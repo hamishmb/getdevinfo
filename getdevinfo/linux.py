@@ -101,6 +101,9 @@ def get_info():
     #Parse the XML.
     output = BeautifulSoup(stdout, "xml")
 
+    if type(output.list) == type(None):
+        raise RuntimeError("No Disks found!")
+
     list_of_devices = output.list.children
 
     #Find the disks.

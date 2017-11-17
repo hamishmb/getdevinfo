@@ -106,8 +106,11 @@ def get_info(): #TODO Document dictionary format.
 
     return diskinfo
 
+print(__package__)
+
 #For development only. FIXME import errors.
 if __name__ == "__main__":
+    #__package__ = 'getdevinfo'
     diskinfo = get_info()
 
     #Print the info in a (semi :D) readable way.
