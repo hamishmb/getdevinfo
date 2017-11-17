@@ -824,7 +824,10 @@ def get_block_size(disk):
                         we want the block size for.
 
     Returns:
-        int. The block size.
+        int/None. The block size.
+
+            - None - Failed!
+            - int  - The block size.
 
     Usage:
 

@@ -12,7 +12,7 @@ Contents:
    :maxdepth: 2
 
    getdevinfo
-
+   linux
 
 
 Indices and tables

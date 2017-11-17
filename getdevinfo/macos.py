@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# macOS Functions For The Device Information Obtainer 1.0.0
+# macOS Functions For The Device Information Obtainer 1.0.1
 # This file is part of GetDevInfo.
 # Copyright (C) 2013-2017 Hamish McIntyre-Bhatty
 # GetDevInfo is free software: you can redistribute it and/or modify it
@@ -15,7 +15,34 @@
 # You should have received a copy of the GNU General Public License
 # along with GetDevInfo.  If not, see <http://www.gnu.org/licenses/>.
 
-#Do future imports to prepare to support python 3. Use unicode strings rather than ASCII strings, as they fix potential problems.
+"""
+This is the part of the package that contains the tools and information
+getters for macOS. This would normally be called from the getdevinfo
+module, but you can call it directly if you like.
+
+.. note::
+        You can import this submodule directly, but it might result
+        in strange behaviour, or not work on your platform if you
+        import the wrong one. That is not how the package is intended
+        to be used, except if you want to use the get_block_size()
+        function to get a block size, as documented below.
+
+.. warning::
+        Feel free to experiment, but be aware that you may be able to
+        crashes, exceptions, and generally weird situations by calling
+        these methods directly if you get it wrong. A good place to
+        look if you're interested in this is the unit tests (in tests/). 
+
+.. module: macos.py
+    :platform: macOS
+    :synopsis: The part of the GetDevInfo module that houses the macOS
+               tools.
+
+.. moduleauthor:: Hamish McIntyre-Bhatty <hamishmb@live.co.uk>
+
+"""
+
+#Do future imports to support python 3.
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -34,7 +61,24 @@ if sys.version_info[0] == 3:
 
 #TODO This is more limited than the Linux version. Might be good to change that.
 def get_info():
-    """Get disk Information."""
+    """
+    This function is the macOS-specific way of getting disk information.
+    It makes use of the diskutil list, and diskutil info commands to gather
+    information.
+
+    It uses the other functions in this module to acheive its work, and
+    it **doesn't** return the disk infomation. Instead, it is left as a
+    global attribute in this module (DISKINFO).
+
+    Raises:
+        Nothing, hopefully, but errors have a small chance of propagation
+        up to here here. Wrap it in a try:, except: block if you are worried.
+
+    Usage:
+
+    >>> get_info()
+    """
+
     global DISKINFO
     DISKINFO = {}
 
@@ -76,7 +120,24 @@ def get_info():
     return DISKINFO
 
 def get_device_info(disk):
-    """Get Device Information"""
+    """
+    Private, implementation detail.
+
+    This function gathers and assembles information for devices (whole disks).
+    It employs some simple logic and the other functions defined in this
+    module to do its work.
+
+    Args:
+        disk (str): The name of a device, without the leading /dev. eg: disk1
+
+    Returns:
+        string.     The name of the device.
+
+    Usage:
+
+    >>> host_disk = get_device_info(<aNode>) 
+    """
+
     host_disk = "/dev/"+disk
     DISKINFO[host_disk] = {}
     DISKINFO[host_disk]["Name"] = host_disk
@@ -97,7 +158,30 @@ def get_device_info(disk):
     return host_disk
 
 def get_partition_info(disk, host_disk):
-    """Get Partition Information"""
+    """
+    Private, implementation detail.
+
+    This function gathers and assembles information for partitions.
+    It employs some simple logic and the other functions defined in this
+    module to do its work.
+
+    Args:
+        disk (str):         The name of a partition, without the leading
+                            /dev. eg: disk1s1
+
+        host_disk (str):    The "parent" or "host" device. eg: for
+                            /dev/disk1s1, the host disk would be /dev/disk1.
+                            Used to organise everything nicely in the
+                            disk info dictionary.
+
+    Returns:
+        string.     The name of the partition.
+
+    Usage:
+
+    >>> volume = get_device_info(<aDisk>, <aHostDisk>) 
+    """
+
     volume = "/dev/"+disk
     DISKINFO[volume] = {}
     DISKINFO[volume]["Name"] = volume
@@ -121,7 +205,27 @@ def get_partition_info(disk, host_disk):
 
 #TODO Try and get rid of this.
 def is_partition(disk):
-    """Check if the given disk is a partition"""
+    """
+    Private, implementation detail.
+
+    .. warning::
+        **DEPRECATED**, likely to disappear in the near future.
+
+    This function determines if a disk is a partition or not.
+
+    Args:
+        disk (str):   Name of a device/partition.
+
+    Returns:
+        bool:
+
+            - True  - Is a partition.
+            - False - Not a partition.
+
+    Usage:
+
+    >>> is_a_partition = is_partition(<aDisk>)
+    """
 
     if "s" in disk.split("disk")[1]:
         result = True
@@ -132,7 +236,25 @@ def is_partition(disk):
     return result
 
 def get_vendor(disk):
-    """Get the vendor"""
+    """
+    Private, implementation detail.
+
+    This function gets the vendor of the given disk.
+
+    Args:
+        disk (str):   Name of a device/partition.
+
+    Returns:
+        string. The vendor:
+
+            - "Unknown"     - Couldn't find it.
+            - Anything else - The vendor.
+
+    Usage:
+
+    >>> vendor = get_vendor(<aDisk>)
+    """
+
     if DISKINFO["/dev/"+disk]["Type"] == "Partition":
         #We need to use the info from the host disk, which will be whatever came before.
         return DISKINFO[DISKINFO["/dev/"+disk]["HostDevice"]]["Vendor"]
@@ -147,7 +269,25 @@ def get_vendor(disk):
         return vendor
 
 def get_product(disk):
-    """Get the product"""
+    """
+    Private, implementation detail.
+
+    This function gets the product of the given disk.
+
+    Args:
+        disk (str):   Name of a device/partition.
+
+    Returns:
+        string. The product:
+
+            - "Unknown"     - Couldn't find it.
+            - Anything else - The product.
+
+    Usage:
+
+    >>> product = get_product(<aDisk>)
+    """
+
     if DISKINFO["/dev/"+disk]["Type"] == "Partition":
         #We need to use the info from the host disk, which will be whatever came before.
         return DISKINFO[DISKINFO["/dev/"+disk]["HostDevice"]]["Product"]
@@ -162,7 +302,29 @@ def get_product(disk):
         return product
 
 def get_capacity():
-    """Get the capacity and human-readable capacity"""
+    """
+    Private, implementation detail.
+
+    This function gets the capacity of the disk currently referenced in
+    the diskinfo output we're storing. You can't really use this standalone.
+    Also rounds it to a human-readable form, and returns both sizes.
+
+    .. warning::
+        Currently, rounding the size to a human-readable form is
+        **NOT IMPLEMENTED**. At the moment, both sizes returned are the same
+        and in bytes(?).
+
+    Returns:
+        tuple (string, string). The sizes (raw, human-readable):
+
+            - ("Unknown", "Unknown")     - Couldn't find them.
+            - Anything else              - The sizes.
+
+    Usage:
+
+    >>> raw_size, human_size = get_capacity()
+    """
+
     try:
         size = PLIST["TotalSize"]
         size = unicode(size)
@@ -172,8 +334,23 @@ def get_capacity():
 
     return size, size #FIXME actaully compute human readable capacity.
 
-def get_description(disk):
-    """Find description information for the given disk."""
+def get_description(disk): #TODO Refactor me.
+    """
+    Private, implementation detail.
+
+    This function generates a human-readable description of the given disk.
+
+    Args:
+        disk (str):   Name of a device/partition.
+
+    Returns:
+        string. The description: This may contain various bits of info, or not,
+                                 depending on what macOS knows about the disk.
+
+    Usage:
+
+    >>> description = get_description(<aDisk>)
+    """
     #Gather info from diskutil to create some descriptions.
     #Internal or external.
     try:
@@ -186,7 +363,7 @@ def get_description(disk):
     except KeyError:
         internal_or_external = ""
 
-    #Type SSD or HDD.
+    #Type SSD or HDD. TODO What about USB drives?
     try:
         if PLIST["SolidState"]:
             disk_type = "Solid State Drive "
@@ -215,31 +392,81 @@ def get_description(disk):
         return "N/A"
 
 def get_capabilities(disk):
+    """
+    Not yet implemented, returns "Unknown"
+    """
+
     #TODO
     return "Unknown"
 
 def get_partitioning(disk):
+    """
+    Not yet implemented, returns "Unknown".
+    """
+
     #TODO
     return "Unknown"
 
 def get_file_system(disk):
+    """
+    Not yet implemented, returns "Unknown".
+    """
+
     #TODO
     return "Unknown"
 
 def get_uuid(disk):
+    """
+    Not yet implemented, returns "Unknown".
+    """
+
     #TODO
     return "Unknown"
 
 def get_id(disk):
+    """
+    Not yet implemented, returns "Unknown".
+    """
+
     #TODO
     return "Unknown"
 
 def get_boot_record(disk):
+    """
+    Not yet implemented, returns ("Unknown", "Unknown").
+    """
+
     #TODO
     return "Unknown", "Unknown"
 
 def get_block_size(disk):
-    """Run the command to get the block size, and pass it to compute_block_size()"""
+    """
+    **Public**
+
+    .. note:
+        It is perfectly safe to use this. The block size information
+        isn't calculated when getting device information, so if you
+        need some, just call this function with a device name to get
+        it.
+
+    This function uses the diskutil info command to get the block size
+    of the given device.
+
+    Args:
+        disk (str):     The partition/device that
+                        we want the block size for.
+
+    Returns:
+        int/None. The block size.
+
+            - None - Failed!
+            - int  - The block size.
+
+    Usage:
+
+    >>> block_size = get_block_size(<aDeviceName>)
+    """
+
     #Run diskutil list to get disk names.
     Command = "diskutil info -plist "+disk
 
@@ -249,7 +476,25 @@ def get_block_size(disk):
     return compute_block_size(disk, runcmd.communicate()[0])
 
 def compute_block_size(disk, stdout):
-    """Called with stdout from blockdev (Linux), or diskutil (Mac) and gets block size"""
+    """
+    Private, implementation detail.
+
+    Used to process and tidy up the block size output from diskutil info.
+
+    Args:
+        stdout (str):       diskutil info's output.
+
+    Returns:
+        int/None: The block size:
+
+            - None - Failed!
+            - int  - The block size.
+
+    Usage:
+
+    >>> compute_block_size(<stdoutFromDiskutil>)
+    """
+
     #Parse the plist (Property List).
     try:
         plist = plistlib.readPlistFromString(stdout)
