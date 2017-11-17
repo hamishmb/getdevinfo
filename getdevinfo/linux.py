@@ -101,12 +101,7 @@ def get_info():
     #Parse the XML.
     output = BeautifulSoup(stdout, "xml")
 
-    #Support for Ubuntu 12.04 LTS as that lshw outputs XML differently in that release.
-    if unicode(type(output.list)) == "<type 'NoneType'>":
-        list_of_devices = output.children
-
-    else:
-        list_of_devices = output.list.children
+    list_of_devices = output.list.children
 
     #Find the disks.
     for node in list_of_devices:
