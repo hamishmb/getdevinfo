@@ -31,13 +31,15 @@ Or, more consisely:
 >>> getdevinfo.get_info()
 
 Will run the correct tools for your platform and return the collected
-disk information.
+disk information as a dictionary.
 
 .. note::
         You can import the submodules directly, but this might result
         in strange behaviour, or not work on your platform if you
-        import the wrong one. That is not how the package is intended
-        to be used.
+        import the wrong one.  That is not how the package is intended
+        to be used, except if you want to use the get_block_size()
+        function to get a block size, as documented for each platform
+        later.
 
 .. module: getdevinfo.py
     :platform: Linux, macOS

@@ -15,6 +15,33 @@
 # You should have received a copy of the GNU General Public License
 # along with GetDevInfo.  If not, see <http://www.gnu.org/licenses/>.
 
+"""
+This is the part of the package that contains the tools and information
+getters for Linux. This would normally be called from the getdevinfo
+module, but you can call it directly if you like.
+
+.. note::
+        You can import this submodule directly, but it might result
+        in strange behaviour, or not work on your platform if you
+        import the wrong one. That is not how the package is intended
+        to be used, except if you want to use the get_block_size()
+        function to get a block size, as documented below.
+
+.. warning::
+        Feel free to experiment, but be aware that you may be able to
+        crashes, exceptions, and generally weird situations by calling
+        these methods directly if you get it wrong. A good place to
+        look if you're interested in this is the unit tests (in tests/). 
+
+.. module: linux.py
+    :platform: Linux
+    :synopsis: The part of the GetDevInfo module that houses the Linux
+               tools.
+
+.. moduleauthor:: Hamish McIntyre-Bhatty <hamishmb@live.co.uk>
+
+"""
+
 #Do future imports to prepare to support python 3. Use unicode strings rather than ASCII strings, as they fix potential problems.
 from __future__ import absolute_import
 from __future__ import division
@@ -31,7 +58,23 @@ if sys.version_info[0] == 3:
     unicode = str
 
 def get_info():
-    """Get disk Information."""
+    """
+    This function is the Linux-specific way of getting disk information.
+    It makes use of the lshw, blkid, and lvdisplay commands to gather
+    information.
+
+    It uses the other functions in this module to acheive its work, and
+    it **doesn't** return the disk infomation. Instead, it is left as a
+    global attribute in this module (DISKINFO).
+
+    Raises:
+        Nothing, hopefully, but errors have a small chance of propagation
+        up to here here. Wrap it in a try:, except: block if you are worried.
+
+    Usage:
+
+    >>> get_info()
+    """
 
     #Run lshw to try and get disk information.
     runcmd = subprocess.Popen("LC_ALL=C lshw -sanitize -class disk -class volume -xml", stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
@@ -96,7 +139,25 @@ def get_info():
         raise RuntimeError("No Disks found!")
 
 def get_device_info(node):
-    """Get Device Information"""
+    """
+    Private, implementation detail.
+
+    This function gathers and assembles information for devices (whole disks).
+    It employs some simple logic and the other functions defined in this
+    module to do its work.
+
+    Args:
+        node:       A "node" representing a device, generated from lshw's XML
+                    output.
+
+    Returns:
+        string.     The name of the device.
+
+    Usage:
+
+    >>> host_disk = get_device_info(<aNode>) 
+    """
+
     host_disk = unicode(node.logicalname.string)
     DISKINFO[host_disk] = {}
     DISKINFO[host_disk]["Name"] = host_disk
@@ -130,7 +191,30 @@ def get_device_info(node):
     return host_disk
 
 def get_partition_info(subnode, host_disk):
-    """Get Partition Information"""
+    """
+    Private, implementation detail.
+
+    This function gathers and assembles information for partitions.
+    It employs some simple logic and the other functions defined in this
+    module to do its work.
+
+    Args:
+        subnode:            A "node" representing a partition, generated
+                            from lshw's XML output.
+
+        host_disk (str):    The "parent" or "host" device. eg: for
+                            /dev/sda1, the host disk would be /dev/sda.
+                            Used to organise everything nicely in the
+                            disk info dictionary.
+
+    Returns:
+        string.     The name of the partition.
+
+    Usage:
+
+    >>> volume = get_device_info(<aNode>) 
+    """
+
     try:
         volume = unicode(subnode.logicalname.string)
 
@@ -165,10 +249,28 @@ def get_partition_info(subnode, host_disk):
     DISKINFO[volume]["UUID"] = get_uuid(volume)
     DISKINFO[volume]["ID"] = get_id(volume)
     DISKINFO[volume]["BootRecord"], DISKINFO[volume]["BootRecordStrings"] = get_boot_record(volume)
+
     return volume
 
 def parse_lvm_output(testing=False):
-    """Get LVM partition information"""
+    """
+    Private, implementation detail.
+
+    This function is used to get LVM partition information from the
+    output of lvdisplay --maps.
+
+    Kwargs:
+        testing (bool):     Used during unit tests. Default = False.
+
+    Usage:
+
+    >>> parse_lvm_output()
+
+    OR:
+
+    >>> parse_lvm_output(testing=<aBool>)
+    """
+
     line_counter = 0
 
     for line in LVMOUTPUT:
@@ -178,7 +280,30 @@ def parse_lvm_output(testing=False):
             assemble_lvm_disk_info(line_counter, testing=testing)
 
 def assemble_lvm_disk_info(line_counter, testing=False):
-    """Assemble LVM disk info into the dictionary"""
+    """
+    Private, implementation detail.
+
+    This function is used to assemble LVM disk info into the dictionary.
+
+    Like get_device_info(), and get_partition_info(), it uses some of the
+    helper functions here.
+
+    Args:
+        line_counter (int):   The line in the output that informtion for a
+                              particular logical volume begins.
+
+    Kwargs:
+        testing (bool):       Used during unit tests. Default = False.
+
+    Usage:
+
+    >>> assemble_lvm_disk_info(<anInt>)
+
+    OR:
+
+    >>> assemble_lvm_disk_info(<anInt>, testing=<aBool>)
+    """
+
     #Get all the info related to this partition.
     raw_lvm_info = []
 
@@ -233,7 +358,26 @@ def assemble_lvm_disk_info(line_counter, testing=False):
         DISKINFO.pop("Unknown")
 
 def get_vendor(node):
-    """Get the vendor"""
+    """
+    Private, implementation detail.
+
+    This function gets the vendor from the structure generated
+    by parsing lshw's XML output.
+
+    Args:
+        node:   Represents a device/partition.
+
+    Returns:
+        string. The vendor:
+
+            - "Unknown"     - Couldn't find it.
+            - Anything else - The vendor.
+
+    Usage:
+
+    >>> vendor = get_vendor(<aNode>)
+    """
+
     try:
         return unicode(node.vendor.string)
 
@@ -241,7 +385,26 @@ def get_vendor(node):
         return "Unknown"
 
 def get_product(node):
-    """Get the product"""
+    """
+    Private, implementation detail.
+
+    This function gets the product from the structure generated
+    by parsing lshw's XML output.
+
+    Args:
+        node:   Represents a device/partition.
+
+    Returns:
+        string. The product:
+
+            - "Unknown"     - Couldn't find it.
+            - Anything else - The product.
+
+    Usage:
+
+    >>> product = get_product(<aNode>)
+    """
+
     try:
         return unicode(node.product.string)
 
@@ -249,7 +412,27 @@ def get_product(node):
         return "Unknown"
 
 def get_capacity(node):
-    """Get the capacity and human-readable capacity"""
+    """
+    Private, implementation detail.
+
+    This function gets the capacity from the structure generated
+    by parsing lshw's XML output. Also rounds it to a human-
+    readable form, and returns both sizes.
+
+    Args:
+        node:   Represents a device/partition.
+
+    Returns:
+        tuple (string, string). The sizes (raw, human-readable):
+
+            - ("Unknown", "Unknown")     - Couldn't find them.
+            - Anything else              - The sizes.
+
+    Usage:
+
+    >>> raw_size, human_size = get_capacity(<aNode>)
+    """
+
     try:
         raw_capacity = unicode(node.size.string)
 
@@ -278,7 +461,26 @@ def get_capacity(node):
     return raw_capacity, unicode(human_readable_size)+" "+unit
 
 def get_capabilities(node):
-    """Get the capabilities"""
+    """
+    Private, implementation detail.
+
+    This function gets the capabilities from the structure
+    generated by parsing lshw's XML output.
+
+    Args:
+        node:   Represents a device/partition.
+
+    Returns:
+        list. The capabilities:
+
+            - []            - Couldn't find them.
+            - Anything else - The capabilities.
+
+    Usage:
+
+    >>> capabilities = get_capabilities(<aNode>)
+    """
+
     flags = []
 
     try:
@@ -295,7 +497,28 @@ def get_capabilities(node):
         return flags
 
 def get_partitioning(disk):
-    """Get the Paritioning"""
+    """
+    Private, implementation detail.
+
+    This function gets the partition scheme from the
+    structure generated by parsing lshw's XML output.
+
+    Args:
+        disk (str):   The name of a device/partition in
+                      the disk info dictionary.
+
+    Returns:
+        string. The partition scheme:
+
+            - "Unknown"     - Couldn't find it.
+            - "mbr"         - Old-style MBR partitioning
+                              for BIOS systems.
+            - "gpt"         - New-style GPT partitioning.
+
+    Usage:
+
+    >>> partitioning = get_partitioning(<aDiskName>)
+    """
     partitioning = DISKINFO[disk]["flags"][-1].split(":")[-1]
 
     if partitioning in ("gpt", "dos"):
@@ -308,7 +531,26 @@ def get_partitioning(disk):
     return partitioning
 
 def get_file_system(node):
-    """Get the FileSystem type"""
+    """
+    Private, implementation detail.
+
+    This function gets the file system from the structure
+    generated by parsing lshw's XML output.
+
+    Args:
+        node:   Represents a device/partition.
+
+    Returns:
+        string. The file system:
+
+            - "Unknown"     - Couldn't find it.
+            - Anything else - The file system.
+
+    Usage:
+
+    >>> file_system = get_file_system(<aNode>)
+    """
+
     file_system = "Unknown"
 
     try:
@@ -332,12 +574,31 @@ def get_file_system(node):
         return file_system
 
 def get_uuid(disk):
-    """Get the given partition's UUID"""
+    """
+    Private, implementation detail.
+
+    This function gets the UUID of a given partition.
+
+    Args:
+        disk (str):   The name of a **partition**.
+
+    Returns:
+        string. The UUID:
+
+            - "Unknown"     - Couldn't find it.
+            - Anything else - The UUID.
+
+    Usage:
+
+    >>> uuid = get_uuid(<aPartitionName>)
+    """
+
     uuid = "Unknown"
 
     #Try to get the UUID from blkid's output.
     for line in BLKIDOUTPUT.split(b'\n'):
         line = unicode(line)
+
         if disk in line:
             uuid = line.split()[-1]
 
@@ -351,7 +612,24 @@ def get_uuid(disk):
     return uuid
 
 def get_id(disk):
-    """Retrive the given partition's/device's ID."""
+    """
+    Private, implementation detail.
+
+    This function gets the ID of a given partition or device.
+
+    Args:
+        disk (str):   The name of a partition/device.
+
+    Returns:
+        string. The ID:
+
+            - "Unknown"     - Couldn't find it.
+            - Anything else - The ID.
+
+    Usage:
+
+    >>> disk_id = get_id(<aDiskName>)
+    """
 
     disk_id = "Unknown"
 
@@ -370,8 +648,26 @@ def get_id(disk):
     return disk_id
 
 def get_boot_record(disk):
-    """Get the MBR or PBR of the given disk."""
-    #Use status=noxfer to try to avoid getting status messages from dd in our boot record (status=none not supported on Ubuntu 12.04).
+    """
+    Private, implementation detail.
+
+    This function gets the MBR/PBR of a given disk.
+
+    Args:
+        disk (str):   The name of a partition/device.
+
+    Returns:
+        tuple (string, string). The boot record (raw, any readable strings):
+
+            - ("Unknown", "Unknown")     - Couldn't read it.
+            - Anything else              - The PBR/MBR and any readable strings therein.
+
+    Usage:
+
+    >>> boot_record, boot_record_strings = get_boot_record(<aDiskName>)
+    """
+
+    #Use status=noxfer to try to avoid getting status messages from dd in our boot record (status=none not supported on Ubuntu 12.04). TODO Change?
     cmd = subprocess.Popen("dd if="+disk+" bs=512 count=1 status=noxfer", stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
     boot_record = cmd.communicate()[0]
     return_value = cmd.returncode
@@ -390,15 +686,50 @@ def get_boot_record(disk):
 
     return (boot_record, boot_record_strings)
 
-def get_lv_file_system(disk):
-    """Get the filesystem type of a logical volume."""
+def get_lv_file_system(disk): #XXX What happens if this fails?
+    """
+    Private, implementation detail.
+
+    This function gets the file system of a logical volume.
+
+    Args:
+        disk (str):   The name of a logical volume.
+
+    Returns:
+        string. The file system.
+
+    Usage:
+
+    >>> file_system = get_lv_file_system(<anLVName>)
+    """
+
     cmd = subprocess.Popen("LC_ALL=C blkid "+disk, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
     output = cmd.communicate()[0]
     
     return output.split("=")[-1].replace("\"", "").replace("\n", "")
 
 def get_lv_aliases(line):
-    """Obtain and verify the name of an LVM volume. Return it once found."""
+    """
+    Private, implementation detail.
+
+    .. note::
+        "name" here means path eg /dev/mapper/fedora/root.
+
+    This function gets the names of a logical volume.
+    There may be one or more aliases as well as a "default"
+    name. Find and return all of them.
+
+    Args:
+        line (int):   The line number where the LV name can be found.
+
+    Returns:
+        tuple (string, list). The aliases (default_name, all aliases).
+
+    Usage:
+
+    >>> default_name, alias_list = get_lv_aliases(<anLVName>)
+    """
+
     alias_list = []
     default_name = "Unknown"
 
@@ -432,7 +763,31 @@ def get_lv_aliases(line):
     return default_name, alias_list
 
 def get_lv_and_vg_name(volume):
-    """Get the Logical volume and volume Group names from the given path"""
+    """
+    Private, implementation detail.
+
+    .. note::
+        "name" here means the names of the logical volume and
+        the volume group by themselves. eg volume "root", in
+        volume group "fedora."
+
+    This function gets the name of the logical volume (LV), and the
+    name of the volume group (VG) it belongs to.
+
+    Args:
+        volume (str):   The path for a logical volume.
+
+    Returns:
+        tuple (string, string). The VG, and LV name (vg_name, lv_name):
+
+            - ("Unknown", "Unknown") - Couldn't find them.
+            - Anything else          - The VG and LV names.
+
+    Usage:
+
+    >>> vg_name, lv_name = get_lv_and_vg_name(<anLVPath>)
+    """
+
     if "/dev/mapper/" in volume:
         separator = "-"
 
@@ -452,7 +807,30 @@ def get_lv_and_vg_name(volume):
     return volume_group, logical_volume
 
 def get_block_size(disk):
-    """Run the command to get the block size, and pass it to compute_block_size()"""
+    """
+    **Public**
+
+    .. note:
+        It is perfectly safe to use this. The block size information
+        isn't calculated when getting device information, so if you
+        need some, just call this function with a device name to get
+        it.
+
+    This function uses the blockdev command to get the block size
+    of the given device.
+
+    Args:
+        disk (str):     The partition/device/logical volume that
+                        we want the block size for.
+
+    Returns:
+        int. The block size.
+
+    Usage:
+
+    >>> block_size = get_block_size(<aDeviceName>)
+    """
+
     #Run /sbin/blockdev to try and get blocksize information.
     command = "blockdev --getpbsz "+disk
 
@@ -462,7 +840,25 @@ def get_block_size(disk):
     return compute_block_size(runcmd.communicate()[0])
 
 def compute_block_size(stdout):
-    """Called with stdout from blockdev (Linux), or diskutil (Mac) and gets block size"""
+    """
+    Private, implementation detail.
+
+    Used to process and tidy up the block size output from blockdev.
+
+    Args:
+        stdout (str):       blockdev's output.
+
+    Returns:
+        int/None: The block size:
+
+            - None - Failed!
+            - int  - The block size.
+
+    Usage:
+
+    >>> compute_block_size(<stdoutFromBlockDev>)
+    """
+
     result = stdout.replace('\n', '')
 
     #Check it worked (it should be convertable to an integer if it did).
