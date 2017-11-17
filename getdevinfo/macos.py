@@ -334,7 +334,7 @@ def get_capacity():
 
     return size, size #FIXME actaully compute human readable capacity.
 
-def get_description(disk): #TODO Refactor me.
+def get_description(disk):
     """
     Private, implementation detail.
 

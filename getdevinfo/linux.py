@@ -98,8 +98,8 @@ def get_info():
     cmd = subprocess.Popen("ls -l /dev/disk/by-id/", stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
     LSOUTPUT = cmd.communicate()[0]
 
-    #Parse XML as HTML to support Ubuntu 12.04 LTS. Otherwise output is cut off. TODO: Consider removing this.
-    output = BeautifulSoup(stdout, "html.parser")
+    #Parse the XML.
+    output = BeautifulSoup(stdout, "xml")
 
     #Support for Ubuntu 12.04 LTS as that lshw outputs XML differently in that release.
     if unicode(type(output.list)) == "<type 'NoneType'>":
