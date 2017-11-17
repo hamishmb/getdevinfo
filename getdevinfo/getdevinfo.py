@@ -15,6 +15,38 @@
 # You should have received a copy of the GNU General Public License
 # along with GetDevInfo.  If not, see <http://www.gnu.org/licenses/>.
 
+"""
+This is the part of the package that you would normally import and use.
+It detects your platform (Linux or macOS), and runs the correct tools
+for that platform.
+
+For example (Python 2 or 3):
+
+>>> import getdevinfo
+>>> getdevinfo.getdevinfo.get_info()
+
+Or, more consisely:
+
+>>> import getdevinfo.getdevinfo as getdevinfo
+>>> getdevinfo.get_info()
+
+Will run the correct tools for your platform and return the collected
+disk information.
+
+.. note::
+        You can import the submodules directly, but this might result
+        in strange behaviour, or not work on your platform if you
+        import the wrong one. That is not how the package is intended
+        to be used.
+
+.. module: getdevinfo.py
+    :platform: Linux, macOS
+    :synopsis: The main part of the GetDevInfo module.
+
+.. moduleauthor:: Hamish McIntyre-Bhatty <hamishmb@live.co.uk>
+
+"""
+
 #Do future imports to support python 3.
 from __future__ import absolute_import
 from __future__ import division
@@ -28,7 +60,31 @@ import sys
 if sys.version_info[0] == 3:
     unicode = str
 
-def get_info():
+def get_info(): #TODO Document dictionary format.
+    """
+    This function is used to determine the platform you're using
+    (Linux or macOS) and run the relevant tools. Then, it returns
+    the disk information dictionary to the caller.
+
+    Returns:
+        dict, the disk info dictionary.
+
+    Raises:
+        Hopefully nothing, but if there is an unhandled error or
+        bug elsewhere, there's a small chance it could propagate
+        to here. If this concerns you, you can wrap this code in
+        a try:, except: clause:
+
+        >>> try:
+        >>>     get_info()
+        >>> except:
+        >>>     #Handle the error.
+
+    Usage:
+
+    >>> disk_info = get_info()
+    """
+
     #Determine if running on Linux or Mac.
     if platform.system() == 'Linux':
         LINUX = True
@@ -48,7 +104,7 @@ def get_info():
 
     return diskinfo
 
-#For development only.
+#For development only. FIXME import errors.
 if __name__ == "__main__":
     diskinfo = get_info()
 
