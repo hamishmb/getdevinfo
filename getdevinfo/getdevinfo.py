@@ -106,8 +106,6 @@ def get_info(): #TODO Document dictionary format.
 
     return diskinfo
 
-print(__package__)
-
 #For development only.
 if __name__ == "__main__":
     #Run with python -m from outside package.
