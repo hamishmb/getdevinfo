@@ -108,9 +108,11 @@ def get_info(): #TODO Document dictionary format.
 
 print(__package__)
 
-#For development only. FIXME import errors.
+#For development only.
 if __name__ == "__main__":
-    #__package__ = 'getdevinfo'
+    #Run with python -m from outside package.
+    # eg:
+    #   python(3) -m getdevinfo.getdevinfo
     diskinfo = get_info()
 
     #Print the info in a (semi :D) readable way.

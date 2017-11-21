@@ -306,16 +306,11 @@ def get_capacity():
     Private, implementation detail.
 
     This function gets the capacity of the disk currently referenced in
-    the diskinfo output we're storing. You can't really use this standalone.
+    the diskutil info output we're storing. You can't really use this standalone.
     Also rounds it to a human-readable form, and returns both sizes.
 
-    .. warning::
-        Currently, rounding the size to a human-readable form is
-        **NOT IMPLEMENTED**. At the moment, both sizes returned are the same
-        and in bytes(?).
-
     Returns:
-        tuple (string, string). The sizes (raw, human-readable):
+        tuple (string, string). The sizes (bytes, human-readable):
 
             - ("Unknown", "Unknown")     - Couldn't find them.
             - Anything else              - The sizes.
@@ -326,13 +321,28 @@ def get_capacity():
     """
 
     try:
-        size = PLIST["TotalSize"]
-        size = unicode(size)
+        raw_capacity = PLIST["TotalSize"]
+        raw_capacity = unicode(raw_capacity)
 
     except KeyError:
-        size = "Unknown"
+        return "Unknown", "Unknown"
 
-    return size, size #FIXME actaully compute human readable capacity.
+    #Round the sizes to make them human-readable.
+    unit_list = [None, "B", "KB", "MB", "GB", "TB", "PB", "EB"]
+    unit = "B"
+    human_readable_size = int(raw_capacity)
+
+    try:
+        while len(unicode(human_readable_size)) > 3:
+            #Shift up one unit.
+            unit = unit_list[unit_list.index(unit)+1]
+            human_readable_size = human_readable_size//1000
+
+    except IndexError:
+        return "Unknown", "Unknown"
+
+    #Include the unit in the result for both exact and human-readable sizes.
+    return raw_capacity, unicode(human_readable_size)+" "+unit
 
 def get_description(disk):
     """

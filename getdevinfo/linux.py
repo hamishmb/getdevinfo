@@ -421,7 +421,7 @@ def get_capacity(node):
         node:   Represents a device/partition.
 
     Returns:
-        tuple (string, string). The sizes (raw, human-readable):
+        tuple (string, string). The sizes (bytes, human-readable):
 
             - ("Unknown", "Unknown")     - Couldn't find them.
             - Anything else              - The sizes.
