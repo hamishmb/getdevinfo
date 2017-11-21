@@ -373,10 +373,13 @@ def get_description(disk):
     except KeyError:
         internal_or_external = ""
 
-    #Type SSD or HDD. TODO What about USB drives?
+    #Type SSD or HDD.
     try:
         if PLIST["SolidState"]:
             disk_type = "Solid State Drive "
+
+        elif PLIST['Removable'] or PLIST['RemovableMedia']:
+            disk_type = "Removable Drive "
 
         else:
             disk_type = "Hard Disk Drive "
