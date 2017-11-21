@@ -371,21 +371,21 @@ def get_description(disk):
             internal_or_external = "External "
 
     except KeyError:
-        internal_or_external = ""
+        internal_or_external = "Unknown"
 
-    #Type SSD or HDD.
+    #Type: Removable, SSD, or HDD.
     try:
-        if PLIST["SolidState"]:
-            disk_type = "Solid State Drive "
-
-        elif PLIST['Removable'] or PLIST['RemovableMedia']:
+        if PLIST['Removable'] or PLIST['RemovableMedia']:
             disk_type = "Removable Drive "
+
+        elif PLIST["SolidState"]:
+            disk_type = "Solid State Drive "
 
         else:
             disk_type = "Hard Disk Drive "
 
     except KeyError:
-        disk_type = ""
+        disk_type = "Unknown"
 
     #Bus protocol.
     try:
@@ -394,12 +394,15 @@ def get_description(disk):
     except KeyError:
         bus_protocol = "Unknown"
 
-    if internal_or_external != "" and disk_type != "":
-        if bus_protocol != "Unknown":
-            return internal_or_external+disk_type+"(Connected through "+bus_protocol+")"
+    #Assemble info into a string.
+    if bus_protocol != "Unknown":
+        return internal_or_external+disk_type+"(Connected through "+bus_protocol+")"
 
-        else:
-            return internal_or_external+disk_type
+    elif disk_type != "Unknown":
+        return internal_or_external+disk_type
+
+    elif internal_or_external != "Unknown":
+        return internal_or_external
 
     else:
         return "N/A"
