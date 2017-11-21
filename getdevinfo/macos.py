@@ -203,13 +203,9 @@ def get_partition_info(disk, host_disk):
 
     return volume
 
-#TODO Try and get rid of this.
 def is_partition(disk):
     """
     Private, implementation detail.
-
-    .. warning::
-        **DEPRECATED**, likely to disappear in the near future.
 
     This function determines if a disk is a partition or not.
 
