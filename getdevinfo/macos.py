@@ -33,6 +33,9 @@ module, but you can call it directly if you like.
         these methods directly if you get it wrong. A good place to
         look if you're interested in this is the unit tests (in tests/). 
 
+.. warning::
+        This module won't work properly unless it is executed as root.
+
 .. module: macos.py
     :platform: macOS
     :synopsis: The part of the GetDevInfo module that houses the macOS

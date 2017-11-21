@@ -33,6 +33,9 @@ module, but you can call it directly if you like.
         these methods directly if you get it wrong. A good place to
         look if you're interested in this is the unit tests (in tests/). 
 
+.. warning::
+        This module won't work properly unless it is executed as root.
+
 .. module: linux.py
     :platform: Linux
     :synopsis: The part of the GetDevInfo module that houses the Linux
@@ -173,7 +176,7 @@ def get_device_info(node):
         DISKINFO[host_disk]["raw_capacity"], DISKINFO[host_disk]["Capacity"] = get_capacity(node)
 
     DISKINFO[host_disk]["Description"] = unicode(node.description.string)
-    DISKINFO[host_disk]["flags"] = get_capabilities(node)
+    DISKINFO[host_disk]["Flags"] = get_capabilities(node)
     DISKINFO[host_disk]["Partitioning"] = get_partitioning(host_disk)
     DISKINFO[host_disk]["FileSystem"] = "N/A"
     DISKINFO[host_disk]["UUID"] = "N/A"

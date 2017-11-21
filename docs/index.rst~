@@ -13,6 +13,7 @@ Contents:
 
    getdevinfo
    linux
+   macos
 
 
 Indices and tables
