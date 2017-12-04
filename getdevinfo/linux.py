@@ -308,7 +308,7 @@ def assemble_lvm_disk_info(line_counter, testing=False):
     raw_lvm_info = []
 
     for line in LVMOUTPUT[line_counter:]:
-        line = unicode(line).replace("\\t", " ")
+        line = line.decode("utf-8")
         raw_lvm_info.append(line)
 
         #When we get to the next volume, stop adding stuff to this entry's data variable.
@@ -343,7 +343,7 @@ def assemble_lvm_disk_info(line_counter, testing=False):
             DISKINFO[volume]["ID"] = "dm-name-"+DISKINFO[volume]["VGName"]+"-"+DISKINFO[volume]["LVName"]
 
         elif "LV UUID" in line:
-            DISKINFO[volume]["UUID"] = line.split("\\t")[-1]
+            DISKINFO[volume]["UUID"] = line.split()[-1]
 
         elif "LV Size" in line:
             DISKINFO[volume]["Capacity"] = ' '.join(line.split()[-2:])
