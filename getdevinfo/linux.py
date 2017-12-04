@@ -308,7 +308,7 @@ def assemble_lvm_disk_info(line_counter, testing=False):
     raw_lvm_info = []
 
     for line in LVMOUTPUT[line_counter:]:
-        line = unicode(line)
+        line = unicode(line).replace("\\t", " ")
         raw_lvm_info.append(line)
 
         #When we get to the next volume, stop adding stuff to this entry's data variable.
