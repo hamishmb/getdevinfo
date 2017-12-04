@@ -396,10 +396,10 @@ def get_description(disk):
     if bus_protocol != "Unknown":
         return internal_or_external+disk_type+"(Connected through "+bus_protocol+")"
 
-    elif disk_type != "Unknown":
+    elif disk_type != "Unknown ":
         return internal_or_external+disk_type
 
-    elif internal_or_external != "Unknown":
+    elif internal_or_external != "Unknown ":
         return internal_or_external
 
     else:
