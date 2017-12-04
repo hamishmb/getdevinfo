@@ -636,7 +636,11 @@ def get_id(disk):
     #Try to get the ID from ls's output.
     for line in LSOUTPUT.split(b'\n'):
         try:
+            line = unicode(line).replace("'", "")
+
             split_line = line.split()
+
+            print("../../"+disk.split('/')[-1], split_line[-1])
 
             if "../../"+disk.split('/')[-1] == split_line[-1]:
                 disk_id = split_line[-3]

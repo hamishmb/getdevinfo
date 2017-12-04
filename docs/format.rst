@@ -173,3 +173,13 @@ Various information is collected and organised here.
     Example:
         >>> DISKINFO['/dev/sda1']['UUID']
         >>> XXXX-XXXX
+
+'ID':
+    The disk's ID.
+
+    .. note::
+        Not available on macOS.
+
+    Example:
+        >>> DISKINFO['/dev/sda']['ID']
+        >>> 
