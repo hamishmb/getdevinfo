@@ -205,7 +205,7 @@ def get_partition_info(disk, host_disk):
 
     return volume
 
-def is_partition(disk):
+def is_partition(disk): #Note: Could change to use "Whole" attrib. Good idea?
     """
     Private, implementation detail.
 
