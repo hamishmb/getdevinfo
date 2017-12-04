@@ -308,7 +308,11 @@ def assemble_lvm_disk_info(line_counter, testing=False):
     raw_lvm_info = []
 
     for line in LVMOUTPUT[line_counter:]:
-        line = line.decode("utf-8").replace("'", "")
+        try:
+            line = line.decode("utf-8").replace("'", "")
+
+        except: pass
+
         raw_lvm_info.append(line)
 
         #When we get to the next volume, stop adding stuff to this entry's data variable.
@@ -708,7 +712,7 @@ def get_lv_file_system(disk): #XXX What happens if this fails?
     cmd = subprocess.Popen("LC_ALL=C blkid "+disk, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
     output = unicode(cmd.communicate()[0])
     
-    return output.split("=")[-1].replace("\"", "").replace("\n", "")
+    return output.split("=")[-1].replace("\"", "").replace("\n", "").replace("b''", "")
 
 def get_lv_aliases(line):
     """

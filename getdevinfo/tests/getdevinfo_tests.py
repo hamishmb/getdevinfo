@@ -237,10 +237,10 @@ class TestParseLVMOutput(unittest.TestCase):
         del linux.DISKINFO
         del self.correct_disk_info
 
-    @unittest.expectedFailure #XXX
     def test_parse_and_assemble_lvm_output(self):
         linux.parse_lvm_output(testing=True)
-        self.assertEqual(linux.DISKINFO, self.correct_disk_info) #FIXME, wrong disk info here. Double check that that is the case.
+
+        self.assertEqual(linux.DISKINFO, self.correct_disk_info)
 
 @unittest.skipUnless(LINUX, "Linux-specific tests")
 class TestComputeBlockSizeLinux(unittest.TestCase):

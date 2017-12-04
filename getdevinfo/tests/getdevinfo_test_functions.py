@@ -32,12 +32,10 @@ def get_lv_aliases(line):
     temp = line.split()[-1]
 
     #Try this way first for better compatibility with most systems.
-    if os.path.exists("/dev/mapper/"+'-'.join(temp.split("/")[2:])):
-        alias_list.append("/dev/mapper/"+'-'.join(temp.split("/")[2:]))
+    alias_list.append("/dev/mapper/"+'-'.join(temp.split("/")[2:]))
 
     #Alternative ways of obtaining the info.
-    if os.path.exists(temp):
-        alias_list.append(temp)
+    alias_list.append(temp)
 
     #Weird one for Ubuntu with extra - in it.
     if "-" in temp:
@@ -49,8 +47,7 @@ def get_lv_aliases(line):
         vg_name = vg_name.replace("-", "--")
 
         #Check whether this works.
-        if os.path.exists("/dev/mapper/"+vg_name+"-"+lv_name):
-            alias_list.append("/dev/mapper/"+vg_name+"-"+lv_name)
+        alias_list.append("/dev/mapper/"+vg_name+"-"+lv_name)
 
     if len(alias_list) >= 1:
         default_name = alias_list[0]
