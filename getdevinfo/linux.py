@@ -308,7 +308,7 @@ def assemble_lvm_disk_info(line_counter, testing=False):
     raw_lvm_info = []
 
     for line in LVMOUTPUT[line_counter:]:
-        line = line.decode("utf-8")
+        line = line.decode("utf-8").replace("'", "")
         raw_lvm_info.append(line)
 
         #When we get to the next volume, stop adding stuff to this entry's data variable.
@@ -639,8 +639,6 @@ def get_id(disk):
             line = unicode(line).replace("'", "")
 
             split_line = line.split()
-
-            print("../../"+disk.split('/')[-1], split_line[-1])
 
             if "../../"+disk.split('/')[-1] == split_line[-1]:
                 disk_id = split_line[-3]
