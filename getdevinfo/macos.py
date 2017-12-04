@@ -369,7 +369,7 @@ def get_description(disk):
             internal_or_external = "External "
 
     except KeyError:
-        internal_or_external = "Unknown"
+        internal_or_external = "Unknown "
 
     #Type: Removable, SSD, or HDD.
     try:
@@ -383,7 +383,7 @@ def get_description(disk):
             disk_type = "Hard Disk Drive "
 
     except KeyError:
-        disk_type = "Unknown"
+        disk_type = "Unknown "
 
     #Bus protocol.
     try:
