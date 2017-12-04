@@ -236,7 +236,6 @@ def get_partition_info(subnode, host_disk):
     DISKINFO[volume]["Product"] = "Host Device: "+DISKINFO[host_disk]["Product"]
     DISKINFO[volume]["RawCapacity"], DISKINFO[volume]["Capacity"] = get_capacity(subnode)
     DISKINFO[volume]["Description"] = unicode(subnode.description.string)
-    DISKINFO[volume]["Flags"] = []
     DISKINFO[volume]["Flags"] = get_capabilities(subnode)
     DISKINFO[volume]["FileSystem"] = get_file_system(subnode)
 
@@ -520,7 +519,7 @@ def get_partitioning(disk):
 
     >>> partitioning = get_partitioning(<aDiskName>)
     """
-    partitioning = DISKINFO[disk]["flags"][-1].split(":")[-1]
+    partitioning = DISKINFO[disk]["Flags"][-1].split(":")[-1]
 
     if partitioning in ("gpt", "dos"):
         if partitioning == "dos":
@@ -610,7 +609,7 @@ def get_uuid(disk):
             else:
                 break
 
-    return uuid
+    return uuid.replace("'", "")
 
 def get_id(disk):
     """

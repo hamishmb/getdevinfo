@@ -196,7 +196,6 @@ def get_partition_info(disk, host_disk):
     DISKINFO[volume]["Product"] = "Host Device: "+DISKINFO[host_disk]["Product"]
     DISKINFO[volume]["RawCapacity"], DISKINFO[volume]["Capacity"] = get_capacity()
     DISKINFO[volume]["Description"] = get_description(disk)
-    DISKINFO[volume]["Flags"] = []
     DISKINFO[volume]["Flags"] = get_capabilities(disk)
     DISKINFO[volume]["FileSystem"] = get_file_system(disk)
     DISKINFO[volume]["Partitioning"] = "N/A"

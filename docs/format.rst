@@ -102,11 +102,74 @@ Various information is collected and organised here.
         >>> DISKINFO['/dev/disk0']['Product']
         >>> "HARDDISK"
 
-TODO more.
+'Capacity', and 'RawCapacity':
+    The disk's capacity, in both human-readable form, and program-friendly form.
+    Ignored for some types of disks, like optical drives. The human-readable
+    capacity is rounded to make it a 3 digit number. The machine-readable size is
+    measured in bytes, and it is not rounded.
+
+    Example:
+        >>> DISKINFO['/dev/sda']['Capacity']
+        >>> "500 GB"
+
+        >>> DISKINFO['/dev/sda']['RawCapacity']
+        >>> "500107862016"
+
+'Description':
+    A human-readable description of the disk. Simply here to make it easier
+    for a human to identify a disk. On Linux, these are the descriptions provided by
+    lshw (except for logical volumes), and they are fairly basic. On macOS, these are
+    generated using information from diskutil.
+
+    Example 1:
+        >>> DISKINFO['/dev/sda']['Description']
+        >>> "ATA Disk"
+
+    Example 2:
+        >>> DISKINFO['/dev/sda']['Description']
+        >>> "Internal Hard Disk Drive (Connected through SATA)"
 
 'Flags':
     The disk's capabilities, stored as a list.
 
+    .. note::
+        Not available on macOS, or for logical volumes.
+
     For example:
-        >>> DISKINFO['/dev/cdrom']['flags']
+        >>> DISKINFO['/dev/cdrom']['Flags']
         >>> ['removable', 'audio', 'cd-r', 'cd-rw', 'dvd', 'dvd-r', 'dvd-ram']
+
+'Partitioning':
+    The disk's partition scheme. N/A for partitions and logical volumes.
+
+    .. note::
+        Not available on macOS.
+
+    Example 1:
+        >>> DISKINFO['/dev/sda']['Partitioning']
+        >>> "gpt"
+
+    Example 2:
+        >>> DISKINFO['/dev/sdb']['Partitioning']
+        >>> "mbr"
+
+'FileSystem':
+    The disk's file system. N/A for devices.
+
+    .. note::
+        Not available on macOS.
+
+    Example:
+        >>> DISKINFO['/dev/sda']['FileSystem']
+        >>> "ext4"
+
+'UUID':
+    This disk's UUID. N/A for devices. Length changes based on filesystem
+    type. For example, vfat UUIDs are shorter.
+
+    .. note::
+        Not available on macOS.
+
+    Example:
+        >>> DISKINFO['/dev/sda1']['UUID']
+        >>> XXXX-XXXX
