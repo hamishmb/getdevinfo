@@ -38,7 +38,8 @@ Various information is collected and organised here.
 
 'HostDevice':
     The "parent" or "host" device of a partition, stored as a string.
-    For a device, this is always set to "N/A".
+    For a device, this is always set to "N/A". For an LVM disk, this is
+    the host device of the containing partition. eg: /dev/sdb.
 
     Example 1:
         >>> DISKINFO['/dev/sda']['HostDevice']
@@ -182,4 +183,12 @@ Various information is collected and organised here.
 
     Example:
         >>> DISKINFO['/dev/sda']['ID']
-        >>> 
+        >>> "usb-Generic_STORAGE_DEVICE_000000001206-0:1"
+
+'BootRecord', 'BootRecordStrings':
+    The MBR/PBR of the disk. Can be useful in identifying the bootloader that
+    resides there, if any.
+
+    .. note::
+        Not available on macOS.
+
