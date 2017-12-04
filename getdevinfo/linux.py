@@ -708,7 +708,7 @@ def get_lv_file_system(disk): #XXX What happens if this fails?
     """
 
     cmd = subprocess.Popen("LC_ALL=C blkid "+disk, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
-    output = cmd.communicate()[0]
+    output = unicode(cmd.communicate()[0])
     
     return output.split("=")[-1].replace("\"", "").replace("\n", "")
 
