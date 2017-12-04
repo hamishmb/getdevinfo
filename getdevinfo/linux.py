@@ -347,7 +347,7 @@ def assemble_lvm_disk_info(line_counter, testing=False):
 
         elif "LV Size" in line:
             DISKINFO[volume]["Capacity"] = ' '.join(line.split()[-2:])
-            DISKINFO[volume]["RawCapacity"] = DISKINFO[volume]["Capacity"]
+            DISKINFO[volume]["RawCapacity"] = "Unknown"
 
         elif "Physical volume" in line:
             DISKINFO[volume]["HostPartition"] = line.split()[-1]
