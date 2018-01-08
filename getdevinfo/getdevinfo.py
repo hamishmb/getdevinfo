@@ -62,7 +62,7 @@ import sys
 if sys.version_info[0] == 3:
     unicode = str
 
-def get_info(): #TODO Document dictionary format.
+def get_info():
     """
     This function is used to determine the platform you're using
     (Linux or macOS) and run the relevant tools. Then, it returns
