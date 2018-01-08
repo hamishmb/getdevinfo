@@ -53,8 +53,8 @@ from __future__ import unicode_literals
 
 import subprocess
 import os
-from bs4 import BeautifulSoup
 import sys
+from bs4 import BeautifulSoup
 
 #Make unicode an alias for str in Python 3.
 if sys.version_info[0] == 3:
@@ -523,13 +523,18 @@ def get_partitioning(disk):
 
     >>> partitioning = get_partitioning(<aDiskName>)
     """
-    partitioning = DISKINFO[disk]["Flags"][-1].split(":")[-1]
+    try:
+        partitioning = DISKINFO[disk]["Flags"][-1].split(":")[-1]
 
-    if partitioning in ("gpt", "dos"):
-        if partitioning == "dos":
-            partitioning = "mbr"
+        if partitioning in ("gpt", "dos"):
+            if partitioning == "dos":
+                partitioning = "mbr"
 
-    else:
+        else:
+            partitioning = "Unknown"
+
+    #Fix for unpartitioned disks.
+    except IndexError:
         partitioning = "Unknown"
 
     return partitioning
