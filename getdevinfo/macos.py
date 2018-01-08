@@ -367,7 +367,8 @@ def get_description(disk):
     #Type: Removable, SSD, or HDD.
     disk_type = "Unknown "
 
-    if "Removable" in PLIST.keys() and PLIST['Removable'] or PLIST['RemovableMedia']:
+    if ("Removable" in PLIST.keys() and PLIST['Removable']) or \
+       ("RemovableMedia" in PLIST.keys() and PLIST['RemovableMedia']):
         disk_type = "Removable Drive "
 
     if disk_type == "Unknown " and "SolidState" in PLIST.keys():
