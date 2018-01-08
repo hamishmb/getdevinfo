@@ -35,10 +35,6 @@ if sys.version_info[0] == 3:
 #Global vars.
 VERSION = "1.0.1"
 
-#Custom made modules.
-import linux
-import macos
-
 #Import test modules.
 import tests
 

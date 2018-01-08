@@ -37,7 +37,7 @@ if sys.version_info[0] == 3:
     unicode = str
     plistlib.readPlistFromString = plistlib.loads
 
-#Plistlib workaround for python 3.x  support.
+#Plistlib workaround for python 3.x support.
 def to_bytestring(string):
     if sys.version_info[0] == 3:
         return bytes(string, "utf-8")
@@ -45,15 +45,17 @@ def to_bytestring(string):
     else:
         return string
 
-#import the linux module so we can test it.
 sys.path.insert(0, os.path.abspath('../'))
 sys.path.insert(0, os.path.abspath('../..'))
 
-import getdevinfo.linux as linux
-import getdevinfo.macos as macos
-
 #Determine the platform.
 LINUX = ("linux" in sys.platform)
+
+if LINUX:
+    import getdevinfo.linux as linux
+
+else:
+    import getdevinfo.macos as macos
 
 @unittest.skipUnless(not LINUX, "Mac-specific tests")
 class TestIsPartition(unittest.TestCase):
@@ -212,7 +214,7 @@ class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
         self.assertEqual(raw_capacity, "650002432")
         self.assertEqual(human_size, "650 MB")
 
-    def test_get_description(self):
+    def test_get_description(self): #NOTE: Could make these more stringent w/ plists from old macOS versions.
         #baddisk0
         macos.PLIST = self.badplist0
         self.assertEqual(macos.get_description(disk="disk0"), "N/A")
