@@ -371,12 +371,12 @@ def get_description(disk):
        ("RemovableMedia" in PLIST.keys() and PLIST['RemovableMedia']):
         disk_type = "Removable Drive "
 
-    if disk_type == "Unknown " and "SolidState" in PLIST.keys():
-        if PLIST["SolidState"]:
-            disk_type = "Solid State Drive "
+    #Fix for old versions of OS X where the SolidState attribute is missing.
+    if disk_type == "Unknown " and "SolidState" in PLIST.keys() and PLIST["SolidState"]:
+        disk_type = "Solid State Drive "
 
-        else:
-            disk_type = "Hard Disk Drive "
+    else:
+        disk_type = "Hard Disk Drive "
 
     #Bus protocol.
     bus_protocol = "Unknown"
