@@ -52,7 +52,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'GetDevInfo'
-copyright = '2013-2017, Hamish McIntyre-Bhatty'
+copyright = '2013-2018, Hamish McIntyre-Bhatty'
 author = 'Hamish McIntyre-Bhatty'
 
 # The version info for the project you're documenting, acts as replacement for
