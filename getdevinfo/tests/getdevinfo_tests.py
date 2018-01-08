@@ -217,7 +217,7 @@ class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
     def test_get_description(self): #NOTE: Could make these more stringent w/ plists from old macOS versions.
         #baddisk0
         macos.PLIST = self.badplist0
-        self.assertEqual(macos.get_description(disk="disk0"), "Unknown Hard Disk Drive")
+        self.assertEqual(macos.get_description(disk="disk0"), "Unknown Hard Disk Drive ")
 
         #disk0
         macos.PLIST = self.plist0
