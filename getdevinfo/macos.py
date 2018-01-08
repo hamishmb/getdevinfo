@@ -372,6 +372,7 @@ def get_description(disk):
         disk_type = "Removable Drive "
 
     #Fix for old versions of OS X where the SolidState attribute is missing.
+    #Means we assume things are HDDs if we can't otherwise figure them out.
     if disk_type == "Unknown " and "SolidState" in PLIST.keys() and PLIST["SolidState"]:
         disk_type = "Solid State Drive "
 
