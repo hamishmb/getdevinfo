@@ -225,7 +225,7 @@ def is_partition(disk): #Note: Could change to use "Whole" attrib. Good idea?
     >>> is_a_partition = is_partition(<aDisk>)
     """
 
-    return disk.split("disk")[1]
+    return "s" in disk.split("disk")[1]
 
 def get_vendor(disk):
     """
