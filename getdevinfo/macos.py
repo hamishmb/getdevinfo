@@ -225,13 +225,7 @@ def is_partition(disk): #Note: Could change to use "Whole" attrib. Good idea?
     >>> is_a_partition = is_partition(<aDisk>)
     """
 
-    if "s" in disk.split("disk")[1]:
-        result = True
-
-    else:
-        result = False
-
-    return result
+    return disk.split("disk")[1]
 
 def get_vendor(disk):
     """
@@ -376,7 +370,7 @@ def get_description(disk):
     if "Removable" in PLIST.keys() and PLIST['Removable'] or PLIST['RemovableMedia']:
         disk_type = "Removable Drive "
 
-    if disk_type = "Unknown " and "SolidState" in PLIST.keys():
+    if disk_type == "Unknown " and "SolidState" in PLIST.keys():
         if PLIST["SolidState"]:
             disk_type = "Solid State Drive "
 
