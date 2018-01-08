@@ -355,7 +355,7 @@ def get_description(disk):
     """
     #Gather info from diskutil to create some descriptions.
     #Internal or external.
-    internal_or_external = "Unknown"
+    internal_or_external = "Unknown "
 
     if "Internal" in PLIST.keys():
         if PLIST["Internal"]:
