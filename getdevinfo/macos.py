@@ -377,7 +377,7 @@ def get_description(disk):
     if disk_type == "Unknown " and "SolidState" in PLIST.keys() and PLIST["SolidState"]:
         disk_type = "Solid State Drive "
 
-    elif disk_type == "Unknown":
+    elif disk_type == "Unknown ":
         disk_type = "Hard Disk Drive "
 
     #Bus protocol.
