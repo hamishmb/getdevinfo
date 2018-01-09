@@ -114,7 +114,7 @@ def get_info():
 
         else:
             #These are Partitions.
-            get_partition_info(disk, "/dev/"+disk[:-2])
+            get_partition_info(disk, "/dev/"+disk.split("s")[0])
 
     #Check we found some disks.
     if len(DISKINFO) == 0:
