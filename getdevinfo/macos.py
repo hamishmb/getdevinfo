@@ -113,8 +113,9 @@ def get_info():
             get_device_info(disk)
 
         else:
-            #These are Partitions.
-            get_partition_info(disk, "/dev/"+disk.split("s")[0])
+            #These are Partitions. Fix for disks w/ more than 9 partitions.
+            host_disk = "/dev/"+disk.split("s")[0]+"s"+disk.split("s")[1]
+            get_partition_info(disk, host_disk)
 
     #Check we found some disks.
     if len(DISKINFO) == 0:
