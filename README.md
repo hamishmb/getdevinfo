@@ -3,7 +3,7 @@
 This repository holds my new getdevinfo module. This module was originally integreted directly into the source code of Wine Autostart, DDRescue-GUI, and WxFixBoot, but has now been separated for ease of maintenance. Because it's here and on PyPI (the Python Package Index) at https://pypi.python.org/pypi/getdevinfo/1.0.0, this means other people can use it too.
 
 Building
-********
+========
 
 Source Distribution
 ===================
@@ -37,7 +37,7 @@ to acheive this if you want.
 
 
 Distribution Packages
-*********************
+=====================
 
 You can find these at https://www.launchpad.net/getdevinfo or http://www.hamishmb.altervista.org/html/Downloads/getdevinfo.php.
 
