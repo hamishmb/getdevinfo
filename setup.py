@@ -11,9 +11,9 @@ here = path.abspath(path.dirname(__file__))
 
 setup(
     name='getdevinfo',
-    version='1.0.0',
+    version='1.0.1',
     description='A device information gatherer for Linux and macOS',
-    long_description='Working on both Linux and macOS, this script makes use of lshw, lvdisplay, and blkid (Linux), as well as diskutil (macOS) to get a comprehensive amount of disk information. This information is available in a structured dictionary for ease of use. On Linux it requires lshw, blkid, and lvdisplay to be installed.',
+    long_description='Working on both Linux and macOS, this script makes use of lshw, lvdisplay, and blkid (Linux), as well as diskutil (macOS) to get a comprehensive amount of disk information. This information is available in a structured dictionary for ease of use. On Linux it requires lshw, blkid, and lvdisplay to be installed. On Linux, you need beautifulsoup4 (bs4) to use this tool. On macOS, nothing beyond a standard python2.x/python3.x install is required, but you still need bs4 if you want to install using the python wheel/through pip.',
 
     url='https://www.github.com/hamishmb/getdevinfo',
     author='Hamish McIntyre-Bhatty',
