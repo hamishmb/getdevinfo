@@ -15,3 +15,4 @@
 # You should have received a copy of the GNU General Public License
 # along with GetDevInfo.  If not, see <http://www.gnu.org/licenses/>.
 from __future__ import absolute_import
+from . import getdevinfo
