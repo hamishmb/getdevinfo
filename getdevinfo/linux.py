@@ -855,7 +855,7 @@ def get_block_size(disk):
     runcmd = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
 
     #Get the output and pass it to compute_block_size.
-    return compute_block_size(runcmd.communicate()[0])
+    return compute_block_size(runcmd.communicate()[0].decode("utf-8"))
 
 def compute_block_size(stdout):
     """
