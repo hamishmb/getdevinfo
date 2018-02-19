@@ -510,14 +510,14 @@ def compute_block_size(disk, stdout):
     #except:
     #    return None
 
+    #else:
+    if "DeviceBlockSize" in plist:
+        result = unicode(plist["DeviceBlockSize"])
+
+    elif "VolumeBlockSize" in plist:
+        result = unicode(plist["VolumeBlockSize"])
+
     else:
-        if "DeviceBlockSize" in plist:
-            result = unicode(plist["DeviceBlockSize"])
+        result = None
 
-        elif "VolumeBlockSize" in plist:
-            result = unicode(plist["VolumeBlockSize"])
-
-        else:
-            result = None
-
-        return result
+    return result
