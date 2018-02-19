@@ -504,11 +504,11 @@ def compute_block_size(disk, stdout):
     """
 
     #Parse the plist (Property List).
-    try:
-        plist = plistlib.readPlistFromString(stdout)
+    #try:
+    plist = plistlib.readPlistFromString(stdout)
 
-    except:
-        return None
+    #except:
+    #    return None
 
     else:
         if "DeviceBlockSize" in plist:
