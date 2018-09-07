@@ -184,7 +184,7 @@ def get_device_info(node):
 
     #Don't try to get Boot Records for optical drives.
     if "/dev/cdrom" in host_disk or "/dev/sr" in host_disk or "/dev/dvd" in host_disk:
-        DISKINFO[host_disk]["BootRecord"], DISKINFO[host_disk]["BootRecordStrings"] = ("N/A", ["N/A"])
+        DISKINFO[host_disk]["BootRecord"], DISKINFO[host_disk]["BootRecordStrings"] = (b"N/A", [b"N/A"])
 
     else:
         DISKINFO[host_disk]["BootRecord"], DISKINFO[host_disk]["BootRecordStrings"] = get_boot_record(host_disk)
@@ -612,8 +612,6 @@ def get_uuid(disk):
             uuid = line.split()[-1]
 
             #Fix a bug where an invalid UUID is used when blkid couldn't find one.
-            print(uuid)
-
             if uuid == "mounted)":
                 uuid = "Unknown"
 
@@ -695,7 +693,7 @@ def get_boot_record(disk):
     return_value = cmd.returncode
 
     if return_value != 0:
-        return (boot_record, ["Unknown"])
+        return (boot_record, [b"Unknown"])
 
     return (boot_record, boot_record_strings)
 
