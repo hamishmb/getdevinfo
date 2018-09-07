@@ -170,10 +170,10 @@ def get_device_info(node):
 
     #Ignore capacities for all optical media.
     if "/dev/cdrom" in host_disk or "/dev/sr" in host_disk or "/dev/dvd" in host_disk:
-        DISKINFO[host_disk]["raw_capacity"], DISKINFO[host_disk]["Capacity"] = ("N/A", "N/A")
+        DISKINFO[host_disk]["RawCapacity"], DISKINFO[host_disk]["Capacity"] = ("N/A", "N/A")
 
     else:
-        DISKINFO[host_disk]["raw_capacity"], DISKINFO[host_disk]["Capacity"] = get_capacity(node)
+        DISKINFO[host_disk]["RawCapacity"], DISKINFO[host_disk]["Capacity"] = get_capacity(node)
 
     DISKINFO[host_disk]["Description"] = unicode(node.description.string)
     DISKINFO[host_disk]["Flags"] = get_capabilities(node)
