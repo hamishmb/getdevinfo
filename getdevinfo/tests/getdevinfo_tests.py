@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Tests for GetDevInfo Version 1.0.1
+# Tests for GetDevInfo Version 1.0.2
 # This file is part of GetDevInfo.
 # Copyright (C) 2013-2018 Hamish McIntyre-Bhatty
 # GetDevInfo is free software: you can redistribute it and/or modify it

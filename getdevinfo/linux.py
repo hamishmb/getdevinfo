@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Linux Functions For The Device Information Obtainer 1.0.1
+# Linux Functions For The Device Information Obtainer 1.0.2
 # This file is part of GetDevInfo.
 # Copyright (C) 2013-2018 Hamish McIntyre-Bhatty
 # GetDevInfo is free software: you can redistribute it and/or modify it
@@ -606,19 +606,21 @@ def get_uuid(disk):
 
     #Try to get the UUID from blkid's output.
     for line in BLKIDOUTPUT.split(b'\n'):
-        line = unicode(line)
+        line = unicode(line).replace("'", "")
 
         if disk in line:
             uuid = line.split()[-1]
 
             #Fix a bug where an invalid UUID is used when blkid couldn't find one.
+            print(uuid)
+
             if uuid == "mounted)":
                 uuid = "Unknown"
 
             else:
                 break
 
-    return uuid.replace("'", "")
+    return uuid
 
 def get_id(disk):
     """

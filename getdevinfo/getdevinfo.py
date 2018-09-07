@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Device Information Obtainer 1.0.1
+# Device Information Obtainer 1.0.2
 # This file is part of GetDevInfo.
 # Copyright (C) 2013-2018 Hamish McIntyre-Bhatty
 # GetDevInfo is free software: you can redistribute it and/or modify it
@@ -61,6 +61,9 @@ import sys
 #Make unicode an alias for str in Python 3.
 if sys.version_info[0] == 3:
     unicode = str
+
+#Declare version; useful for users of the module.
+VERSION = "1.0.2"
 
 def get_info():
     """
