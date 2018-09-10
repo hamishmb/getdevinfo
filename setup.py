@@ -9,13 +9,16 @@ from os import path
 
 here = path.abspath(path.dirname(__file__))
 
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
 setup(
     name='getdevinfo',
-    version='1.0.2',
+    version='1.0.3',
     description='A device information gatherer for Linux and macOS',
-    long_description='A device information gatherer for Linux and macOS.\n\nWorking on both Linux and macOS, this script makes use of lshw, lvdisplay, and blkid (Linux), as well as diskutil (macOS) to get a comprehensive amount of disk information. This information is available in a structured dictionary for ease of use. On Linux it requires lshw, blkid, and lvdisplay to be installed. On Linux, you need beautifulsoup4 (bs4), and lxml to use this tool. On macOS, nothing beyond a standard python2.x/python3.x install is required, but you still need bs4 and lxml if you want to install using the python wheel/through pip.',
+    long_description=long_description,
 
-    url='https://www.github.com/hamishmb/getdevinfo',
+    url='https://www.hamishmb.com/',
     author='Hamish McIntyre-Bhatty',
     author_email='hamishmb@live.co.uk',
     license='GPLv3+',
@@ -31,6 +34,10 @@ setup(
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
 
         #Misc.
         'Environment :: MacOS X',
