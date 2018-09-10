@@ -55,7 +55,7 @@ to acheive this if you want.
 Distribution Packages
 =====================
 
-You can find these at https://www.launchpad.net/getdevinfo or http://www.hamishmb.com/html/Downloads/getdevinfo.php.
+You can find these at https://www.launchpad.net/getdevinfo or https://www.hamishmb.com/html/downloads.php?program_name=getdevinfo.
 
 Documentation
 =============
