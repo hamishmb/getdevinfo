@@ -684,7 +684,7 @@ def get_boot_record(disk):
     return_value = cmd.returncode
 
     if return_value != 0:
-        return ("Unknown", ["Unknown"])
+        return (b"Unknown", [b"Unknown"])
 
     #Get the readable strings in the boot record.
     cmd = subprocess.Popen("strings", stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
