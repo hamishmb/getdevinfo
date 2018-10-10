@@ -1,6 +1,6 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Linux Functions For The Device Information Obtainer 1.0.1
+# Linux Functions For The Device Information Obtainer 1.0.3
 # This file is part of GetDevInfo.
 # Copyright (C) 2013-2018 Hamish McIntyre-Bhatty
 # GetDevInfo is free software: you can redistribute it and/or modify it
@@ -170,10 +170,10 @@ def get_device_info(node):
 
     #Ignore capacities for all optical media.
     if "/dev/cdrom" in host_disk or "/dev/sr" in host_disk or "/dev/dvd" in host_disk:
-        DISKINFO[host_disk]["raw_capacity"], DISKINFO[host_disk]["Capacity"] = ("N/A", "N/A")
+        DISKINFO[host_disk]["RawCapacity"], DISKINFO[host_disk]["Capacity"] = ("N/A", "N/A")
 
     else:
-        DISKINFO[host_disk]["raw_capacity"], DISKINFO[host_disk]["Capacity"] = get_capacity(node)
+        DISKINFO[host_disk]["RawCapacity"], DISKINFO[host_disk]["Capacity"] = get_capacity(node)
 
     DISKINFO[host_disk]["Description"] = unicode(node.description.string)
     DISKINFO[host_disk]["Flags"] = get_capabilities(node)
@@ -184,7 +184,7 @@ def get_device_info(node):
 
     #Don't try to get Boot Records for optical drives.
     if "/dev/cdrom" in host_disk or "/dev/sr" in host_disk or "/dev/dvd" in host_disk:
-        DISKINFO[host_disk]["BootRecord"], DISKINFO[host_disk]["BootRecordStrings"] = ("N/A", ["N/A"])
+        DISKINFO[host_disk]["BootRecord"], DISKINFO[host_disk]["BootRecordStrings"] = (b"N/A", [b"N/A"])
 
     else:
         DISKINFO[host_disk]["BootRecord"], DISKINFO[host_disk]["BootRecordStrings"] = get_boot_record(host_disk)
@@ -606,7 +606,7 @@ def get_uuid(disk):
 
     #Try to get the UUID from blkid's output.
     for line in BLKIDOUTPUT.split(b'\n'):
-        line = unicode(line)
+        line = unicode(line).replace("'", "")
 
         if disk in line:
             uuid = line.split()[-1]
@@ -618,7 +618,7 @@ def get_uuid(disk):
             else:
                 break
 
-    return uuid.replace("'", "")
+    return uuid
 
 def get_id(disk):
     """
@@ -684,7 +684,7 @@ def get_boot_record(disk):
     return_value = cmd.returncode
 
     if return_value != 0:
-        return ("Unknown", ["Unknown"])
+        return (b"Unknown", [b"Unknown"])
 
     #Get the readable strings in the boot record.
     cmd = subprocess.Popen("strings", stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
@@ -693,7 +693,7 @@ def get_boot_record(disk):
     return_value = cmd.returncode
 
     if return_value != 0:
-        return (boot_record, ["Unknown"])
+        return (boot_record, [b"Unknown"])
 
     return (boot_record, boot_record_strings)
 

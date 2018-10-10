@@ -1,6 +1,6 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# macOS Functions For The Device Information Obtainer 1.0.1
+# macOS Functions For The Device Information Obtainer 1.0.3
 # This file is part of GetDevInfo.
 # Copyright (C) 2013-2018 Hamish McIntyre-Bhatty
 # GetDevInfo is free software: you can redistribute it and/or modify it
