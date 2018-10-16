@@ -543,7 +543,7 @@ def get_partitioning(disk):
                       the disk info dictionary.
 
     Returns:
-        string. The partition scheme:
+        string (unicode). The partition scheme:
 
             - "Unknown"     - Couldn't find it.
             - "mbr"         - Old-style MBR partitioning
@@ -565,7 +565,7 @@ def get_partitioning(disk):
             partitioning = "Unknown"
 
     #Fix for unpartitioned disks.
-    except IndexError:
+    except (IndexError, KeyError):
         partitioning = "Unknown"
 
     return partitioning

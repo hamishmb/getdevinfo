@@ -274,6 +274,7 @@ def return_fake_disk_info_linux():
     diskinfo["/dev/sda"]["Capacity"] = "200GB"
     diskinfo["/dev/sda"]["Type"] = "Device"
     diskinfo["/dev/sda"]["Partitions"] = ["/dev/sda1", "/dev/sda2"]
+    diskinfo["/dev/sda"]["Flags"] = ["removable", "gpt"]
 
     #Fictional /dev/sda1
     diskinfo["/dev/sda1"] = {}
@@ -287,6 +288,9 @@ def return_fake_disk_info_linux():
     diskinfo["/dev/sda1"]["Type"] = "Partition"
     diskinfo["/dev/sda1"]["Partitions"] = []
 
+    #Not here in practice, cos this is a partition, but useful for test data. 
+    diskinfo["/dev/sda1"]["Flags"] = ["removable", "dos"]
+
     #Fictional /dev/sda2
     diskinfo["/dev/sda2"] = {}
     diskinfo["/dev/sda2"]["Product"] = "Host Device: FakeDisk"
@@ -299,6 +303,9 @@ def return_fake_disk_info_linux():
     diskinfo["/dev/sda2"]["Type"] = "Partition"
     diskinfo["/dev/sda2"]["Partitions"] = []
 
+    #As above.
+    diskinfo["/dev/sda2"]["Flags"] = ["removable", "apm"]
+
     #Fictional /dev/sda3
     diskinfo["/dev/sda3"] = {}
     diskinfo["/dev/sda3"]["Product"] = "Host Device: FakeDisk"
@@ -310,6 +317,9 @@ def return_fake_disk_info_linux():
     diskinfo["/dev/sda3"]["Capacity"] = "25.5GB"
     diskinfo["/dev/sda3"]["Type"] = "Partition"
     diskinfo["/dev/sda3"]["Partitions"] = []
+
+    #As above.
+    diskinfo["/dev/sda3"]["Flags"] = ["removable"]
 
     return diskinfo
 
@@ -368,7 +378,17 @@ def return_fake_disk_info_mac():
 
 #Functions to return other data.
 def return_fake_lvm_disk_info():
-    return {u'/dev/sda': {u'Product': u'FakeDisk', u'Vendor': u'ThereIsNone', u'Name': u'/dev/sda', u'RawCapacity': u'56483132', u'HostDevice': u'N/A', u'Capacity': u'200GB', u'Partitions': [u'/dev/sda1', u'/dev/sda2'], u'Type': u'Device', u'Description': u'Fake Hard Disk Drive'}, u'/dev/mapper/fakefedora-root': {u'LVName': u'root', u'VGName': u'fakefedora', u'HostPartition': u'/dev/sda3', u'Vendor': u'Linux', u'Name': u'/dev/mapper/fakefedora-root', u'Capacity': u'13.20 GiB', u'Product': u'LVM Partition', u'UUID': u'TWxt1j-g62o-GYju-3UpB-A4g3-9ZbB-HWb7jf', u'Partitioning': u'N/A', u'HostDevice': u'/dev/sda', u'BootRecord': b'Unknown', u'Flags': [], u'RawCapacity': u'Unknown', u'BootRecordStrings': [b'Unknown'], u'FileSystem': u'', u'Description': u'LVM partition root in volume group fakefedora', u'Aliases': [u'/dev/mapper/fakefedora-root', u'/dev/fakefedora/root'], u'Type': u'Partition', u'ID': u'dm-name-fakefedora-root', u'Partitions': []}, u'/dev/sda3': {u'Product': u'Host Device: FakeDisk', u'Vendor': u'FakeOS v3', u'Name': u'/dev/sda3', u'RawCapacity': u'564456313', u'HostDevice': u'/dev/sda', u'Capacity': u'25.5GB', u'Partitions': [], u'Type': u'Partition', u'Description': u'BTRFS Volume'}, u'/dev/sda1': {u'Product': u'Host Device: FakeDisk', u'Vendor': u'FakeOS v3', u'Name': u'/dev/sda1', u'RawCapacity': u'5648313', u'HostDevice': u'/dev/sda', u'Capacity': u'20GB', u'Partitions': [], u'Type': u'Partition', u'Description': u'EXT4 Volume'}, u'/dev/sda2': {u'Product': u'Host Device: FakeDisk', u'Vendor': u'FakeOS v3', u'Name': u'/dev/sda2', u'RawCapacity': u'564313', u'HostDevice': u'/dev/sda', u'Capacity': u'2.5GB', u'Partitions': [], u'Type': u'Partition', u'Description': u'EXT3 Volume'}, u'/dev/mapper/fakefedora-swap': {u'LVName': u'swap', u'VGName': u'fakefedora', u'HostPartition': u'/dev/sda3', u'Vendor': u'Linux', u'Name': u'/dev/mapper/fakefedora-swap', u'Capacity': u'1.60 GiB', u'Product': u'LVM Partition', u'UUID': u'3e8urm-xsCG-iCAJ-Q3go-2247-OU5N-3AwlD1', u'Partitioning': u'N/A', u'HostDevice': u'/dev/sda', u'BootRecord': b'Unknown', u'Flags': [], u'RawCapacity': u'Unknown', u'BootRecordStrings': [b'Unknown'], u'FileSystem': u'', u'Description': u'LVM partition swap in volume group fakefedora', u'Aliases': [u'/dev/mapper/fakefedora-swap', u'/dev/fakefedora/swap'], u'Type': u'Partition', u'ID': u'dm-name-fakefedora-swap', u'Partitions': []}}
+    return {u'/dev/sda': {u'Product': u'FakeDisk', u'Vendor': u'ThereIsNone', u'Name': u'/dev/sda', u'RawCapacity': u'56483132', u'HostDevice': u'N/A', u'Capacity': u'200GB', u'Partitions': [u'/dev/sda1', u'/dev/sda2'], u'Type': u'Device', u'Description': u'Fake Hard Disk Drive', u'Flags': [u'removable', u'gpt']},
+
+           u'/dev/mapper/fakefedora-root': {u'LVName': u'root', u'VGName': u'fakefedora', u'HostPartition': u'/dev/sda3', u'Vendor': u'Linux', u'Name': u'/dev/mapper/fakefedora-root', u'Capacity': u'13.20 GiB', u'Product': u'LVM Partition', u'UUID': u'TWxt1j-g62o-GYju-3UpB-A4g3-9ZbB-HWb7jf', u'Partitioning': u'N/A', u'HostDevice': u'/dev/sda', u'BootRecord': b'Unknown', u'Flags': [], u'RawCapacity': u'Unknown', u'BootRecordStrings': [b'Unknown'], u'FileSystem': u'', u'Description': u'LVM partition root in volume group fakefedora', u'Aliases': [u'/dev/mapper/fakefedora-root', u'/dev/fakefedora/root'], u'Type': u'Partition', u'ID': u'dm-name-fakefedora-root', u'Partitions': []},
+
+           u'/dev/sda3': {u'Product': u'Host Device: FakeDisk', u'Vendor': u'FakeOS v3', u'Name': u'/dev/sda3', u'RawCapacity': u'564456313', u'HostDevice': u'/dev/sda', u'Capacity': u'25.5GB', u'Partitions': [], u'Type': u'Partition', u'Description': u'BTRFS Volume', u'Flags': [u'removable']},
+
+           u'/dev/sda1': {u'Product': u'Host Device: FakeDisk', u'Vendor': u'FakeOS v3', u'Name': u'/dev/sda1', u'RawCapacity': u'5648313', u'HostDevice': u'/dev/sda', u'Capacity': u'20GB', u'Partitions': [], u'Type': u'Partition', u'Description': u'EXT4 Volume', u'Flags': [u'removable', u'dos']},
+
+           u'/dev/sda2': {u'Product': u'Host Device: FakeDisk', u'Vendor': u'FakeOS v3', u'Name': u'/dev/sda2', u'RawCapacity': u'564313', u'HostDevice': u'/dev/sda', u'Capacity': u'2.5GB', u'Partitions': [], u'Type': u'Partition', u'Description': u'EXT3 Volume', u'Flags': [u'removable', u'apm']},
+
+           u'/dev/mapper/fakefedora-swap': {u'LVName': u'swap', u'VGName': u'fakefedora', u'HostPartition': u'/dev/sda3', u'Vendor': u'Linux', u'Name': u'/dev/mapper/fakefedora-swap', u'Capacity': u'1.60 GiB', u'Product': u'LVM Partition', u'UUID': u'3e8urm-xsCG-iCAJ-Q3go-2247-OU5N-3AwlD1', u'Partitioning': u'N/A', u'HostDevice': u'/dev/sda', u'BootRecord': b'Unknown', u'Flags': [], u'RawCapacity': u'Unknown', u'BootRecordStrings': [b'Unknown'], u'FileSystem': u'', u'Description': u'LVM partition swap in volume group fakefedora', u'Aliases': [u'/dev/mapper/fakefedora-swap', u'/dev/fakefedora/swap'], u'Type': u'Partition', u'ID': u'dm-name-fakefedora-swap', u'Partitions': []}}
 
 def return_fake_diskutil_list_plist():
     return """<?xml version="1.0" encoding="UTF-8"?>
