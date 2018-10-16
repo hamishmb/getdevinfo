@@ -730,8 +730,8 @@ def return_fake_diskutil_info_disk0s2_plist():
 	<integer>42089095168</integer>
 	<key>IORegistryEntryName</key>
 	<string>OSX</string>
-	<key>External</key>
-	<true/>
+	<key>Internal</key>
+	<false/>
 	<key>JournalOffset</key>
 	<integer>1310720</integer>
 	<key>JournalSize</key>
@@ -826,8 +826,8 @@ def return_fake_diskutil_info_disk0s3_plist():
 	<integer>650002432</integer>
 	<key>IORegistryEntryName</key>
 	<string>Recovery HD</string>
-	<key>External</key>
-	<true/>
+	<key>Internal</key>
+	<false/>
 	<key>MediaName</key>
 	<string></string>
 	<key>MediaType</key>
