@@ -282,7 +282,7 @@ class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
         """Test #4: Test that the capacity is returned correctly for partitions (650 EB)."""
         macos.PLIST = self.plist0s3
         raw_capacity, human_size = macos.get_capacity()
-        self.assertEqual(raw_capacity, "650002432000000000")
+        self.assertEqual(raw_capacity, "650002432000000000000")
         self.assertEqual(human_size, "650 EB")
 
     def test_get_description(self): #NOTE: Could make these more stringent w/ plists from old macOS versions.
