@@ -471,7 +471,13 @@ def get_capacity(node):
     #Round the sizes to make them human-readable.
     unit_list = [None, "B", "KB", "MB", "GB", "TB", "PB", "EB"]
     unit = "B"
-    human_readable_size = int(raw_capacity)
+
+    #Return Unknown, Unknown if this is not an integer.
+    try:
+        human_readable_size = int(raw_capacity)
+
+    except ValueError:
+        return "Unknown", "Unknown"
 
     try:
         while len(unicode(human_readable_size)) > 3:

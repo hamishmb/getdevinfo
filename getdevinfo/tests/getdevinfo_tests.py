@@ -98,10 +98,6 @@ class TestGetVendorProductCapacityLinux(unittest.TestCase):
         self.bytenode1 = data.ByteNode1().get_copy()
         self.bytenode2 = data.ByteNode2().get_copy()
 
-        #Non-roman characters.
-        self.bytenode3 = data.ByteNode3().get_copy()
-        self.bytenode4 = data.ByteNode4().get_copy()
-
         #Bad nodes.
         self.badnode1 = data.BadNode1().get_copy()
         self.badnode2 = data.BadNode2().get_copy()
@@ -115,8 +111,6 @@ class TestGetVendorProductCapacityLinux(unittest.TestCase):
 
         del self.bytenode1
         del self.bytenode2
-        del self.bytenode3
-        del self.bytenode4
 
         del self.badnode1
         del self.badnode2
@@ -138,39 +132,50 @@ class TestGetVendorProductCapacityLinux(unittest.TestCase):
         self.assertEqual(linux.get_vendor(node=self.node4), "ꀒꀲꀯꀭꁎꀦꀄꀴꀿꀬꀝꅮꅧꅌ")
 
     def test_get_vendor_linux_4(self):
-        """Test #4: Test that vendors are returned correctly when they have non-roman chars (byte strings)."""
-        self.assertEqual(linux.get_vendor(node=self.bytenode3), "ΉΜήυΟομἝἲϾᾍᾈᾁὮᾌ")
-        self.assertEqual(linux.get_vendor(node=self.bytenode4), "ꀒꀲꀯꀭꁎꀦꀄꀴꀿꀬꀝꅮꅧꅌ")
-
-    def test_get_vendor_linux_5(self):
-        """Test #5: Test that u"Unknown" is returned when vendor string is missing."""
+        """Test #4: Test that u"Unknown" is returned when vendor string is missing."""
         self.assertEqual(linux.get_vendor(node=self.badnode1), "Unknown")
 
-    def test_get_product_linux(self):
+    def test_get_product_linux_1(self):
+        """Test #1: Test that products are returned correctly when they are present (unicode strings)."""
         self.assertEqual(linux.get_product(node=self.node1), "FakeProduct")
         self.assertEqual(linux.get_product(node=self.node2), "FakeProduct2")
+
+    def test_get_product_linux_2(self):
+        """Test #2: Test that products are returned correctly when they are present (byte strings)."""
+        self.assertEqual(linux.get_product(node=self.bytenode1), "FakeProduct")
+        self.assertEqual(linux.get_product(node=self.bytenode2), "FakeProduct2")
+
+    def test_get_product_linux_3(self):
+        """Test #3: Test that products are returned correctly when they have non-roman chars (unicode strings)."""
+        self.assertEqual(linux.get_product(node=self.node3), "𐅛𐅣𐅸𐅒𐅌𐅮𐅺𐅷𐅑𐅮𐆀𐅸𝈢𝈵𝈭")
+        self.assertEqual(linux.get_product(node=self.node4), "ꍜꍧꍼꍟꍏꍄꌲꍏꌽꍛꍷꍼꍴ")
+
+    def test_get_product_linux_4(self):
+        """Test #4: Test that u"Unknown" is returned when product string is missing."""
         self.assertEqual(linux.get_product(node=self.badnode1), "Unknown")
 
-    def test_get_capacity_linux(self):
-        #1st good node.
+    def test_get_capacity_linux_1(self):
+        """Test #1: Test that capacity is correct on a 100GB disk"""
         raw_capacity, human_size = linux.get_capacity(node=self.node1)
         self.assertEqual(raw_capacity, "100000000000")
         self.assertEqual(human_size, "100 GB")
 
-        #2nd good node.
+    def test_get_capacity_linux_2(self):
+        """Test #2: Test that capacity is correct on a 10 EB disk"""
         raw_capacity, human_size = linux.get_capacity(node=self.node2)
         self.assertEqual(raw_capacity, "10000000000000000000")
         self.assertEqual(human_size, "10 EB")
 
-        #1st bad node.
+    def test_get_capacity_linux_3(self):
+        """Test #3: Test that ("Unknown", "Unknown") is returned when capacity is not present."""
         self.assertEqual(linux.get_capacity(node=self.badnode1), ("Unknown", "Unknown"))
 
-        #2nd bad node.
+    def test_get_capacity_linux_4(self):
+        """Test #4: Test that ("Unknown", "Unknown") is returned when capacity is insanely big (clearly wrong)."""
         self.assertEqual(linux.get_capacity(node=self.badnode2), ("Unknown", "Unknown"))
 
-    @unittest.expectedFailure
-    def test_bad_get_capacity_linux(self):
-        #3rd bad node.
+    def test_get_capacity_linux_5(self):
+        """Test #5: Test that ("Unknown", "Unknown") is returned when capacity is not an integer."""
         self.assertEqual(linux.get_capacity(node=self.badnode3), ("Unknown", "Unknown"))
 
 @unittest.skipUnless(not LINUX, "Mac-specific tests")

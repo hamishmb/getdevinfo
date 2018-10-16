@@ -24,6 +24,8 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import sys
+
 #Classes for test cases.
 #--------------------------------------- Good Nodes, unicode strings ------------------------------------
 class Node1:
@@ -102,33 +104,6 @@ class ByteNode2:
 
     class product:
         string = b"FakeProduct2"
-
-    class size:
-        string = 10000000000000000000
-
-# ---------------------------------------------- non-roman chars --------------------------------------
-class ByteNode3: #Greek characters.
-    def get_copy(self):
-        return self
-
-    class vendor:
-        string = b"ΉΜήυΟομἝἲϾᾍᾈᾁὮᾌ"
-
-    class product:
-        string = b"𐅛𐅣𐅸𐅒𐅌𐅮𐅺𐅷𐅑𐅮𐆀𐅸𝈢𝈵𝈭"
-
-    class size:
-        string = 10000000000000000000
-
-class ByteNode4: #Yi characters.
-    def get_copy(self):
-        return self
-
-    class vendor:
-        string = b"ꀒꀲꀯꀭꁎꀦꀄꀴꀿꀬꀝꅮꅧꅌ"
-
-    class product:
-        string = b"ꍜꍧꍼꍟꍏꍄꌲꍏꌽꍛꍷꍼꍴ"
 
     class size:
         string = 10000000000000000000
