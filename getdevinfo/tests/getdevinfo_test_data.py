@@ -158,6 +158,7 @@ def return_fake_disk_info_linux():
     diskinfo["/dev/sda"]["Name"] = "/dev/sda"
     diskinfo["/dev/sda"]["Description"] = "Fake Hard Disk Drive"
     diskinfo["/dev/sda"]["RawCapacity"] = "56483132"
+    diskinfo["/dev/sda"]["HostDevice"] = "N/A"
     diskinfo["/dev/sda"]["Capacity"] = "200GB"
     diskinfo["/dev/sda"]["Type"] = "Device"
     diskinfo["/dev/sda"]["Partitions"] = ["/dev/sda1", "/dev/sda2"]
