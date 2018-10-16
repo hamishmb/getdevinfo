@@ -429,5 +429,16 @@ class TestComputeBlockSizeMac(unittest.TestCase):
         del self.correct_results
 
     def test_compute_block_size(self):
+        """Test #1: Test that the block size is computed right with fake block dev output for:
+
+        1. None - No such file or device.
+        2. 512
+        3. 1024
+        4. 2014
+        5. 4096
+        6. 8192 TODO this one.
+
+        """
+
         for testdata in self.block_sizes:
             self.assertEqual(macos.compute_block_size("FakeDisk", to_bytestring(testdata)), self.correct_results[self.block_sizes.index(testdata)])
