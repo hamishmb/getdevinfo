@@ -184,7 +184,11 @@ class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
         macos.DISKINFO = data.return_fake_disk_info_mac()
         self.badplist0 = plistlib.readPlistFromString(to_bytestring(data.return_fake_diskutil_info_bad_disk0_plist()))
         self.plist0 = plistlib.readPlistFromString(to_bytestring(data.return_fake_diskutil_info_disk0_plist()))
-        self.plist0nonroman = plistlib.readPlistFromString(to_bytestring(data.return_fake_diskutil_info_disk0_plist_nonroman()))
+
+        #This will fail on Python 2. Nothing I can do about it, though.
+        if sys.version_info[0] > 2:
+            self.plist0nonroman = plistlib.readPlistFromString(to_bytestring(data.return_fake_diskutil_info_disk0_plist_nonroman()))
+
         self.plist0s1 = plistlib.readPlistFromString(to_bytestring(data.return_fake_diskutil_info_disk0s1_plist()))
         self.plist0s2 = plistlib.readPlistFromString(to_bytestring(data.return_fake_diskutil_info_disk0s2_plist()))
         self.plist0s3 = plistlib.readPlistFromString(to_bytestring(data.return_fake_diskutil_info_disk0s3_plist()))
@@ -208,6 +212,7 @@ class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
         macos.PLIST = self.plist0
         self.assertEqual(macos.get_vendor(disk="disk0"), "VBOX")
 
+    @unittest.skipUnless(sys.version_info[0] > 2, "This test will fail on Python 2")
     def test_get_vendor_3(self):
         """Test #3: Test that the vendor is returned correctly for host devices (non-roman chars)."""
         macos.PLIST = self.plist0nonroman
