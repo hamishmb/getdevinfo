@@ -857,7 +857,7 @@ def return_fake_diskutil_info_disk0s3_plist():
 	<key>SystemImage</key>
 	<false/>
 	<key>TotalSize</key>
-	<integer>650002432</integer>
+	<integer>650002432000000000</integer>
 	<key>VolumeName</key>
 	<string>Recovery HD</string>
 	<key>VolumeSize</key>

@@ -257,36 +257,33 @@ class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
         macos.PLIST = self.plist0s2
         self.assertEqual(macos.get_product(disk="disk0s2"), "FakeDisk")
 
-    def test_get_capacity(self):
-        #baddisk0
+    def test_get_capacity_1(self):
+        """Test #1: Test that u"Unknown", u"Unknown" is returned when capacity info is missing."""
         macos.PLIST = self.badplist0
         raw_capacity, human_size = macos.get_capacity()
         self.assertEqual(raw_capacity, "Unknown")
         self.assertEqual(human_size, "Unknown")
 
-        #disk0
+    def test_get_capacity_2(self):
+        """Test #2: Test that capacity is returned correctly for host devices."""
         macos.PLIST = self.plist0
         raw_capacity, human_size = macos.get_capacity()
         self.assertEqual(raw_capacity, "42948853248")
         self.assertEqual(human_size, "42 GB")
 
-        #disk0s1
-        macos.PLIST = self.plist0s1
-        raw_capacity, human_size = macos.get_capacity()
-        self.assertEqual(raw_capacity, "209715200")
-        self.assertEqual(human_size, "209 MB")
-
-        #disk0s2
+    def test_get_capacity_3(self):
+        """Test #3: Test that the capacity is returned correctly for partitions (42 GB)."""
         macos.PLIST = self.plist0s2
         raw_capacity, human_size = macos.get_capacity()
         self.assertEqual(raw_capacity, "42089095168")
         self.assertEqual(human_size, "42 GB")
 
-        #disk0s3
+    def test_get_capacity_4(self):
+        """Test #4: Test that the capacity is returned correctly for partitions (650 EB)."""
         macos.PLIST = self.plist0s3
         raw_capacity, human_size = macos.get_capacity()
-        self.assertEqual(raw_capacity, "650002432")
-        self.assertEqual(human_size, "650 MB")
+        self.assertEqual(raw_capacity, "650002432000000000")
+        self.assertEqual(human_size, "650 EB")
 
     def test_get_description(self): #NOTE: Could make these more stringent w/ plists from old macOS versions.
         #baddisk0
