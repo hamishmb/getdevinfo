@@ -60,7 +60,7 @@ if LINUX:
 else:
     import getdevinfo.macos as macos
 
-@unittest.skipUnless(not LINUX, "Mac-specific tests")
+@unittest.skipUnless(not LINUX, "Mac-specific test")
 class TestIsPartition(unittest.TestCase):
     def setUp(self):
         #Create a fictional DiskInfo dictionary for it to test against.
@@ -83,7 +83,7 @@ class TestIsPartition(unittest.TestCase):
 
             self.assertTrue(macos.is_partition(partition))
 
-@unittest.skipUnless(LINUX, "Linux-specific tests")
+@unittest.skipUnless(LINUX, "Linux-specific test")
 class TestGetVendorProductCapacityLinux(unittest.TestCase):
     def setUp(self):
         #Good nodes, unicode strings.
@@ -178,7 +178,7 @@ class TestGetVendorProductCapacityLinux(unittest.TestCase):
         """Test #5: Test that ("Unknown", "Unknown") is returned when capacity is not an integer."""
         self.assertEqual(linux.get_capacity(node=self.badnode3), ("Unknown", "Unknown"))
 
-@unittest.skipUnless(not LINUX, "Mac-specific tests")
+@unittest.skipUnless(not LINUX, "Mac-specific test")
 class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
     def setUp(self):
         macos.DISKINFO = data.return_fake_disk_info_mac()
@@ -196,26 +196,25 @@ class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
         del self.plist0s2
         del self.plist0s3
 
-    def test_get_vendor(self):
-        #baddisk0
+    def test_get_vendor_1(self):
+        """Test #1: Test that u"Unknown" is returned when vendor info is missing."""
         macos.PLIST = self.badplist0
         self.assertEqual(macos.get_vendor(disk="disk0"), "Unknown")
 
-        #disk0
+    def test_get_vendor_2(self):
+        """Test #2: Test that the vendor is returned correctly for host devices."""
         macos.PLIST = self.plist0
         self.assertEqual(macos.get_vendor(disk="disk0"), "VBOX")
 
-        #disk0s1
+    def test_get_vendor_3(self):
+        """Test #3: Test that the vendor is returned correctly for partitions, using the host disk data, when missing."""
         macos.PLIST = self.plist0s1
         self.assertEqual(macos.get_vendor(disk="disk0s1"), "ThereIsNone")
 
-        #disk0s2
+    def test_get_vendor_4(self):
+        """Test #4: Test that the vendor is returned correctly for partitions, using the host disk data, when present."""
         macos.PLIST = self.plist0s2
         self.assertEqual(macos.get_vendor(disk="disk0s2"), "ThereIsNone")
-
-        #disk0s3
-        macos.PLIST = self.plist0s3
-        self.assertEqual(macos.get_vendor(disk="disk0s3"), "ThereIsNone")
 
     def test_get_product(self):
         #baddisk0
@@ -290,7 +289,7 @@ class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
         macos.PLIST = self.plist0s3
         self.assertEqual(macos.get_description(disk="disk0s3"), "Internal Hard Disk Drive (Connected through SATA)")
 
-@unittest.skipUnless(LINUX, "Linux-specific tests")
+@unittest.skipUnless(LINUX, "Linux-specific test")
 class TestParseLVMOutput(unittest.TestCase):
     def setUp(self):
         linux.LVMOUTPUT = data.return_fake_lvm_output()
@@ -309,7 +308,7 @@ class TestParseLVMOutput(unittest.TestCase):
 
         self.assertEqual(linux.DISKINFO, self.correct_disk_info)
 
-@unittest.skipUnless(LINUX, "Linux-specific tests")
+@unittest.skipUnless(LINUX, "Linux-specific test")
 class TestComputeBlockSizeLinux(unittest.TestCase):
     def setUp(self):
         self.block_sizes, self.correct_results = (data.return_fake_block_dev_output(),
@@ -324,7 +323,7 @@ class TestComputeBlockSizeLinux(unittest.TestCase):
             self.assertEqual(linux.compute_block_size(testdata),
                              self.correct_results[self.block_sizes.index(testdata)])
 
-@unittest.skipUnless(not LINUX, "Mac-specific tests")
+@unittest.skipUnless(not LINUX, "Mac-specific test")
 class TestComputeBlockSizeMac(unittest.TestCase):
     def setUp(self):
         self.block_sizes, self.correct_results = (["Not a plist",

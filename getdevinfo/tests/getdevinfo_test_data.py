@@ -158,7 +158,6 @@ def return_fake_disk_info_linux():
     diskinfo["/dev/sda"]["Name"] = "/dev/sda"
     diskinfo["/dev/sda"]["Description"] = "Fake Hard Disk Drive"
     diskinfo["/dev/sda"]["RawCapacity"] = "56483132"
-    diskinfo["/dev/sda"]["HostDevice"] = "N/A"
     diskinfo["/dev/sda"]["Capacity"] = "200GB"
     diskinfo["/dev/sda"]["Type"] = "Device"
     diskinfo["/dev/sda"]["Partitions"] = ["/dev/sda1", "/dev/sda2"]
@@ -647,7 +646,7 @@ def return_fake_diskutil_info_disk0s2_plist():
 	<key>JournalSize</key>
 	<integer>8388608</integer>
 	<key>MediaName</key>
-	<string></string>
+	<string>VBOX HARDDISK</string>
 	<key>MediaType</key>
 	<string>Generic</string>
 	<key>MountPoint</key>
