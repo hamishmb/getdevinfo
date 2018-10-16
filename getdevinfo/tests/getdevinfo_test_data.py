@@ -25,6 +25,11 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import sys
+import bs4
+
+#Make unicode an alias for str in Python 3.
+if sys.version_info[0] == 3:
+    unicode = str
 
 #Classes for test cases.
 #--------------------------------------- Good Nodes, unicode strings ------------------------------------
@@ -41,6 +46,14 @@ class Node1:
     class capacity:
         string = 100000000000
 
+    class capabilities:
+        children = []
+
+        for _id in range(0, 200):
+            tag = bs4.element.Tag(name="capability")
+            tag["id"] = "test"+unicode(_id)
+            children.append(tag)
+
 class Node2:
     def get_copy(self):
         return self
@@ -53,6 +66,14 @@ class Node2:
 
     class size:
         string = 10000000000000000000
+
+    class capabilities:
+        children = []
+
+        for _id in ("removable", "uefi", "rewritable"):
+            tag = bs4.element.Tag(name="capability")
+            tag["id"] = _id
+            children.append(tag)
 
 # ---------------------------------------------- non-roman chars --------------------------------------
 class Node3: #Greek characters.
@@ -68,6 +89,14 @@ class Node3: #Greek characters.
     class size:
         string = 10000000000000000000
 
+    class capabilities:
+        children = []
+
+        for _id in ("ΉΜή", "𐅌𐅮", "test3"):
+            tag = bs4.element.Tag(name="capability")
+            tag["id"] = _id
+            children.append(tag)
+
 class Node4: #Yi characters.
     def get_copy(self):
         return self
@@ -80,6 +109,14 @@ class Node4: #Yi characters.
 
     class size:
         string = 10000000000000000000
+
+    class capabilities:
+        children = []
+
+        for _id in ("ΉgerhΜή", "𐅌345𐅮", "test3"):
+            tag = bs4.element.Tag(name="capability")
+            tag["id"] = _id
+            children.append(tag)
 
 #------------------------------------- Good Nodes, byte strings -----------------------------------------
 class ByteNode1:
@@ -95,6 +132,14 @@ class ByteNode1:
     class capacity:
         string = 100000000000
 
+    class capabilities:
+        children = []
+
+        for _id in range(0, 200):
+            tag = bs4.element.Tag(name="capability")
+            tag["id"] = b"test"+unicode(_id).encode("utf-8")
+            children.append(tag)
+
 class ByteNode2:
     def get_copy(self):
         return self
@@ -107,6 +152,14 @@ class ByteNode2:
 
     class size:
         string = 10000000000000000000
+
+    class capabilities:
+        children = []
+
+        for _id in (b"removable", b"uefi", b"rewritable"):
+            tag = bs4.element.Tag(name="capability")
+            tag["id"] = _id
+            children.append(tag)
 
 # ---------------------------------------------- non-roman chars --------------------------------------
 class ByteNode3: #Greek characters.
@@ -122,6 +175,14 @@ class ByteNode3: #Greek characters.
     class size:
         string = 10000000000000000000
 
+    class capabilities:
+        children = []
+
+        for _id in ("ΉΜή".encode("utf-8"), "𐅌𐅮".encode("utf-8"), b"test3"):
+            tag = bs4.element.Tag(name="capability")
+            tag["id"] = _id
+            children.append(tag)
+
 class ByteNode4: #Yi characters.
     def get_copy(self):
         return self
@@ -135,6 +196,14 @@ class ByteNode4: #Yi characters.
     class size:
         string = 10000000000000000000
 
+    class capabilities:
+        children = []
+
+        for _id in ("ΉgerhΜή".encode("utf-8"), "𐅌345𐅮".encode("utf-8"), b"test3"):
+            tag = bs4.element.Tag(name="capability")
+            tag["id"] = _id
+            children.append(tag)
+
 #----------------------------------- Bad Nodes, missing data, and/or wrong type ------------------------
 class BadNode1:
     def get_copy(self):
@@ -145,6 +214,10 @@ class BadNode1:
 
     class product:
         notstring = ""
+
+    class capabilities:
+        #int instead of list.
+        children = 9
 
 class BadNode2:
     def get_copy(self):
@@ -160,6 +233,14 @@ class BadNode2:
         #Too long, causes IndexError.
         string = 1000000000000000000000000000000000000000000000000
 
+    class capabilities:
+        children = []
+
+        for _id in ("ΉgerhΜή", "𐅌345𐅮", "test3"):
+            tag = bs4.element.Tag(name="capamability") #Wrong name - will be ignored.
+            tag["id"] = _id
+            children.append(tag)
+
 class BadNode3:
     def get_copy(self):
         return self
@@ -173,6 +254,10 @@ class BadNode3:
     class size:
         #Should be int, despite the misleading name.
         string = "fghjk"
+
+    class capabilities:
+        #Empty capabilities list.
+        children = []
 
 #-------------------------------- Functions to return fake diskinfo dictionary. --------------------------------
 def return_fake_disk_info_linux():

@@ -505,7 +505,7 @@ def get_capabilities(node):
         list. The capabilities:
 
             - []            - Couldn't find them.
-            - Anything else - The capabilities.
+            - Anything else - The capabilities - as unicode strings.
 
     Usage:
 
@@ -519,7 +519,11 @@ def get_capabilities(node):
             if (not isinstance(capability, bs4.element.Tag)) or capability.name != "capability":
                 continue
 
-            flags.append(capability["id"])
+            if isinstance(capability["id"], bytes):
+                flags.append(capability["id"].decode("utf-8", errors="replace"))
+
+            elif isinstance(capability["id"], unicode):
+                flags.append(capability["id"])
 
     except AttributeError:
         return []

@@ -84,7 +84,7 @@ class TestIsPartition(unittest.TestCase):
             self.assertTrue(macos.is_partition(partition))
 
 @unittest.skipUnless(LINUX, "Linux-specific test")
-class TestGetVendorProductCapacityLinux(unittest.TestCase):
+class TestGetVendorProductCapacityCapabilitiesLinux(unittest.TestCase):
     def setUp(self):
         #Good nodes, unicode strings.
         self.node1 = data.Node1().get_copy()
@@ -122,6 +122,7 @@ class TestGetVendorProductCapacityLinux(unittest.TestCase):
         del self.badnode2
         del self.badnode3
 
+    #------------------------------------ Tests for get_vendor ------------------------------------
     def test_get_vendor_linux_1(self):
         """Test #1: Test that vendors are returned correctly when they are present (unicode strings)."""
         self.assertEqual(linux.get_vendor(node=self.node1), "FakeVendor")
@@ -146,6 +147,7 @@ class TestGetVendorProductCapacityLinux(unittest.TestCase):
         """Test #5: Test that u"Unknown" is returned when vendor string is missing."""
         self.assertEqual(linux.get_vendor(node=self.badnode1), "Unknown")
 
+    #------------------------------------ Tests for get_product ------------------------------------
     def test_get_product_linux_1(self):
         """Test #1: Test that products are returned correctly when they are present (unicode strings)."""
         self.assertEqual(linux.get_product(node=self.node1), "FakeProduct")
@@ -170,6 +172,7 @@ class TestGetVendorProductCapacityLinux(unittest.TestCase):
         """Test #5: Test that u"Unknown" is returned when product string is missing."""
         self.assertEqual(linux.get_product(node=self.badnode1), "Unknown")
 
+    #------------------------------------ Tests for get_capacity ------------------------------------
     def test_get_capacity_linux_1(self):
         """Test #1: Test that capacity is correct on a 100GB disk"""
         raw_capacity, human_size = linux.get_capacity(node=self.node1)
@@ -193,6 +196,59 @@ class TestGetVendorProductCapacityLinux(unittest.TestCase):
     def test_get_capacity_linux_5(self):
         """Test #5: Test that ("Unknown", "Unknown") is returned when capacity is not an integer."""
         self.assertEqual(linux.get_capacity(node=self.badnode3), ("Unknown", "Unknown"))
+
+    #------------------------------------ Tests for get_capabilities ------------------------------------
+    def test_get_capabilities_linux_1(self):
+        """Test #1: Test that simple capabilities are found correctly (unicode strings)"""
+        capabilities = linux.get_capabilities(node=self.node1)
+
+        expected_capabilities = []
+
+        for _id in range(0, 200):
+            expected_capabilities.append("test"+unicode(_id))
+
+        self.assertEqual(capabilities, expected_capabilities)
+
+    def test_get_capabilities_linux_2(self):
+        """Test #2: Test that more realistic capabilities are found correctly (unicode strings)"""
+        capabilities = linux.get_capabilities(node=self.node2)
+        self.assertEqual(capabilities, ["removable", "uefi", "rewritable"])
+
+    def test_get_capabilities_linux_3(self):
+        """Test #3: Test that non-roman capabilities are found correctly (unicode strings)"""
+        capabilities = linux.get_capabilities(node=self.node3)
+        self.assertEqual(capabilities, ["ΉΜή", "𐅌𐅮", "test3"])
+
+    def test_get_capabilities_linux_4(self):
+        """Test #4: Test that mixed-character capabilities are found correctly (unicode strings)"""
+        capabilities = linux.get_capabilities(node=self.node4)
+        self.assertEqual(capabilities, ["ΉgerhΜή", "𐅌345𐅮", "test3"])
+
+    def test_get_capabilities_linux_5(self):
+        """Test #5: Test that simple capabilities are found correctly (byte strings)"""
+        capabilities = linux.get_capabilities(node=self.bytenode1)
+
+        expected_capabilities = []
+
+        for _id in range(0, 200):
+            expected_capabilities.append("test"+unicode(_id))
+
+        self.assertEqual(capabilities, expected_capabilities)
+
+    def test_get_capabilities_linux_6(self):
+        """Test #6: Test that more realistic capabilities are found correctly (byte strings)"""
+        capabilities = linux.get_capabilities(node=self.bytenode2)
+        self.assertEqual(capabilities, ["removable", "uefi", "rewritable"])
+
+    def test_get_capabilities_linux_7(self):
+        """Test #7: Test that non-roman capabilities are found correctly (byte strings)"""
+        capabilities = linux.get_capabilities(node=self.bytenode3)
+        self.assertEqual(capabilities, ["ΉΜή", "𐅌𐅮", "test3"])
+
+    def test_get_capabilities_linux_8(self):
+        """Test #8: Test that mixed-character capabilities are found correctly (byte strings)"""
+        capabilities = linux.get_capabilities(node=self.bytenode4)
+        self.assertEqual(capabilities, ["ΉgerhΜή", "𐅌345𐅮", "test3"])
 
 @unittest.skipUnless(not LINUX, "Mac-specific test")
 class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
