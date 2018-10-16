@@ -829,7 +829,7 @@ def return_fake_diskutil_info_disk0s3_plist():
 	<key>Internal</key>
 	<true/>
 	<key>MediaName</key>
-	<string>ΉΜήυΟομἝἲϾᾍᾈᾁὮᾌ ꍜꍧꍼꍟꍏꍄꌲꍏꌽꍛꍷꍼꍴ</string>
+	<string>/string>
 	<key>MediaType</key>
 	<string>Generic</string>
 	<key>MountPoint</key>
