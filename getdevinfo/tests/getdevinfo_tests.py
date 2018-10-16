@@ -231,26 +231,31 @@ class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
         macos.PLIST = self.plist0s2
         self.assertEqual(macos.get_vendor(disk="disk0s2"), "ThereIsNone")
 
-    def test_get_product(self):
-        #baddisk0
+    def test_get_product_1(self):
+        """Test #1: Test that u"Unknown" is returned when product info is missing."""
         macos.PLIST = self.badplist0
         self.assertEqual(macos.get_product(disk="disk0"), "Unknown")
 
-        #disk0
+    def test_get_product_2(self):
+        """Test #2: Test that the product is returned correctly for host devices (roman chars)."""
         macos.PLIST = self.plist0
         self.assertEqual(macos.get_product(disk="disk0"), "HARDDISK")
 
-        #disk0s1
+    @unittest.skipUnless(sys.version_info[0] > 2, "This test will fail on Python 2")
+    def test_get_product_3(self):
+        """Test #3: Test that the product is returned correctly for host devices (non-roman chars)."""
+        macos.PLIST = self.plist0nonroman
+        self.assertEqual(macos.get_product(disk="disk0"), "ꍜꍧꍼꍟꍏꍄꌲꍏꌽꍛꍷꍼꍴ")
+
+    def test_get_product_4(self):
+        """Test #4: Test that the product is returned correctly for partitions, using the host disk data, when missing."""
         macos.PLIST = self.plist0s1
         self.assertEqual(macos.get_product(disk="disk0s1"), "FakeDisk")
 
-        #disk0s2
+    def test_get_product_5(self):
+        """Test #5: Test that the product is returned correctly for partitions, using the host disk data, when present."""
         macos.PLIST = self.plist0s2
         self.assertEqual(macos.get_product(disk="disk0s2"), "FakeDisk")
-
-        #disk0s3
-        macos.PLIST = self.plist0s3
-        self.assertEqual(macos.get_product(disk="disk0s3"), "FakeDisk")
 
     def test_get_capacity(self):
         #baddisk0
