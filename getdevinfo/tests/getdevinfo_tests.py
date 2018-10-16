@@ -197,7 +197,10 @@ class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
         del macos.DISKINFO
         del self.badplist0
         del self.plist0
-        del self.plist0nonroman
+
+        if sys.version_info[0] > 2:
+            del self.plist0nonroman
+
         del self.plist0s1
         del self.plist0s2
         del self.plist0s3
