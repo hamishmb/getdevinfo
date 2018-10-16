@@ -382,6 +382,7 @@ class TestParseLVMOutput(unittest.TestCase):
         del self.correct_disk_info
 
     def test_parse_and_assemble_lvm_output(self):
+        """Test #1: Test that we run without error and that the result is as expected."""
         linux.parse_lvm_output(testing=True)
 
         self.assertEqual(linux.DISKINFO, self.correct_disk_info)
@@ -397,6 +398,17 @@ class TestComputeBlockSizeLinux(unittest.TestCase):
         del self.correct_results
 
     def test_compute_block_size(self):
+        """Test #1: Test that the block size is computed right with fake block dev output for:
+
+        1. None - No such file or device.
+        2. 512
+        3. 1024
+        4. 2014
+        5. 4096
+        6. 8192
+
+        """
+
         for testdata in self.block_sizes:
             self.assertEqual(linux.compute_block_size(testdata),
                              self.correct_results[self.block_sizes.index(testdata)])
