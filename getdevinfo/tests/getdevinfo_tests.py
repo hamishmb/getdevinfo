@@ -276,7 +276,7 @@ class TestComputeBlockSizeMac(unittest.TestCase):
                                                    data.return_fake_diskutil_info_bad_disk0_plist(),
                                                    data.return_fake_diskutil_info_disk0_plist(),
                                                    data.return_fake_diskutil_info_disk0s1_plist(),
-                                                   data.return_fake_diskutil_info_disk0s2_plist(), 
+                                                   data.return_fake_diskutil_info_disk0s2_plist(),
                                                    data.return_fake_diskutil_info_disk0s3_plist()],
                                                   [None, None, "512", "1024", "2048", "4096"])
 

@@ -31,7 +31,7 @@ module, but you can call it directly if you like.
         Feel free to experiment, but be aware that you may be able to
         crashes, exceptions, and generally weird situations by calling
         these methods directly if you get it wrong. A good place to
-        look if you're interested in this is the unit tests (in tests/). 
+        look if you're interested in this is the unit tests (in tests/).
 
 .. warning::
         This module won't work properly unless it is executed as root.
@@ -61,6 +61,10 @@ if sys.version_info[0] == 3:
 
     #Plist hack for Python 3.
     plistlib.readPlistFromString = plistlib.loads
+
+#Define global variables to make pylint happy.
+DISKINFO = None
+PLIST = None
 
 #TODO This is more limited than the Linux version. Might be good to change that.
 def get_info():
@@ -118,7 +122,7 @@ def get_info():
             get_partition_info(disk, host_disk)
 
     #Check we found some disks.
-    if len(DISKINFO) == 0:
+    if not DISKINFO:
         raise RuntimeError("No Disks found!")
 
     return DISKINFO
@@ -139,7 +143,7 @@ def get_device_info(disk):
 
     Usage:
 
-    >>> host_disk = get_device_info(<aNode>) 
+    >>> host_disk = get_device_info(<aNode>)
     """
 
     host_disk = "/dev/"+disk
@@ -183,7 +187,7 @@ def get_partition_info(disk, host_disk):
 
     Usage:
 
-    >>> volume = get_device_info(<aDisk>, <aHostDisk>) 
+    >>> volume = get_device_info(<aDisk>, <aHostDisk>)
     """
 
     volume = "/dev/"+disk
@@ -476,9 +480,9 @@ def get_block_size(disk):
     """
 
     #Run diskutil list to get disk names.
-    Command = "diskutil info -plist "+disk
+    command = "diskutil info -plist "+disk
 
-    runcmd = subprocess.Popen(Command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+    runcmd = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
 
     #Get the output and pass it to compute_block_size.
     return compute_block_size(disk, runcmd.communicate()[0])

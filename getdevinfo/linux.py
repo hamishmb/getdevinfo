@@ -31,7 +31,7 @@ module, but you can call it directly if you like.
         Feel free to experiment, but be aware that you may be able to
         crashes, exceptions, and generally weird situations by calling
         these methods directly if you get it wrong. A good place to
-        look if you're interested in this is the unit tests (in tests/). 
+        look if you're interested in this is the unit tests (in tests/).
 
 .. warning::
         This module won't work properly unless it is executed as root.
@@ -54,11 +54,18 @@ from __future__ import unicode_literals
 import subprocess
 import os
 import sys
+import bs4
 from bs4 import BeautifulSoup
 
 #Make unicode an alias for str in Python 3.
 if sys.version_info[0] == 3:
     unicode = str
+
+#Define global variables to make pylint happy.
+DISKINFO = None
+BLKIDOUTPUT = None
+LSOUTPUT = None
+LVMOUTPUT = None
 
 def get_info():
     """
@@ -104,14 +111,14 @@ def get_info():
     #Parse the XML.
     output = BeautifulSoup(stdout, "xml")
 
-    if type(output.list) == type(None):
+    if output.list is None:
         raise RuntimeError("No Disks found!")
 
     list_of_devices = output.list.children
 
     #Find the disks.
     for node in list_of_devices:
-        if unicode(type(node)) != "<class 'bs4.element.Tag'>":
+        if isinstance(node, bs4.element.Tag):
             continue
 
         #These are devices.
@@ -122,7 +129,7 @@ def get_info():
 
         #Get the info of any partitions these devices contain.
         for subnode in partitions:
-            if unicode(type(subnode)) != "<class 'bs4.element.Tag'>" or subnode.name != "node":
+            if (not isinstance(subnode, bs4.element.Tag)) or subnode.name != "node":
                 continue
 
             #partitions.
@@ -136,7 +143,7 @@ def get_info():
     parse_lvm_output()
 
     #Check we found some disks.
-    if len(DISKINFO) == 0:
+    if not DISKINFO:
         raise RuntimeError("No Disks found!")
 
 def get_device_info(node):
@@ -156,10 +163,10 @@ def get_device_info(node):
 
     Usage:
 
-    >>> host_disk = get_device_info(<aNode>) 
+    >>> host_disk = get_device_info(<aNode>)
     """
 
-    host_disk = unicode(node.logicalname.string)
+    host_disk = node.logicalname.string.decode("utf-8", errors="replace")
     DISKINFO[host_disk] = {}
     DISKINFO[host_disk]["Name"] = host_disk
     DISKINFO[host_disk]["Type"] = "Device"
@@ -175,7 +182,7 @@ def get_device_info(node):
     else:
         DISKINFO[host_disk]["RawCapacity"], DISKINFO[host_disk]["Capacity"] = get_capacity(node)
 
-    DISKINFO[host_disk]["Description"] = unicode(node.description.string)
+    DISKINFO[host_disk]["Description"] = node.description.string.decode("utf-8", errors="replace")
     DISKINFO[host_disk]["Flags"] = get_capabilities(node)
     DISKINFO[host_disk]["Partitioning"] = get_partitioning(host_disk)
     DISKINFO[host_disk]["FileSystem"] = "N/A"
@@ -213,14 +220,14 @@ def get_partition_info(subnode, host_disk):
 
     Usage:
 
-    >>> volume = get_device_info(<aNode>) 
+    >>> volume = get_device_info(<aNode>)
     """
 
     try:
-        volume = unicode(subnode.logicalname.string)
+        volume = subnode.logicalname.string.decode("utf-8", errors="replace")
 
     except AttributeError:
-        volume = host_disk+unicode(subnode.physid.string)
+        volume = host_disk+subnode.physid.string.decode("utf-8", errors="replace")
 
     #Fix bug on Pmagic, if the volume already exists in DISKINFO, or if it is an optical drive, ignore it here.
     if volume in DISKINFO or "/dev/cdrom" in volume or "/dev/sr" in volume or "/dev/dvd" in volume:
@@ -235,7 +242,7 @@ def get_partition_info(subnode, host_disk):
     DISKINFO[volume]["Vendor"] = get_vendor(subnode)
     DISKINFO[volume]["Product"] = "Host Device: "+DISKINFO[host_disk]["Product"]
     DISKINFO[volume]["RawCapacity"], DISKINFO[volume]["Capacity"] = get_capacity(subnode)
-    DISKINFO[volume]["Description"] = unicode(subnode.description.string)
+    DISKINFO[volume]["Description"] = subnode.description.string.decode("utf-8", errors="replace")
     DISKINFO[volume]["Flags"] = get_capabilities(subnode)
     DISKINFO[volume]["FileSystem"] = get_file_system(subnode)
 
@@ -275,7 +282,13 @@ def parse_lvm_output(testing=False):
 
     for line in LVMOUTPUT:
         line_counter += 1
-        line = unicode(line)
+
+        try:
+            line = line.decode("utf-8", errors="replace")
+
+        except AttributeError:
+            pass #Already a unicode string.
+
         if "--- Logical volume ---" in line:
             assemble_lvm_disk_info(line_counter, testing=testing)
 
@@ -309,9 +322,10 @@ def assemble_lvm_disk_info(line_counter, testing=False):
 
     for line in LVMOUTPUT[line_counter:]:
         try:
-            line = line.decode("utf-8").replace("'", "")
+            line = line.decode("utf-8", errors="replace").replace("'", "")
 
-        except: pass
+        except:
+            pass
 
         raw_lvm_info.append(line)
 
@@ -329,7 +343,7 @@ def assemble_lvm_disk_info(line_counter, testing=False):
 
             else:
                 #Get them from the test data, overriding the check to see if they exist.
-                volume, alias_list = get_lv_aliases_test(line)
+                volume, alias_list = get_lv_aliases_test(line) #pylint: disable=undefined-variable
 
             DISKINFO[volume] = {}
             DISKINFO[volume]["Name"] = volume
@@ -382,10 +396,14 @@ def get_vendor(node):
     >>> vendor = get_vendor(<aNode>)
     """
 
-    try:
-        return unicode(node.vendor.string)
+    if hasattr(node.vendor, "string"):
+        try:
+            return node.vendor.string.decode("utf-8", errors="replace")
 
-    except AttributeError:
+        except AttributeError:
+            return node.vendor.string #Already a unicode string.
+
+    else:
         return "Unknown"
 
 def get_product(node):
@@ -409,10 +427,14 @@ def get_product(node):
     >>> product = get_product(<aNode>)
     """
 
-    try:
-        return unicode(node.product.string)
+    if hasattr(node.product, "string"):
+        try:
+            return node.product.string.decode("utf-8", errors="replace")
 
-    except AttributeError:
+        except AttributeError:
+            return node.product.string #Already a unicode string.
+
+    else:
         return "Unknown"
 
 def get_capacity(node):
@@ -437,15 +459,16 @@ def get_capacity(node):
     >>> raw_size, human_size = get_capacity(<aNode>)
     """
 
-    try:
+    if hasattr(node, "size") and hasattr(node.size, "string"):
+        #This is actually an int, despite the misleading name.
         raw_capacity = unicode(node.size.string)
 
-    except AttributeError:
-        try:
-            raw_capacity = unicode(node.capacity.string)
+    elif hasattr(node, "capacity") and hasattr(node.capacity, "string"):
+        #This is actually an int, despite the misleading name.
+        raw_capacity = unicode(node.capacity.string)
 
-        except AttributeError:
-            return "Unknown", "Unknown"
+    else:
+        return "Unknown", "Unknown"
 
     #Round the sizes to make them human-readable.
     unit_list = [None, "B", "KB", "MB", "GB", "TB", "PB", "EB"]
@@ -489,7 +512,7 @@ def get_capabilities(node):
 
     try:
         for capability in node.capabilities.children:
-            if unicode(type(capability)) != "<class 'bs4.element.Tag'>" or capability.name != "capability":
+            if (not isinstance(capability, bs4.element.Tag)) or capability.name != "capability":
                 continue
 
             flags.append(capability["id"])
@@ -564,11 +587,11 @@ def get_file_system(node):
 
     try:
         for config in node.configuration.children:
-            if unicode(type(config)) != "<class 'bs4.element.Tag'>" or config.name != "setting":
+            if (not isinstance(config, bs4.element.Tag)) or config.name != "setting":
                 continue
 
             if config["id"] == "filesystem":
-                file_system = unicode(config["value"])
+                file_system = config["value"].decode("utf-8", errors="replace")
 
                 #Use different terminology where wanted.
                 if file_system == "fat":
@@ -606,7 +629,7 @@ def get_uuid(disk):
 
     #Try to get the UUID from blkid's output.
     for line in BLKIDOUTPUT.split(b'\n'):
-        line = unicode(line).replace("'", "")
+        line = line.decode("utf-8", errors="replace").replace("'", "")
 
         if disk in line:
             uuid = line.split()[-1]
@@ -645,7 +668,7 @@ def get_id(disk):
     #Try to get the ID from ls's output.
     for line in LSOUTPUT.split(b'\n'):
         try:
-            line = unicode(line).replace("'", "")
+            line = line.decode("utf-8", errors="replace").replace("'", "")
 
             split_line = line.split()
 
@@ -717,9 +740,10 @@ def get_lv_file_system(disk): #XXX What happens if this fails?
     cmd = subprocess.Popen("LC_ALL=C blkid "+disk, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
 
     try:
-        output = cmd.communicate()[0].decode("utf-8")
+        output = cmd.communicate()[0].decode("utf-8", errors="replace")
 
-    except: pass
+    except:
+        pass
 
     return output.split("=")[-1].replace("\"", "").replace("\n", "")
 
@@ -855,7 +879,7 @@ def get_block_size(disk):
     runcmd = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
 
     #Get the output and pass it to compute_block_size.
-    return compute_block_size(runcmd.communicate()[0].decode("utf-8"))
+    return compute_block_size(runcmd.communicate()[0].decode("utf-8", errors="replace"))
 
 def compute_block_size(stdout):
     """
@@ -881,7 +905,7 @@ def compute_block_size(stdout):
 
     #Check it worked (it should be convertable to an integer if it did).
     try:
-        tmp = int(result)
+        int(result)
 
     except ValueError:
         #It didn't, this is probably a file, not a disk.

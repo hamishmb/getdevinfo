@@ -28,17 +28,15 @@ import getopt
 import sys
 import os
 
+#Import test modules.
+from tests import getdevinfo_tests
+
 #Make unicode an alias for str in Python 3.
 if sys.version_info[0] == 3:
     unicode = str
 
 #Global vars.
 VERSION = "1.0.4"
-
-#Import test modules.
-import tests
-
-from tests import getdevinfo_tests
 
 def usage():
     print("\nUsage: tests.py [OPTION]\n\n")
@@ -54,7 +52,7 @@ if os.geteuid() != 0:
 
 #Check all cmdline options are valid.
 try:
-    opts, args = getopt.getopt(sys.argv[1:], "hD", ["help", "debug"])
+    OPTS, ARGS = getopt.getopt(sys.argv[1:], "hD", ["help", "debug"])
 
 except getopt.GetoptError as err:
     #Invalid option. Show the help message and then exit.
@@ -64,11 +62,11 @@ except getopt.GetoptError as err:
     sys.exit(2)
 
 #Log only critical messages by default.
-loggerLevel = logging.CRITICAL
+LOGGER_LEVEL = logging.CRITICAL
 
-for o, a in opts:
+for o, a in OPTS:
     if o in ["-D", "--debug"]:
-        loggerLevel = logging.DEBUG
+        LOGGER_LEVEL = logging.DEBUG
     elif o in ["-h", "--help"]:
         usage()
         sys.exit()
@@ -76,7 +74,7 @@ for o, a in opts:
         assert False, "unhandled option"
 
 #Set up the logger (silence all except critical logging messages).
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s: %(message)s', datefmt='%d/%m/%Y %I:%M:%S %p', level=loggerLevel)
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s: %(message)s', datefmt='%d/%m/%Y %I:%M:%S %p', level=LOGGER_LEVEL)
 logger = logging
 
 if __name__ == "__main__":

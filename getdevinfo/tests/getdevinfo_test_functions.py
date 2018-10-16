@@ -21,8 +21,6 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import os
-
 def get_lv_aliases(line):
     """Obtain and verify the name of an LVM volume. Return it once found."""
     alias_list = []
