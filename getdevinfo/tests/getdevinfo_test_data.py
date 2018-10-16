@@ -108,6 +108,33 @@ class ByteNode2:
     class size:
         string = 10000000000000000000
 
+# ---------------------------------------------- non-roman chars --------------------------------------
+class ByteNode3: #Greek characters.
+    def get_copy(self):
+        return self
+
+    class vendor:
+        string = "ΉΜήυΟομἝἲϾᾍᾈᾁὮᾌ".encode("utf-8")
+
+    class product:
+        string = "𐅛𐅣𐅸𐅒𐅌𐅮𐅺𐅷𐅑𐅮𐆀𐅸𝈢𝈵𝈭".encode("utf-8")
+
+    class size:
+        string = 10000000000000000000
+
+class ByteNode4: #Yi characters.
+    def get_copy(self):
+        return self
+
+    class vendor:
+        string = "ꀒꀲꀯꀭꁎꀦꀄꀴꀿꀬꀝꅮꅧꅌ".encode("utf-8")
+
+    class product:
+        string = "ꍜꍧꍼꍟꍏꍄꌲꍏꌽꍛꍷꍼꍴ".encode("utf-8")
+
+    class size:
+        string = 10000000000000000000
+
 #----------------------------------- Bad Nodes, missing data, and/or wrong type ------------------------
 class BadNode1:
     def get_copy(self):
