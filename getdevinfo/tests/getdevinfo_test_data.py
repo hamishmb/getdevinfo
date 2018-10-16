@@ -15,6 +15,9 @@
 # You should have received a copy of the GNU General Public License
 # along with GetDevInfo.  If not, see <http://www.gnu.org/licenses/>.
 
+#Note: The non-roman characters in this test data are random.
+#If they by some random chance spell something offensive, I apologise.
+
 #Do future imports to support python 3.
 from __future__ import absolute_import
 from __future__ import division
@@ -22,6 +25,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 #Classes for test cases.
+#--------------------------------------- Good Nodes, unicode strings ------------------------------------
 class Node1:
     def get_copy(self):
         return self
@@ -48,6 +52,88 @@ class Node2:
     class size:
         string = 10000000000000000000
 
+# ---------------------------------------------- non-roman chars --------------------------------------
+class Node3: #Greek characters.
+    def get_copy(self):
+        return self
+
+    class vendor:
+        string = "ΉΜήυΟομἝἲϾᾍᾈᾁὮᾌ"
+
+    class product:
+        string = "𐅛𐅣𐅸𐅒𐅌𐅮𐅺𐅷𐅑𐅮𐆀𐅸𝈢𝈵𝈭"
+
+    class size:
+        string = 10000000000000000000
+
+class Node4: #Yi characters.
+    def get_copy(self):
+        return self
+
+    class vendor:
+        string = "ꀒꀲꀯꀭꁎꀦꀄꀴꀿꀬꀝꅮꅧꅌ"
+
+    class product:
+        string = "ꍜꍧꍼꍟꍏꍄꌲꍏꌽꍛꍷꍼꍴ"
+
+    class size:
+        string = 10000000000000000000
+
+#------------------------------------- Good Nodes, byte strings -----------------------------------------
+class ByteNode1:
+    def get_copy(self):
+        return self
+
+    class vendor:
+        string = b"FakeVendor"
+
+    class product:
+        string = b"FakeProduct"
+
+    class capacity:
+        string = 100000000000
+
+class ByteNode2:
+    def get_copy(self):
+        return self
+
+    class vendor:
+        string = b"FakeVendor2"
+
+    class product:
+        string = b"FakeProduct2"
+
+    class size:
+        string = 10000000000000000000
+
+# ---------------------------------------------- non-roman chars --------------------------------------
+class ByteNode3: #Greek characters.
+    def get_copy(self):
+        return self
+
+    class vendor:
+        string = b"ΉΜήυΟομἝἲϾᾍᾈᾁὮᾌ"
+
+    class product:
+        string = b"𐅛𐅣𐅸𐅒𐅌𐅮𐅺𐅷𐅑𐅮𐆀𐅸𝈢𝈵𝈭"
+
+    class size:
+        string = 10000000000000000000
+
+class ByteNode4: #Yi characters.
+    def get_copy(self):
+        return self
+
+    class vendor:
+        string = b"ꀒꀲꀯꀭꁎꀦꀄꀴꀿꀬꀝꅮꅧꅌ"
+
+    class product:
+        string = b"ꍜꍧꍼꍟꍏꍄꌲꍏꌽꍛꍷꍼꍴ"
+
+    class size:
+        string = 10000000000000000000
+
+#----------------------------------- Bad Nodes, missing data, and/or wrong type ------------------------
 class BadNode1:
     def get_copy(self):
         return self
@@ -83,9 +169,10 @@ class BadNode3:
         notstring = ""
 
     class size:
+        #Should be int, despite the misleading name.
         string = "fghjk"
 
-#Functions to return fake diskinfo dictionary.
+#-------------------------------- Functions to return fake diskinfo dictionary. --------------------------------
 def return_fake_disk_info_linux():
     diskinfo = {}
 

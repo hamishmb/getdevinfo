@@ -15,6 +15,9 @@
 # You should have received a copy of the GNU General Public License
 # along with GetDevInfo.  If not, see <http://www.gnu.org/licenses/>.
 
+#Note: The non-roman characters in these tests are random.
+#If they by some random chance spell something offensive, I apologise.
+
 #Do future imports to support python 3.
 from __future__ import absolute_import
 from __future__ import division
@@ -66,20 +69,40 @@ class TestIsPartition(unittest.TestCase):
     def tearDown(self):
         del macos.DISKINFO
 
-    def test_is_partition(self):
+    def test_is_partition_1(self):
+        """Test #1: Test that devices are not recognised as partitions"""
         #Devices.
-        for device in ["/dev/disk0", "/dev/disk1", "/dev/disk10"]:
+        for device in ["/dev/disk0", "/dev/disk1", "/dev/disk10", "/dev/disk134"]:
             self.assertFalse(macos.is_partition(device))
 
+    def test_is_partition_2(self):
+        """Test #2: Test that partitions are not recognised as devices."""
         #Partitions.
-        for partition in ["/dev/disk0s2", "/dev/disk0s1", "/dev/disk0s45", "/dev/disk1s5", "/dev/disk1s45"]:
+        for partition in ["/dev/disk0s2", "/dev/disk0s1", "/dev/disk0s45", "/dev/disk1s5",
+                          "/dev/disk1s45", "/dev/disk25s456"]:
+
             self.assertTrue(macos.is_partition(partition))
 
 @unittest.skipUnless(LINUX, "Linux-specific tests")
 class TestGetVendorProductCapacityLinux(unittest.TestCase):
     def setUp(self):
+        #Good nodes, unicode strings.
         self.node1 = data.Node1().get_copy()
         self.node2 = data.Node2().get_copy()
+
+        #Non-roman characters.
+        self.node3 = data.Node3().get_copy()
+        self.node4 = data.Node4().get_copy()
+
+        #Good nodes, bytestrings.
+        self.bytenode1 = data.ByteNode1().get_copy()
+        self.bytenode2 = data.ByteNode2().get_copy()
+
+        #Non-roman characters.
+        self.bytenode3 = data.ByteNode3().get_copy()
+        self.bytenode4 = data.ByteNode4().get_copy()
+
+        #Bad nodes.
         self.badnode1 = data.BadNode1().get_copy()
         self.badnode2 = data.BadNode2().get_copy()
         self.badnode3 = data.BadNode3().get_copy()
@@ -87,13 +110,40 @@ class TestGetVendorProductCapacityLinux(unittest.TestCase):
     def tearDown(self):
         del self.node1
         del self.node2
+        del self.node3
+        del self.node4
+
+        del self.bytenode1
+        del self.bytenode2
+        del self.bytenode3
+        del self.bytenode4
+
         del self.badnode1
         del self.badnode2
         del self.badnode3
 
-    def test_get_vendor_linux(self):
+    def test_get_vendor_linux_1(self):
+        """Test #1: Test that vendors are returned correctly when they are present (unicode strings)."""
         self.assertEqual(linux.get_vendor(node=self.node1), "FakeVendor")
         self.assertEqual(linux.get_vendor(node=self.node2), "FakeVendor2")
+
+    def test_get_vendor_linux_2(self):
+        """Test #2: Test that vendors are returned correctly when they are present (byte strings)."""
+        self.assertEqual(linux.get_vendor(node=self.bytenode1), "FakeVendor")
+        self.assertEqual(linux.get_vendor(node=self.bytenode2), "FakeVendor2")
+
+    def test_get_vendor_linux_3(self):
+        """Test #3: Test that vendors are returned correctly when they have non-roman chars (unicode strings)."""
+        self.assertEqual(linux.get_vendor(node=self.node3), "ΉΜήυΟομἝἲϾᾍᾈᾁὮᾌ")
+        self.assertEqual(linux.get_vendor(node=self.node4), "ꀒꀲꀯꀭꁎꀦꀄꀴꀿꀬꀝꅮꅧꅌ")
+
+    def test_get_vendor_linux_4(self):
+        """Test #4: Test that vendors are returned correctly when they have non-roman chars (byte strings)."""
+        self.assertEqual(linux.get_vendor(node=self.bytenode3), "ΉΜήυΟομἝἲϾᾍᾈᾁὮᾌ")
+        self.assertEqual(linux.get_vendor(node=self.bytenode4), "ꀒꀲꀯꀭꁎꀦꀄꀴꀿꀬꀝꅮꅧꅌ")
+
+    def test_get_vendor_linux_5(self):
+        """Test #5: Test that u"Unknown" is returned when vendor string is missing."""
         self.assertEqual(linux.get_vendor(node=self.badnode1), "Unknown")
 
     def test_get_product_linux(self):

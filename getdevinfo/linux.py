@@ -397,14 +397,13 @@ def get_vendor(node):
     """
 
     if hasattr(node.vendor, "string"):
-        try:
+        if isinstance(node.vendor.string, bytes):
             return node.vendor.string.decode("utf-8", errors="replace")
 
-        except AttributeError:
+        elif isinstance(node.vendor.string, unicode):
             return node.vendor.string #Already a unicode string.
 
-    else:
-        return "Unknown"
+    return "Unknown"
 
 def get_product(node):
     """
@@ -428,14 +427,13 @@ def get_product(node):
     """
 
     if hasattr(node.product, "string"):
-        try:
+        if isinstance(node.vendor.string, bytes):
             return node.product.string.decode("utf-8", errors="replace")
 
-        except AttributeError:
+        elif isinstance(node.vendor.string, unicode):
             return node.product.string #Already a unicode string.
 
-    else:
-        return "Unknown"
+    return "Unknown"
 
 def get_capacity(node):
     """
