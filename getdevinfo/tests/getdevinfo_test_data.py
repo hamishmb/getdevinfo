@@ -651,9 +651,9 @@ def return_fake_diskutil_info_disk0s1_plist():
 	<key>RAIDSlice</key>
 	<false/>
 	<key>Removable</key>
-	<false/>
+	<true/>
 	<key>RemovableMedia</key>
-	<false/>
+	<true/>
 	<key>RemovableMediaOrExternalDevice</key>
 	<false/>
 	<key>SMARTStatus</key>

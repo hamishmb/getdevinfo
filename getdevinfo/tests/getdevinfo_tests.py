@@ -317,7 +317,7 @@ class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
         Test #3: Test that the description (for a partition) is generated correctly when:
 
         1. We know the disk is internal.
-        2. The disk is an HDD.
+        2. The disk is a removable drive.
         3. We know the disk is connected through SATA.
 
         """

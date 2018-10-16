@@ -398,7 +398,7 @@ def get_description(disk):
         return internal_or_external+disk_type
 
     elif internal_or_external != "Unknown ":
-        return internal_or_external
+        return internal_or_external+"Unknown Disk"
 
     else:
         return "N/A"
