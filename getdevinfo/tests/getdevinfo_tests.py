@@ -285,26 +285,71 @@ class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
         self.assertEqual(raw_capacity, "650002432000000000000")
         self.assertEqual(human_size, "650 EB")
 
-    def test_get_description(self): #NOTE: Could make these more stringent w/ plists from old macOS versions.
-        #baddisk0
+        #NOTE: Could make these next ones more stringent w/ plists from old macOS versions.
+    def test_get_description_1(self):
+        """
+        Test #1: Test that the description is generated correctly when:
+
+        1. We don't know if the disk is internal or external.
+        2. We don't know if the disk is an SSD.
+        3. We don't know the bus protocol.
+
+        """
+
         macos.PLIST = self.badplist0
         self.assertEqual(macos.get_description(disk="disk0"), "Unknown Hard Disk Drive ")
 
-        #disk0
+    def test_get_description_2(self):
+        """
+        Test #2: Test that the description (for a host device) is generated correctly when:
+
+        1. We know the disk is internal.
+        2. The disk is an HDD.
+        3. We know the disk is connected through SATA.
+
+        """
+
         macos.PLIST = self.plist0
         self.assertEqual(macos.get_description(disk="disk0"), "Internal Hard Disk Drive (Connected through SATA)")
 
-        #disk0s1
+    def test_get_description_3(self):
+        """
+        Test #3: Test that the description (for a partition) is generated correctly when:
+
+        1. We know the disk is internal.
+        2. The disk is an HDD.
+        3. We know the disk is connected through SATA.
+
+        """
+
         macos.PLIST = self.plist0s1
         self.assertEqual(macos.get_description(disk="disk0s1"), "Internal Hard Disk Drive (Connected through SATA)")
 
-        #disk0s2
-        macos.PLIST = self.plist0s2
-        self.assertEqual(macos.get_description(disk="disk0s2"), "Internal Hard Disk Drive (Connected through SATA)")
+    def test_get_description_4(self):
+        """
+        Test #4: Test that the description (for a partition) is generated correctly when:
 
-        #disk0s3
+        1. We know the disk is external.
+        2. The disk is an HDD.
+        3. We know the disk is connected through USB.
+
+        """
+
+        macos.PLIST = self.plist0s2
+        self.assertEqual(macos.get_description(disk="disk0s2"), "External Hard Disk Drive (Connected through USB)")
+
+    def test_get_description_5(self):
+        """
+        Test #5: Test that the description (for a partition) is generated correctly when:
+
+        1. We know the disk is external.
+        2. The disk is an SSD.
+        3. We know the disk is connected through Thunderbolt.
+
+        """
+
         macos.PLIST = self.plist0s3
-        self.assertEqual(macos.get_description(disk="disk0s3"), "Internal Hard Disk Drive (Connected through SATA)")
+        self.assertEqual(macos.get_description(disk="disk0s3"), "External Solid State Drive (Connected through Thunderbolt)")
 
 @unittest.skipUnless(LINUX, "Linux-specific test")
 class TestParseLVMOutput(unittest.TestCase):
