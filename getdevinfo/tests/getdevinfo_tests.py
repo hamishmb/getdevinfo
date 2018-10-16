@@ -323,7 +323,7 @@ class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
         """
 
         macos.PLIST = self.plist0s1
-        self.assertEqual(macos.get_description(disk="disk0s1"), "Internal Hard Disk Drive (Connected through SATA)")
+        self.assertEqual(macos.get_description(disk="disk0s1"), "Internal Removable Drive (Connected through SATA)")
 
     def test_get_description_4(self):
         """
