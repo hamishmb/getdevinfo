@@ -507,6 +507,96 @@ def return_fake_diskutil_info_disk0_plist():
 </dict>
 </plist>"""
 
+def return_fake_diskutil_info_disk0_plist_nonroman():
+    return """<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Bootable</key>
+	<false/>
+	<key>BusProtocol</key>
+	<string>SATA</string>
+	<key>CanBeMadeBootable</key>
+	<false/>
+	<key>CanBeMadeBootableRequiresDestroy</key>
+	<false/>
+	<key>Content</key>
+	<string>GUID_partition_scheme</string>
+	<key>DeviceBlockSize</key>
+	<integer>512</integer>
+	<key>DeviceIdentifier</key>
+	<string>disk0</string>
+	<key>DeviceNode</key>
+	<string>/dev/disk0</string>
+	<key>DeviceTreePath</key>
+	<string>IODeviceTree:/PCI0@1e0000/pci8086,2829@1F,2/PRT0@0/PMP@0</string>
+	<key>Ejectable</key>
+	<false/>
+	<key>EjectableMediaAutomaticUnderSoftwareControl</key>
+	<false/>
+	<key>EjectableOnly</key>
+	<false/>
+	<key>FreeSpace</key>
+	<integer>0</integer>
+	<key>GlobalPermissionsEnabled</key>
+	<false/>
+	<key>IOKitSize</key>
+	<integer>42948853248</integer>
+	<key>IORegistryEntryName</key>
+	<string>VBOX HARDDISK Media</string>
+	<key>Internal</key>
+	<true/>
+	<key>LowLevelFormatSupported</key>
+	<false/>
+	<key>MediaName</key>
+	<string>ΉΜήυΟομἝἲϾᾍᾈᾁὮᾌ ꍜꍧꍼꍟꍏꍄꌲꍏꌽꍛꍷꍼꍴ</string>
+	<key>MediaType</key>
+	<string>Generic</string>
+	<key>MountPoint</key>
+	<string></string>
+	<key>OS9DriversInstalled</key>
+	<false/>
+	<key>ParentWholeDisk</key>
+	<string>disk0</string>
+	<key>RAIDMaster</key>
+	<false/>
+	<key>RAIDSlice</key>
+	<false/>
+	<key>Removable</key>
+	<false/>
+	<key>RemovableMedia</key>
+	<false/>
+	<key>RemovableMediaOrExternalDevice</key>
+	<false/>
+	<key>SMARTStatus</key>
+	<string>Not Supported</string>
+	<key>Size</key>
+	<integer>42948853248</integer>
+	<key>SolidState</key>
+	<false/>
+	<key>SupportsGlobalPermissionsDisable</key>
+	<false/>
+	<key>SystemImage</key>
+	<false/>
+	<key>TotalSize</key>
+	<integer>42948853248</integer>
+	<key>VirtualOrPhysical</key>
+	<string>Physical</string>
+	<key>VolumeName</key>
+	<string></string>
+	<key>VolumeSize</key>
+	<integer>0</integer>
+	<key>WholeDisk</key>
+	<true/>
+	<key>Writable</key>
+	<true/>
+	<key>WritableMedia</key>
+	<true/>
+	<key>WritableVolume</key>
+	<false/>
+</dict>
+</plist>"""
+
 def return_fake_diskutil_info_disk0s1_plist():
     return """<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -739,7 +829,7 @@ def return_fake_diskutil_info_disk0s3_plist():
 	<key>Internal</key>
 	<true/>
 	<key>MediaName</key>
-	<string></string>
+	<string>ΉΜήυΟομἝἲϾᾍᾈᾁὮᾌ ꍜꍧꍼꍟꍏꍄꌲꍏꌽꍛꍷꍼꍴ</string>
 	<key>MediaType</key>
 	<string>Generic</string>
 	<key>MountPoint</key>

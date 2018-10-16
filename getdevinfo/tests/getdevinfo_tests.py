@@ -184,6 +184,7 @@ class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
         macos.DISKINFO = data.return_fake_disk_info_mac()
         self.badplist0 = plistlib.readPlistFromString(to_bytestring(data.return_fake_diskutil_info_bad_disk0_plist()))
         self.plist0 = plistlib.readPlistFromString(to_bytestring(data.return_fake_diskutil_info_disk0_plist()))
+        self.plist0nonroman = plistlib.readPlistFromString(to_bytestring(data.return_fake_diskutil_info_disk0_plist_nonroman()))
         self.plist0s1 = plistlib.readPlistFromString(to_bytestring(data.return_fake_diskutil_info_disk0s1_plist()))
         self.plist0s2 = plistlib.readPlistFromString(to_bytestring(data.return_fake_diskutil_info_disk0s2_plist()))
         self.plist0s3 = plistlib.readPlistFromString(to_bytestring(data.return_fake_diskutil_info_disk0s3_plist()))
@@ -192,6 +193,7 @@ class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
         del macos.DISKINFO
         del self.badplist0
         del self.plist0
+        del self.plist0nonroman
         del self.plist0s1
         del self.plist0s2
         del self.plist0s3
@@ -202,17 +204,22 @@ class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
         self.assertEqual(macos.get_vendor(disk="disk0"), "Unknown")
 
     def test_get_vendor_2(self):
-        """Test #2: Test that the vendor is returned correctly for host devices."""
+        """Test #2: Test that the vendor is returned correctly for host devices (roman chars)."""
         macos.PLIST = self.plist0
         self.assertEqual(macos.get_vendor(disk="disk0"), "VBOX")
 
     def test_get_vendor_3(self):
-        """Test #3: Test that the vendor is returned correctly for partitions, using the host disk data, when missing."""
+        """Test #3: Test that the vendor is returned correctly for host devices (non-roman chars)."""
+        macos.PLIST = self.plist0nonroman
+        self.assertEqual(macos.get_vendor(disk="disk0"), "ΉΜήυΟομἝἲϾᾍᾈᾁὮᾌ")
+
+    def test_get_vendor_4(self):
+        """Test #4: Test that the vendor is returned correctly for partitions, using the host disk data, when missing."""
         macos.PLIST = self.plist0s1
         self.assertEqual(macos.get_vendor(disk="disk0s1"), "ThereIsNone")
 
-    def test_get_vendor_4(self):
-        """Test #4: Test that the vendor is returned correctly for partitions, using the host disk data, when present."""
+    def test_get_vendor_5(self):
+        """Test #5: Test that the vendor is returned correctly for partitions, using the host disk data, when present."""
         macos.PLIST = self.plist0s2
         self.assertEqual(macos.get_vendor(disk="disk0s2"), "ThereIsNone")
 
