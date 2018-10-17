@@ -84,7 +84,7 @@ class TestIsPartition(unittest.TestCase):
             self.assertTrue(macos.is_partition(partition))
 
 @unittest.skipUnless(LINUX, "Linux-specific test")
-class TestGetVendorProductCapacityCapabilitiesLinux(unittest.TestCase):
+class TestMainLinux(unittest.TestCase):
     def setUp(self):
         #Disk info.
         linux.DISKINFO = data.return_fake_disk_info_linux()
@@ -276,7 +276,7 @@ class TestGetVendorProductCapacityCapabilitiesLinux(unittest.TestCase):
         """Test #5: Test that Unknown is returned when the disk is not in the dictionary"""
         self.assertEqual(linux.get_partitioning("thisisnotadisk1"), "Unknown")
 
-    #------------------------------------ Tests for get_partitioning ------------------------------------
+    #------------------------------------ Tests for get_file_system ------------------------------------
     def test_get_file_system_1(self):
         """Test #1: Test that fat is detected correctly as 'vfat' (unicode strings)"""
         self.assertEqual(linux.get_file_system(self.node1), "vfat")
@@ -309,6 +309,22 @@ class TestGetVendorProductCapacityCapabilitiesLinux(unittest.TestCase):
         """Test #8: Test that mixed characters are handled correctly (byte strings)"""
         self.assertEqual(linux.get_file_system(self.bytenode4), "ꀒꀲꀯꀭꁎꀦꀄewrhtyjthgrfeꀴꀿꀬꀝꅮꅧꅌ")
 
+    #------------------------------------ Tests for get_uuid ------------------------------------
+    def test_get_uuid_1(self):
+        """Test #1: Test that the UUID is returned correctly when present"""
+        linux.BLKIDOUTPUT = data.return_fake_blkid_output()
+        self.assertEqual(linux.get_uuid("/dev/sda1"), "8243-0631")
+
+    def test_get_uuid_2(self):
+        """Test #2: Test that Unknown is returned when the UUID is not present"""
+        linux.BLKIDOUTPUT = data.return_fake_blkid_output()
+        self.assertEqual(linux.get_uuid("/dev/sda3"), "Unknown")
+
+    def test_get_uuid_3(self):
+        """Test #3: Test that Unknown is returned when we ask for the UUID of a disk that is not present"""
+        linux.BLKIDOUTPUT = data.return_fake_blkid_output()
+        self.assertEqual(linux.get_uuid("/dev/sda34"), "Unknown")
+        
 @unittest.skipUnless(not LINUX, "Mac-specific test")
 class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
     def setUp(self):
@@ -418,8 +434,7 @@ class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
 
         #NOTE: Could make these next ones more stringent w/ plists from old macOS versions.
     def test_get_description_1(self):
-        """
-        Test #1: Test that the description is generated correctly when:
+        """Test #1: Test that the description is generated correctly when:
 
         1. We don't know if the disk is internal or external.
         2. We don't know if the disk is an SSD.
@@ -431,8 +446,7 @@ class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
         self.assertEqual(macos.get_description(disk="disk0"), "Unknown Hard Disk Drive ")
 
     def test_get_description_2(self):
-        """
-        Test #2: Test that the description (for a host device) is generated correctly when:
+        """Test #2: Test that the description (for a host device) is generated correctly when:
 
         1. We know the disk is internal.
         2. The disk is an HDD.
@@ -444,8 +458,7 @@ class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
         self.assertEqual(macos.get_description(disk="disk0"), "Internal Hard Disk Drive (Connected through SATA)")
 
     def test_get_description_3(self):
-        """
-        Test #3: Test that the description (for a partition) is generated correctly when:
+        """Test #3: Test that the description (for a partition) is generated correctly when:
 
         1. We know the disk is internal.
         2. The disk is a removable drive.
@@ -457,8 +470,7 @@ class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
         self.assertEqual(macos.get_description(disk="disk0s1"), "Internal Removable Drive (Connected through SATA)")
 
     def test_get_description_4(self):
-        """
-        Test #4: Test that the description (for a partition) is generated correctly when:
+        """Test #4: Test that the description (for a partition) is generated correctly when:
 
         1. We know the disk is external.
         2. The disk is an HDD.
@@ -470,8 +482,7 @@ class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
         self.assertEqual(macos.get_description(disk="disk0s2"), "External Hard Disk Drive (Connected through USB)")
 
     def test_get_description_5(self):
-        """
-        Test #5: Test that the description (for a partition) is generated correctly when:
+        """Test #5: Test that the description (for a partition) is generated correctly when:
 
         1. We know the disk is external.
         2. The disk is an SSD.
