@@ -75,7 +75,7 @@ class TestIsPartition(unittest.TestCase):
 
             self.assertTrue(macos.is_partition(partition))
 
-class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
+class TestGetVendorProductCapacityDescription(unittest.TestCase):
     def setUp(self):
         macos.DISKINFO = data.return_fake_disk_info_mac()
         self.badplist0 = plistlib.readPlistFromString(to_bytestring(data.return_fake_diskutil_info_bad_disk0_plist()))
@@ -242,7 +242,7 @@ class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
         macos.PLIST = self.plist0s3
         self.assertEqual(macos.get_description(disk="disk0s3"), "External Solid State Drive (Connected through Thunderbolt)")
 
-class TestComputeBlockSizeMac(unittest.TestCase):
+class TestComputeBlockSize(unittest.TestCase):
     def setUp(self):
         self.block_sizes, self.correct_results = (["Not a plist",
                                                    data.return_fake_diskutil_info_bad_disk0_plist(),

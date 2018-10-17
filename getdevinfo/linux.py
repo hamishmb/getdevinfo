@@ -118,7 +118,7 @@ def get_info():
 
     #Find the disks.
     for node in list_of_devices:
-        if isinstance(node, bs4.element.Tag):
+        if not isinstance(node, bs4.element.Tag):
             continue
 
         #These are devices.
@@ -166,7 +166,7 @@ def get_device_info(node):
     >>> host_disk = get_device_info(<aNode>)
     """
 
-    host_disk = node.logicalname.string.decode("utf-8", errors="replace")
+    host_disk = unicode(node.logicalname.string) #FIXME is this ever bytes?
     DISKINFO[host_disk] = {}
     DISKINFO[host_disk]["Name"] = host_disk
     DISKINFO[host_disk]["Type"] = "Device"
@@ -182,7 +182,7 @@ def get_device_info(node):
     else:
         DISKINFO[host_disk]["RawCapacity"], DISKINFO[host_disk]["Capacity"] = get_capacity(node)
 
-    DISKINFO[host_disk]["Description"] = node.description.string.decode("utf-8", errors="replace")
+    DISKINFO[host_disk]["Description"] = unicode(node.description.string) #FIXME is this ever bytes?
     DISKINFO[host_disk]["Flags"] = get_capabilities(node)
     DISKINFO[host_disk]["Partitioning"] = get_partitioning(host_disk)
     DISKINFO[host_disk]["FileSystem"] = "N/A"
@@ -224,10 +224,10 @@ def get_partition_info(subnode, host_disk):
     """
 
     try:
-        volume = subnode.logicalname.string.decode("utf-8", errors="replace")
+        volume = unicode(subnode.logicalname.string) #FIXME is this ever bytes?
 
     except AttributeError:
-        volume = host_disk+subnode.physid.string.decode("utf-8", errors="replace")
+        volume = host_disk+unicode(subnode.physid.string) #FIXME is this ever bytes?
 
     #Fix bug on Pmagic, if the volume already exists in DISKINFO, or if it is an optical drive, ignore it here.
     if volume in DISKINFO or "/dev/cdrom" in volume or "/dev/sr" in volume or "/dev/dvd" in volume:
@@ -242,7 +242,7 @@ def get_partition_info(subnode, host_disk):
     DISKINFO[volume]["Vendor"] = get_vendor(subnode)
     DISKINFO[volume]["Product"] = "Host Device: "+DISKINFO[host_disk]["Product"]
     DISKINFO[volume]["RawCapacity"], DISKINFO[volume]["Capacity"] = get_capacity(subnode)
-    DISKINFO[volume]["Description"] = subnode.description.string.decode("utf-8", errors="replace")
+    DISKINFO[volume]["Description"] = unicode(subnode.description.string) #FIXME is this ever bytes?
     DISKINFO[volume]["Flags"] = get_capabilities(subnode)
     DISKINFO[volume]["FileSystem"] = get_file_system(subnode)
 

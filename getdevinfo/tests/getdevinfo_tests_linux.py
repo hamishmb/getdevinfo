@@ -53,7 +53,7 @@ sys.path.insert(0, os.path.abspath('../..'))
 
 import getdevinfo.linux as linux
 
-class TestMainLinux(unittest.TestCase):
+class TestMain(unittest.TestCase):
     def setUp(self):
         #Disk info.
         linux.DISKINFO = data.return_fake_disk_info_linux()
@@ -333,7 +333,7 @@ class TestParseLVMOutput(unittest.TestCase):
 
         self.assertEqual(linux.DISKINFO, self.correct_disk_info)
 
-class TestComputeBlockSizeLinux(unittest.TestCase):
+class TestComputeBlockSize(unittest.TestCase):
     def setUp(self):
         self.block_sizes, self.correct_results = (data.return_fake_block_dev_output(),
                                                   [None, "512", "1024", "2048", "4096", "8192"])
@@ -357,3 +357,8 @@ class TestComputeBlockSizeLinux(unittest.TestCase):
         for testdata in self.block_sizes:
             self.assertEqual(linux.compute_block_size(testdata),
                              self.correct_results[self.block_sizes.index(testdata)])
+
+class TestGetInfo(unittest.TestCase):
+    def test_get_info(self):
+        """Test that the information can be collected on this system without error"""
+        linux.get_info()
