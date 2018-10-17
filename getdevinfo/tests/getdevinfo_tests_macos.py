@@ -101,6 +101,7 @@ class TestGetVendorProductCapacityDescription(unittest.TestCase):
         del self.plist0s2
         del self.plist0s3
 
+    #------------------------------------ Tests for get_vendor ------------------------------------
     def test_get_vendor_1(self):
         """Test #1: Test that u"Unknown" is returned when vendor info is missing."""
         macos.PLIST = self.badplist0
@@ -127,6 +128,7 @@ class TestGetVendorProductCapacityDescription(unittest.TestCase):
         macos.PLIST = self.plist0s2
         self.assertEqual(macos.get_vendor(disk="disk0s2"), "ThereIsNone")
 
+    #------------------------------------ Tests for get_product ------------------------------------
     def test_get_product_1(self):
         """Test #1: Test that u"Unknown" is returned when product info is missing."""
         macos.PLIST = self.badplist0
@@ -153,6 +155,7 @@ class TestGetVendorProductCapacityDescription(unittest.TestCase):
         macos.PLIST = self.plist0s2
         self.assertEqual(macos.get_product(disk="disk0s2"), "FakeDisk")
 
+    #------------------------------------ Tests for get_capacity ------------------------------------
     def test_get_capacity_1(self):
         """Test #1: Test that u"Unknown", u"Unknown" is returned when capacity info is missing."""
         macos.PLIST = self.badplist0
@@ -181,7 +184,8 @@ class TestGetVendorProductCapacityDescription(unittest.TestCase):
         self.assertEqual(raw_capacity, "650002432000000000000")
         self.assertEqual(human_size, "650 EB")
 
-        #NOTE: Could make these next ones more stringent w/ plists from old macOS versions.
+    #------------------------------------ Tests for get_description ------------------------------------
+    #NOTE: Could make these next ones more stringent w/ plists from old macOS versions.
     def test_get_description_1(self):
         """Test #1: Test that the description is generated correctly when:
 
@@ -264,9 +268,13 @@ class TestComputeBlockSize(unittest.TestCase):
         3. 1024
         4. 2014
         5. 4096
-        6. 8192 TODO this one.
 
         """
 
         for testdata in self.block_sizes:
             self.assertEqual(macos.compute_block_size("FakeDisk", to_bytestring(testdata)), self.correct_results[self.block_sizes.index(testdata)])
+
+class TestGetInfo(unittest.TestCase):
+    def test_get_info(self):
+        """Test that the information can be collected on this system without error"""
+        macos.get_info()
