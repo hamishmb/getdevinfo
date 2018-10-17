@@ -1,6 +1,6 @@
 # getdevinfo
 
-This repository holds my new getdevinfo module. This module was originally integreted directly into the source code of Wine Autostart, DDRescue-GUI, and WxFixBoot, but has now been separated for ease of maintenance. Because it's on GitLab (https://gitlab.com/hamishmb/getdevinfo) and on PyPI (the Python Package Index) (https://pypi.python.org/pypi/getdevinfo/), and released under the GPLv3+, this means other people can use it too.
+This repository holds my new getdevinfo module. This module was originally integreted directly into the source code of Wine Autostart, DDRescue-GUI, and WxFixBoot, but has now been separated for ease of maintenance. Because it's on GitLab (https://gitlab.com/hamishmb/getdevinfo) and on PyPI (the Python Package Index) (https://pypi.org/project/getdevinfo/), and released under the GPLv3+, this means other people can use it too.
 
 Description of Package
 ======================
@@ -61,3 +61,41 @@ Documentation
 =============
 This can be found at https://www.hamishmb.com/html/Docs/getdevinfo.php.
 
+Running The Tests
+=================
+
+These have to be run as the superuser, because low-level access to hardware is required to gather information.
+
+The process for running these is the same on both Linux and macOS. It can be done on both Python 2 and Python 3.
+
+Without Coverage Reporting
+--------------------------
+Change directory to the getdevinfo subfolder, and run:
+
+"sudo python3 ./tests.py"
+
+or:
+
+"sudo python2 ./tests.py"
+
+With Coverage Reporting
+-----------------------
+Make sure you have installed Coverage.py using pip or your package manager.
+
+Change directory to the getdevinfo subfolder, and run:
+
+"sudo python3 -m coverage run --rcfile=../.coveragerc ./tests.py"
+
+or:
+
+"sudo python2 -m coverage run --rcfile=../.coveragerc ./tests.py"
+
+To run the tests. Then run:
+
+"sudo python3 -m coverage report"
+
+or:
+
+"sudo python2 -m coverage report"
+
+To see the report.
