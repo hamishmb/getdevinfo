@@ -599,7 +599,11 @@ def get_file_system(node):
                 continue
 
             if config["id"] == "filesystem":
-                file_system = config["value"].decode("utf-8", errors="replace")
+                if isinstance(config["value"], bytes):
+                    file_system = config["value"].decode("utf-8", errors="replace")
+
+                elif isinstance(config["value"], unicode):
+                    file_system = config["value"] #Already a unicode string.
 
                 #Use different terminology where wanted.
                 if file_system == "fat":

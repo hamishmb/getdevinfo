@@ -276,6 +276,39 @@ class TestGetVendorProductCapacityCapabilitiesLinux(unittest.TestCase):
         """Test #5: Test that Unknown is returned when the disk is not in the dictionary"""
         self.assertEqual(linux.get_partitioning("thisisnotadisk1"), "Unknown")
 
+    #------------------------------------ Tests for get_partitioning ------------------------------------
+    def test_get_file_system_1(self):
+        """Test #1: Test that fat is detected correctly as 'vfat' (unicode strings)"""
+        self.assertEqual(linux.get_file_system(self.node1), "vfat")
+
+    def test_get_file_system_2(self):
+        """Test #2: Test that ext4 is detected correctly (unicode strings)"""
+        self.assertEqual(linux.get_file_system(self.node2), "ext4")
+
+    def test_get_file_system_3(self):
+        """Test #3: Test that non-roman characters are handled correctly (unicode strings)"""
+        self.assertEqual(linux.get_file_system(self.node3), "ΉΜήυΟομἝἲϾᾍᾈᾁὮᾌ")
+
+    def test_get_file_system_4(self):
+        """Test #4: Test that mixed characters are handled correctly (unicode strings)"""
+        self.assertEqual(linux.get_file_system(self.node4), "ꀒꀲꀯꀭꁎꀦꀄewrhtyjthgrfeꀴꀿꀬꀝꅮꅧꅌ")
+
+    def test_get_file_system_5(self):
+        """Test #1: Test that fat is detected correctly as 'vfat' (byte strings)"""
+        self.assertEqual(linux.get_file_system(self.bytenode1), "vfat")
+
+    def test_get_file_system_6(self):
+        """Test #6: Test that ext4 is detected correctly (byte strings)"""
+        self.assertEqual(linux.get_file_system(self.bytenode2), "ext4")
+
+    def test_get_file_system_7(self):
+        """Test #7: Test that non-roman characters are handled correctly (byte strings)"""
+        self.assertEqual(linux.get_file_system(self.bytenode3), "ΉΜήυΟομἝἲϾᾍᾈᾁὮᾌ")
+
+    def test_get_file_system_8(self):
+        """Test #8: Test that mixed characters are handled correctly (byte strings)"""
+        self.assertEqual(linux.get_file_system(self.bytenode4), "ꀒꀲꀯꀭꁎꀦꀄewrhtyjthgrfeꀴꀿꀬꀝꅮꅧꅌ")
+
 @unittest.skipUnless(not LINUX, "Mac-specific test")
 class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
     def setUp(self):

@@ -54,6 +54,14 @@ class Node1:
             tag["id"] = "test"+unicode(_id)
             children.append(tag)
 
+    class configuration:
+        children = []
+
+        tag = bs4.element.Tag(name="setting")
+        tag["id"] = "filesystem"
+        tag["value"] = "fat"
+        children.append(tag)
+
 class Node2:
     def get_copy(self):
         return self
@@ -74,6 +82,14 @@ class Node2:
             tag = bs4.element.Tag(name="capability")
             tag["id"] = _id
             children.append(tag)
+
+    class configuration:
+        children = []
+
+        tag = bs4.element.Tag(name="setting")
+        tag["id"] = "filesystem"
+        tag["value"] = "ext4"
+        children.append(tag)
 
 # ---------------------------------------------- non-roman chars --------------------------------------
 class Node3: #Greek characters.
@@ -97,6 +113,14 @@ class Node3: #Greek characters.
             tag["id"] = _id
             children.append(tag)
 
+    class configuration:
+        children = []
+
+        tag = bs4.element.Tag(name="setting")
+        tag["id"] = "filesystem"
+        tag["value"] = "ΉΜήυΟομἝἲϾᾍᾈᾁὮᾌ"
+        children.append(tag)
+
 class Node4: #Yi characters.
     def get_copy(self):
         return self
@@ -117,6 +141,14 @@ class Node4: #Yi characters.
             tag = bs4.element.Tag(name="capability")
             tag["id"] = _id
             children.append(tag)
+
+    class configuration:
+        children = []
+
+        tag = bs4.element.Tag(name="setting")
+        tag["id"] = "filesystem"
+        tag["value"] = "ꀒꀲꀯꀭꁎꀦꀄewrhtyjthgrfeꀴꀿꀬꀝꅮꅧꅌ"
+        children.append(tag)
 
 #------------------------------------- Good Nodes, byte strings -----------------------------------------
 class ByteNode1:
@@ -140,6 +172,14 @@ class ByteNode1:
             tag["id"] = b"test"+unicode(_id).encode("utf-8")
             children.append(tag)
 
+    class configuration:
+        children = []
+
+        tag = bs4.element.Tag(name="setting")
+        tag["id"] = "filesystem"
+        tag["value"] = b"fat"
+        children.append(tag)
+
 class ByteNode2:
     def get_copy(self):
         return self
@@ -160,6 +200,14 @@ class ByteNode2:
             tag = bs4.element.Tag(name="capability")
             tag["id"] = _id
             children.append(tag)
+
+    class configuration:
+        children = []
+
+        tag = bs4.element.Tag(name="setting")
+        tag["id"] = "filesystem"
+        tag["value"] = b"ext4"
+        children.append(tag)
 
 # ---------------------------------------------- non-roman chars --------------------------------------
 class ByteNode3: #Greek characters.
@@ -183,6 +231,14 @@ class ByteNode3: #Greek characters.
             tag["id"] = _id
             children.append(tag)
 
+    class configuration:
+        children = []
+
+        tag = bs4.element.Tag(name="setting")
+        tag["id"] = "filesystem"
+        tag["value"] = "ΉΜήυΟομἝἲϾᾍᾈᾁὮᾌ".encode("utf-8")
+        children.append(tag)
+
 class ByteNode4: #Yi characters.
     def get_copy(self):
         return self
@@ -203,6 +259,14 @@ class ByteNode4: #Yi characters.
             tag = bs4.element.Tag(name="capability")
             tag["id"] = _id
             children.append(tag)
+
+    class configuration:
+        children = []
+
+        tag = bs4.element.Tag(name="setting")
+        tag["id"] = "filesystem"
+        tag["value"] = "ꀒꀲꀯꀭꁎꀦꀄewrhtyjthgrfeꀴꀿꀬꀝꅮꅧꅌ".encode("utf-8")
+        children.append(tag)
 
 #----------------------------------- Bad Nodes, missing data, and/or wrong type ------------------------
 class BadNode1:
