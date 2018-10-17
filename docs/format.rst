@@ -6,7 +6,7 @@ In order for it to be useful, this format, and the information that
 is provided in it, needs to be explained precisely.
 
 This format is the same on both Linux and macOS, but the macOS version
-of this librry currently has less functionality, so some of the
+of this library currently has less functionality, so some of the
 information isn't present on that version. Instead, placeholders
 like "N/A" or "Unknown" are used. Those instances will be pointed out
 here.
@@ -30,7 +30,7 @@ Various information is collected and organised here.
     The disk's name, stored as a string.
 
 'Type':
-    Whether the disk is a "Device" or "Partition", stored as a strin.
+    Whether the disk is a "Device" or "Partition", stored as a string.
 
     For example:
         >>> DISKINFO['/dev/sda']['Type']
@@ -127,14 +127,14 @@ Various information is collected and organised here.
         >>> "ATA Disk"
 
     Example 2:
-        >>> DISKINFO['/dev/sda']['Description']
+        >>> DISKINFO['/dev/disk1']['Description']
         >>> "Internal Hard Disk Drive (Connected through SATA)"
 
 'Flags':
     The disk's capabilities, stored as a list.
 
     .. note::
-        Not available on macOS, or for logical volumes.
+        Not yet available on macOS, or for logical volumes.
 
     For example:
         >>> DISKINFO['/dev/cdrom']['Flags']
@@ -144,7 +144,7 @@ Various information is collected and organised here.
     The disk's partition scheme. N/A for partitions and logical volumes.
 
     .. note::
-        Not available on macOS.
+        Not yet available on macOS.
 
     Example 1:
         >>> DISKINFO['/dev/sda']['Partitioning']
@@ -158,7 +158,7 @@ Various information is collected and organised here.
     The disk's file system. N/A for devices.
 
     .. note::
-        Not available on macOS.
+        Not yet available on macOS.
 
     Example:
         >>> DISKINFO['/dev/sda']['FileSystem']
@@ -169,7 +169,7 @@ Various information is collected and organised here.
     type. For example, vfat UUIDs are shorter.
 
     .. note::
-        Not available on macOS.
+        Not yet available on macOS.
 
     Example:
         >>> DISKINFO['/dev/sda1']['UUID']
@@ -179,7 +179,7 @@ Various information is collected and organised here.
     The disk's ID.
 
     .. note::
-        Not available on macOS.
+        Not yet available on macOS.
 
     Example:
         >>> DISKINFO['/dev/sda']['ID']
@@ -190,5 +190,5 @@ Various information is collected and organised here.
     resides there, if any.
 
     .. note::
-        Not available on macOS.
+        Not yet available on macOS.
 

@@ -29,7 +29,7 @@ module, but you can call it directly if you like.
 
 .. warning::
         Feel free to experiment, but be aware that you may be able to
-        crashes, exceptions, and generally weird situations by calling
+        cause crashes, exceptions, and generally weird situations by calling
         these methods directly if you get it wrong. A good place to
         look if you're interested in this is the unit tests (in tests/).
 

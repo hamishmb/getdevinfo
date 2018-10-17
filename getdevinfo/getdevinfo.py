@@ -25,7 +25,7 @@ For example (Python 2 or 3):
 >>> import getdevinfo
 >>> getdevinfo.getdevinfo.get_info()
 
-Or, more consisely:
+Or, more concisely:
 
 >>> import getdevinfo.getdevinfo as getdevinfo
 >>> getdevinfo.get_info()
