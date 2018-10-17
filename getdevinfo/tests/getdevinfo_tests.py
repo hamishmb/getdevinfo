@@ -89,6 +89,12 @@ class TestMainLinux(unittest.TestCase):
         #Disk info.
         linux.DISKINFO = data.return_fake_disk_info_linux()
 
+        #Blkid output.
+        linux.BLKIDOUTPUT = data.return_fake_blkid_output()
+
+        #Ls output.
+        linux.LSOUTPUT = data.return_fake_ls_output()
+
         #Good nodes, unicode strings.
         self.node1 = data.Node1().get_copy()
         self.node2 = data.Node2().get_copy()
@@ -112,6 +118,8 @@ class TestMainLinux(unittest.TestCase):
 
     def tearDown(self):
         del linux.DISKINFO
+        del linux.BLKIDOUTPUT
+        del linux.LSOUTPUT
 
         del self.node1
         del self.node2
@@ -312,19 +320,29 @@ class TestMainLinux(unittest.TestCase):
     #------------------------------------ Tests for get_uuid ------------------------------------
     def test_get_uuid_1(self):
         """Test #1: Test that the UUID is returned correctly when present"""
-        linux.BLKIDOUTPUT = data.return_fake_blkid_output()
         self.assertEqual(linux.get_uuid("/dev/sda1"), "8243-0631")
 
     def test_get_uuid_2(self):
         """Test #2: Test that Unknown is returned when the UUID is not present"""
-        linux.BLKIDOUTPUT = data.return_fake_blkid_output()
         self.assertEqual(linux.get_uuid("/dev/sda3"), "Unknown")
 
     def test_get_uuid_3(self):
         """Test #3: Test that Unknown is returned when we ask for the UUID of a disk that is not present"""
-        linux.BLKIDOUTPUT = data.return_fake_blkid_output()
         self.assertEqual(linux.get_uuid("/dev/sda34"), "Unknown")
-        
+
+    #------------------------------------ Tests for get_id ------------------------------------
+    def test_get_id_1(self):
+        """Test #1: Test that the ID is returned correctly for a partition when present"""
+        self.assertEqual(linux.get_id("/dev/sda1"), "ata-Samsung_SSD_850_EVO_500GB_S21JNXAGC48182L-part1")
+
+    def test_get_id_2(self):
+        """Test #2: Test that the ID is returned correctly for a device when present"""
+        self.assertEqual(linux.get_id("/dev/sdb"), "ata-ST1000DM003-1CH162_W1D2BRDP")
+
+    def test_get_id_3(self):
+        """Test #3: Test that Unknown is returned for a device/partition that is not present"""
+        self.assertEqual(linux.get_id("/dev/sdf"), "Unknown")
+
 @unittest.skipUnless(not LINUX, "Mac-specific test")
 class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
     def setUp(self):

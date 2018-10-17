@@ -1137,5 +1137,40 @@ def return_fake_blkid_output():
 /dev/sdb2  ext4             /home          83788ffc-d36b-4f3a-b48f-18638f1591a8
 /dev/sda3                   (not mounted)  """
 
+def return_fake_ls_output():
+    return b"""total 0
+lrwxrwxrwx 1 root root  9 Oct 17 08:45 ata-HL-DT-ST_DVD+_-RW_GA50N_K0ADADE0046 -> ../../sr0
+lrwxrwxrwx 1 root root  9 Oct 17 08:45 ata-Samsung_SSD_850_EVO_500GB_S21JNXAGC48182L -> ../../sda
+lrwxrwxrwx 1 root root 10 Oct 17 08:45 ata-Samsung_SSD_850_EVO_500GB_S21JNXAGC48182L-part1 -> ../../sda1
+lrwxrwxrwx 1 root root 11 Oct 17 08:45 ata-Samsung_SSD_850_EVO_500GB_S21JNXAGC48182L-part10 -> ../../sda10
+lrwxrwxrwx 1 root root 10 Oct 17 08:45 ata-Samsung_SSD_850_EVO_500GB_S21JNXAGC48182L-part2 -> ../../sda2
+lrwxrwxrwx 1 root root 10 Oct 17 08:45 ata-Samsung_SSD_850_EVO_500GB_S21JNXAGC48182L-part3 -> ../../sda3
+lrwxrwxrwx 1 root root 10 Oct 17 08:45 ata-Samsung_SSD_850_EVO_500GB_S21JNXAGC48182L-part4 -> ../../sda4
+lrwxrwxrwx 1 root root 10 Oct 17 08:45 ata-Samsung_SSD_850_EVO_500GB_S21JNXAGC48182L-part5 -> ../../sda5
+lrwxrwxrwx 1 root root 10 Oct 17 08:45 ata-Samsung_SSD_850_EVO_500GB_S21JNXAGC48182L-part6 -> ../../sda6
+lrwxrwxrwx 1 root root 10 Oct 17 08:45 ata-Samsung_SSD_850_EVO_500GB_S21JNXAGC48182L-part7 -> ../../sda7
+lrwxrwxrwx 1 root root 10 Oct 17 08:45 ata-Samsung_SSD_850_EVO_500GB_S21JNXAGC48182L-part8 -> ../../sda8
+lrwxrwxrwx 1 root root 10 Oct 17 08:45 ata-Samsung_SSD_850_EVO_500GB_S21JNXAGC48182L-part9 -> ../../sda9
+lrwxrwxrwx 1 root root  9 Oct 17 08:45 ata-ST1000DM003-1CH162_W1D2BRDP -> ../../sdb
+lrwxrwxrwx 1 root root 10 Oct 17 08:45 ata-ST1000DM003-1CH162_W1D2BRDP-part1 -> ../../sdb1
+lrwxrwxrwx 1 root root 10 Oct 17 08:45 ata-ST1000DM003-1CH162_W1D2BRDP-part2 -> ../../sdb2
+lrwxrwxrwx 1 root root  9 Oct 17 08:45 usb-Generic_STORAGE_DEVICE_000000001206-0:0 -> ../../sdc
+lrwxrwxrwx 1 root root  9 Oct 17 08:45 usb-Generic_STORAGE_DEVICE_000000001206-0:1 -> ../../sdd
+lrwxrwxrwx 1 root root  9 Oct 17 08:45 wwn-0x5000c5006e19c6f2 -> ../../sdb
+lrwxrwxrwx 1 root root 10 Oct 17 08:45 wwn-0x5000c5006e19c6f2-part1 -> ../../sdb1
+lrwxrwxrwx 1 root root 10 Oct 17 08:45 wwn-0x5000c5006e19c6f2-part2 -> ../../sdb2
+lrwxrwxrwx 1 root root  9 Oct 17 08:45 wwn-0x5001480000000000 -> ../../sr0
+lrwxrwxrwx 1 root root  9 Oct 17 08:45 wwn-0x5002538d40897bed -> ../../sda
+lrwxrwxrwx 1 root root 10 Oct 17 08:45 wwn-0x5002538d40897bed-part1 -> ../../sda1
+lrwxrwxrwx 1 root root 11 Oct 17 08:45 wwn-0x5002538d40897bed-part10 -> ../../sda10
+lrwxrwxrwx 1 root root 10 Oct 17 08:45 wwn-0x5002538d40897bed-part2 -> ../../sda2
+lrwxrwxrwx 1 root root 10 Oct 17 08:45 wwn-0x5002538d40897bed-part3 -> ../../sda3
+lrwxrwxrwx 1 root root 10 Oct 17 08:45 wwn-0x5002538d40897bed-part4 -> ../../sda4
+lrwxrwxrwx 1 root root 10 Oct 17 08:45 wwn-0x5002538d40897bed-part5 -> ../../sda5
+lrwxrwxrwx 1 root root 10 Oct 17 08:45 wwn-0x5002538d40897bed-part6 -> ../../sda6
+lrwxrwxrwx 1 root root 10 Oct 17 08:45 wwn-0x5002538d40897bed-part7 -> ../../sda7
+lrwxrwxrwx 1 root root 10 Oct 17 08:45 wwn-0x5002538d40897bed-part8 -> ../../sda8
+lrwxrwxrwx 1 root root 10 Oct 17 08:45 wwn-0x5002538d40897bed-part9 -> ../../sda9"""
+
 def return_fake_block_dev_output():
     return ["No such file or device", "512", "1024", "2048", "4096", "8192"]
