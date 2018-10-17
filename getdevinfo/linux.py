@@ -732,7 +732,7 @@ def get_boot_record(disk):
 
     return (boot_record, boot_record_strings)
 
-def get_lv_file_system(disk): #XXX What happens if this fails?
+def get_lv_file_system(disk):
     """
     Private, implementation detail.
 
@@ -750,12 +750,10 @@ def get_lv_file_system(disk): #XXX What happens if this fails?
     """
 
     cmd = subprocess.Popen("LC_ALL=C blkid "+disk, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+    output = cmd.communicate()[0]
 
-    try:
-        output = cmd.communicate()[0].decode("utf-8", errors="replace")
-
-    except:
-        pass
+    if isinstance(output, bytes):
+        output = output.decode("utf-8", errors="replace")
 
     return output.split("=")[-1].replace("\"", "").replace("\n", "")
 

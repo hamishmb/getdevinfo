@@ -28,15 +28,21 @@ import getopt
 import sys
 import os
 
-#Import test modules.
-from tests import getdevinfo_tests
-
 #Make unicode an alias for str in Python 3.
 if sys.version_info[0] == 3:
     unicode = str
 
 #Global vars.
 VERSION = "1.0.4"
+
+#Determine the platform.
+LINUX = ("linux" in sys.platform)
+
+if LINUX:
+    from tests import getdevinfo_tests_linux as gd_tests
+
+else:
+    from tests import getdevinfo_tests_macos as gd_tests
 
 def usage():
     print("\nUsage: tests.py [OPTION]\n\n")
@@ -78,4 +84,4 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s: %(message)s'
 logger = logging
 
 if __name__ == "__main__":
-    unittest.TextTestRunner(verbosity=2).run(unittest.TestLoader().loadTestsFromModule(getdevinfo_tests))
+    unittest.TextTestRunner(verbosity=2).run(unittest.TestLoader().loadTestsFromModule(gd_tests))

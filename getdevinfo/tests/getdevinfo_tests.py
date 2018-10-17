@@ -343,6 +343,8 @@ class TestMainLinux(unittest.TestCase):
         """Test #3: Test that Unknown is returned for a device/partition that is not present"""
         self.assertEqual(linux.get_id("/dev/sdf"), "Unknown")
 
+    #------------------------------------ Tests for get_boot_record ------------------------------------
+
 @unittest.skipUnless(not LINUX, "Mac-specific test")
 class TestGetVendorProductCapacityDescriptionMac(unittest.TestCase):
     def setUp(self):
