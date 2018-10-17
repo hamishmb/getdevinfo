@@ -244,7 +244,13 @@ def get_partition_info(subnode, host_disk):
     DISKINFO[volume]["RawCapacity"], DISKINFO[volume]["Capacity"] = get_capacity(subnode)
     DISKINFO[volume]["Description"] = unicode(subnode.description.string) #FIXME is this ever bytes?
     DISKINFO[volume]["Flags"] = get_capabilities(subnode)
-    DISKINFO[volume]["FileSystem"] = get_file_system(subnode)
+
+    #Fx bug: don't try to get file systems of extended partitions.
+    if "extended" in DISKINFO[volume]["Flags"]:
+        DISKINFO[volume]["FileSystem"] = "N/A"
+
+    else:
+        DISKINFO[volume]["FileSystem"] = get_file_system(subnode)
 
     #Fix for Ubuntu 14.04.
     if DISKINFO[volume]["FileSystem"] == "Unknown":
