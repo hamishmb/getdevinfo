@@ -433,10 +433,10 @@ def get_product(node):
     """
 
     if hasattr(node.product, "string"):
-        if isinstance(node.vendor.string, bytes):
+        if isinstance(node.product.string, bytes):
             return node.product.string.decode("utf-8", errors="replace")
 
-        elif isinstance(node.vendor.string, unicode):
+        elif isinstance(node.product.string, unicode):
             return node.product.string #Already a unicode string.
 
     return "Unknown"
