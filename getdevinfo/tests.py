@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Unit tests for GetDevInfo version 1.0.4
+# Unit tests for GetDevInfo
 # This file is part of GetDevInfo.
 # Copyright (C) 2013-2018 Hamish McIntyre-Bhatty
 # GetDevInfo is free software: you can redistribute it and/or modify it
@@ -33,7 +33,7 @@ if sys.version_info[0] == 3:
     unicode = str
 
 #Global vars.
-VERSION = "1.0.4"
+VERSION = "1.0.5"
 
 #Determine the platform.
 LINUX = ("linux" in sys.platform)
