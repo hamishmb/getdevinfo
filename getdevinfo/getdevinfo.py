@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Device Information Obtainer 1.0.4
+# Device Information Obtainer
 # This file is part of GetDevInfo.
 # Copyright (C) 2013-2018 Hamish McIntyre-Bhatty
 # GetDevInfo is free software: you can redistribute it and/or modify it
@@ -58,7 +58,7 @@ from __future__ import unicode_literals
 import platform
 
 #Declare version; useful for users of the module.
-VERSION = "1.0.4"
+VERSION = "1.0.5"
 
 def get_info():
     """
