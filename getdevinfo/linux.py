@@ -499,10 +499,10 @@ def parse_lsblk_output():
                     DISKINFO[child_disk]["UUID"] = "Unknown"
 
                 try:
-                    DISKINFO[child_disk]["FileSystem"] = "Unknown"
+                    DISKINFO[child_disk]["FileSystem"] = child["fstype"]
 
                 except Exception:
-                    DISKINFO[child_disk]["FileSystem"] = child["fstype"]
+                    DISKINFO[child_disk]["FileSystem"] = "Unknown"
 
                 try:
                     DISKINFO[child_disk]["RawCapacity"] = child["size"]
