@@ -412,7 +412,12 @@ def parse_lsblk_output():
     >>> parse_lsblk_output()
     """
 
-    data = json.loads(LSBLKOUTPUT)
+    try:
+        data = json.loads(LSBLKOUTPUT)
+
+    except ValueError:
+        #Not a valid JSON document!
+        return
 
     for disk in data["blockdevices"]:
         host_disk = "/dev/"+disk["name"]
