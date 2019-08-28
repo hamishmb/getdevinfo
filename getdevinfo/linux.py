@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # Linux Functions For The Device Information Obtainer
 # This file is part of GetDevInfo.
-# Copyright (C) 2013-2018 Hamish McIntyre-Bhatty
+# Copyright (C) 2013-2019 Hamish McIntyre-Bhatty
 # GetDevInfo is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License version 3 or,
 # at your option, any later version.
@@ -54,6 +54,7 @@ from __future__ import unicode_literals
 import subprocess
 import os
 import sys
+import json
 import bs4
 from bs4 import BeautifulSoup
 
@@ -64,6 +65,7 @@ if sys.version_info[0] == 3:
 #Define global variables to make pylint happy.
 DISKINFO = None
 BLKIDOUTPUT = None
+LSBLKOUTPUT = None
 LSOUTPUT = None
 LVMOUTPUT = None
 
@@ -141,6 +143,20 @@ def get_info():
     LVMOUTPUT = cmd.communicate()[0].split(b"\n")
 
     parse_lvm_output()
+
+    #Find any NVME disks (lshw currently doesn't detect these).
+    cmd = subprocess.Popen("lsblk -o NAME,SIZE,TYPE,FSTYPE,VENDOR,MODEL -b -J", stdout=subprocess.PIPE,
+                           stderr=subprocess.STDOUT, shell=True)
+
+    global LSBLKOUTPUT
+    LSBLKOUTPUT = cmd.communicate()[0]
+
+    #Ignore exceptions in this code - it is temporary and unlikely to fail.
+    try:
+        parse_lsblk_output()
+
+    except Exception:
+        pass
 
     #Check we found some disks.
     if not DISKINFO:
@@ -380,6 +396,129 @@ def assemble_lvm_disk_info(line_counter, testing=False):
     #If there are any entries called "Unknown" (disks that we couldn't get the name for), remove them now to prevent issues.
     if "Unknown" in DISKINFO:
         DISKINFO.pop("Unknown")
+
+def parse_lsblk_output():
+    """
+    Private, implementation detail.
+
+    This function is used to get NVME disk information from the output of lsblk.
+
+    .. note::
+            This will only remain here until lshw adds support for NVME disk detection -
+            this is a temporary fix.
+
+    Usage:
+
+    >>> parse_lsblk_output()
+    """
+
+    data = json.loads(LSBLKOUTPUT)
+
+    for disk in data["blockdevices"]:
+        host_disk = "/dev/"+disk["name"]
+
+        #If this is not an NVME disk, ignore it.
+        if "nvme" not in host_disk:
+            continue
+
+        #If this disk is already in the DISKINFO dictionary, ignore it.
+        if host_disk in DISKINFO:
+            continue
+
+        DISKINFO[host_disk] = {}
+        DISKINFO[host_disk]["Name"] = host_disk
+        DISKINFO[host_disk]["Type"] = "Device"
+        DISKINFO[host_disk]["HostDevice"] = "N/A"
+        DISKINFO[host_disk]["Partitions"] = []
+        DISKINFO[host_disk]["Vendor"] = disk["vendor"].strip()
+        DISKINFO[host_disk]["Product"] = disk["model"].strip()
+        DISKINFO[host_disk]["UUID"] = "N/A"
+        DISKINFO[host_disk]["FileSystem"] = "N/A"
+
+        DISKINFO[host_disk]["RawCapacity"] = disk["size"]
+
+        #Calculate human-readable capacity.
+        #Round the sizes to make them human-readable.
+        unit_list = [None, "B", "KB", "MB", "GB", "TB", "PB", "EB"]
+        unit = "B"
+
+        try:
+            human_readable_size = int(DISKINFO[host_disk]["RawCapacity"])
+
+
+            while len(unicode(human_readable_size)) > 3:
+                #Shift up one unit.
+                unit = unit_list[unit_list.index(unit)+1]
+                human_readable_size = human_readable_size//1000
+
+        except (ValueError, IndexError):
+            DISKINFO[host_disk]["Capacity"] = "Unknown"
+
+        else:
+            DISKINFO[host_disk]["Capacity"] = unicode(human_readable_size)+" "+unit
+
+        DISKINFO[host_disk]["BootRecord"], DISKINFO[host_disk]["BootRecordStrings"] = get_boot_record(host_disk)
+
+        DISKINFO[host_disk]["Description"] = "N/A"
+        DISKINFO[host_disk]["Flags"] = "Unknown"
+        DISKINFO[host_disk]["Partitioning"] = "Unknown"
+        DISKINFO[host_disk]["ID"] = "Unknown"
+
+        #Get any partitions as well.
+        if "children" in disk:
+            for child in disk["children"]:
+                child_disk = "/dev/"+child["name"]
+
+                DISKINFO[child_disk] = {}
+                DISKINFO[child_disk]["Name"] = child_disk
+                DISKINFO[child_disk]["Type"] = "Partition"
+                DISKINFO[child_disk]["HostDevice"] = host_disk
+                DISKINFO[child_disk]["Partitions"] = []
+                DISKINFO[host_disk]["Partitions"].append(child_disk)
+                DISKINFO[child_disk]["Vendor"] = "N/A"
+                DISKINFO[child_disk]["Product"] = "Host Device: "+DISKINFO[host_disk]["Product"]
+
+                try:
+                    DISKINFO[child_disk]["UUID"] = child["uuid"]
+
+                except KeyError:
+                    DISKINFO[child_disk]["UUID"] = "Unknown"
+
+                if child["fstype"] is None:
+                    DISKINFO[child_disk]["FileSystem"] = "Unknown"
+
+                else:
+                    DISKINFO[child_disk]["FileSystem"] = child["fstype"]
+
+                DISKINFO[child_disk]["RawCapacity"] = child["size"]
+
+                #Calculate human-readable capacity.
+                #Round the sizes to make them human-readable.
+                unit_list = [None, "B", "KB", "MB", "GB", "TB", "PB", "EB"]
+                unit = "B"
+
+                try:
+                    human_readable_size = int(DISKINFO[child_disk]["RawCapacity"])
+
+
+                    while len(unicode(human_readable_size)) > 3:
+                        #Shift up one unit.
+                        unit = unit_list[unit_list.index(unit)+1]
+                        human_readable_size = human_readable_size//1000
+
+                except (ValueError, IndexError):
+                    DISKINFO[child_disk]["Capacity"] = "Unknown"
+
+                else:
+                    DISKINFO[child_disk]["Capacity"] = unicode(human_readable_size)+" "+unit
+
+                DISKINFO[child_disk]["BootRecord"], DISKINFO[child_disk]["BootRecordStrings"] = get_boot_record(child_disk)
+
+                DISKINFO[child_disk]["Description"] = "N/A"
+                DISKINFO[child_disk]["Flags"] = "Unknown"
+                DISKINFO[child_disk]["Partitioning"] = "N/A"
+                DISKINFO[child_disk]["ID"] = "Unknown"
+
 
 def get_vendor(node):
     """
@@ -694,7 +833,7 @@ def get_id(disk):
                 disk_id = split_line[-3]
                 break
 
-        except:
+        except Exception:
             pass
 
     return disk_id
