@@ -430,12 +430,27 @@ def parse_lsblk_output():
         DISKINFO[host_disk]["Type"] = "Device"
         DISKINFO[host_disk]["HostDevice"] = "N/A"
         DISKINFO[host_disk]["Partitions"] = []
-        DISKINFO[host_disk]["Vendor"] = disk["vendor"].strip()
-        DISKINFO[host_disk]["Product"] = disk["model"].strip()
+
+        try:
+            DISKINFO[host_disk]["Vendor"] = disk["vendor"].strip()
+
+        except Exception:
+            DISKINFO[host_disk]["Vendor"] = "Unknown"
+
+        try:
+            DISKINFO[host_disk]["Product"] = disk["model"].strip()
+
+        except Exception:
+            DISKINFO[host_disk]["Product"] = "Unknown"
+
         DISKINFO[host_disk]["UUID"] = "N/A"
         DISKINFO[host_disk]["FileSystem"] = "N/A"
 
-        DISKINFO[host_disk]["RawCapacity"] = disk["size"]
+        try:
+            DISKINFO[host_disk]["RawCapacity"] = disk["size"]
+
+        except Exception:
+            DISKINFO[host_disk]["RawCapacity"] = "Unknown"
 
         #Calculate human-readable capacity.
         #Round the sizes to make them human-readable.
@@ -445,13 +460,12 @@ def parse_lsblk_output():
         try:
             human_readable_size = int(DISKINFO[host_disk]["RawCapacity"])
 
-
             while len(unicode(human_readable_size)) > 3:
                 #Shift up one unit.
                 unit = unit_list[unit_list.index(unit)+1]
                 human_readable_size = human_readable_size//1000
 
-        except (ValueError, IndexError):
+        except (KeyError, ValueError, IndexError):
             DISKINFO[host_disk]["Capacity"] = "Unknown"
 
         else:
@@ -484,13 +498,17 @@ def parse_lsblk_output():
                 except KeyError:
                     DISKINFO[child_disk]["UUID"] = "Unknown"
 
-                if child["fstype"] is None:
+                try:
                     DISKINFO[child_disk]["FileSystem"] = "Unknown"
 
-                else:
+                except Exception:
                     DISKINFO[child_disk]["FileSystem"] = child["fstype"]
 
-                DISKINFO[child_disk]["RawCapacity"] = child["size"]
+                try:
+                    DISKINFO[child_disk]["RawCapacity"] = child["size"]
+
+                except Exception:
+                    DISKINFO[child_disk]["RawCapacity"] = "Unknown"
 
                 #Calculate human-readable capacity.
                 #Round the sizes to make them human-readable.
@@ -506,7 +524,7 @@ def parse_lsblk_output():
                         unit = unit_list[unit_list.index(unit)+1]
                         human_readable_size = human_readable_size//1000
 
-                except (ValueError, IndexError):
+                except (KeyError, ValueError, IndexError):
                     DISKINFO[child_disk]["Capacity"] = "Unknown"
 
                 else:
@@ -518,7 +536,6 @@ def parse_lsblk_output():
                 DISKINFO[child_disk]["Flags"] = "Unknown"
                 DISKINFO[child_disk]["Partitioning"] = "N/A"
                 DISKINFO[child_disk]["ID"] = "Unknown"
-
 
 def get_vendor(node):
     """
