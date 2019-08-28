@@ -509,6 +509,9 @@ def parse_lsblk_output():
                 except Exception:
                     DISKINFO[child_disk]["FileSystem"] = "Unknown"
 
+                if DISKINFO[child_disk]["FileSystem"] is None:
+                    DISKINFO[child_disk]["FileSystem"] = "Unknown"
+
                 try:
                     DISKINFO[child_disk]["RawCapacity"] = child["size"]
 
