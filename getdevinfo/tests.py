@@ -33,7 +33,7 @@ if sys.version_info[0] == 3:
     unicode = str
 
 #Global vars.
-VERSION = "1.0.5"
+VERSION = "1.0.6"
 
 #Determine the platform.
 LINUX = ("linux" in sys.platform)

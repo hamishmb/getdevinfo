@@ -58,7 +58,7 @@ from __future__ import unicode_literals
 import platform
 
 #Declare version; useful for users of the module.
-VERSION = "1.0.5"
+VERSION = "1.0.6"
 
 def get_info():
     """

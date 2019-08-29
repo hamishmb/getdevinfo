@@ -478,7 +478,7 @@ def parse_lsblk_output():
 
         DISKINFO[host_disk]["BootRecord"], DISKINFO[host_disk]["BootRecordStrings"] = get_boot_record(host_disk)
 
-        DISKINFO[host_disk]["Description"] = "N/A"
+        DISKINFO[host_disk]["Description"] = "NVME Disk"
         DISKINFO[host_disk]["Flags"] = "Unknown"
         DISKINFO[host_disk]["Partitioning"] = "Unknown"
         DISKINFO[host_disk]["ID"] = "Unknown"

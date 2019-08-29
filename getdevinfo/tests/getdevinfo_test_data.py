@@ -1174,3 +1174,231 @@ lrwxrwxrwx 1 root root 10 Oct 17 08:45 wwn-0x5002538d40897bed-part9 -> ../../sda
 
 def return_fake_block_dev_output():
     return ["No such file or device", "512", "1024", "2048", "4096", "8192"]
+
+def fake_get_boot_record(disk):
+    return (b"Unknown", [b"Unknown"])
+
+def return_fake_lsblk_output_good_1():
+    return b"""{
+   "blockdevices": [
+      {"name": "nvme0n1", "size": "1000204886016", "type": "disk", "fstype": null, "vendor": "ATA     ", "model": "Samsung SSD 860 ", "uuid": null,
+         "children": [
+            {"name": "nvme0n1p1", "size": "524288000", "type": "part", "fstype": "vfat", "vendor": null, "model": null, "uuid": "8033-0331"}
+         ]
+      },
+      {"name": "nvme1n1", "size": "1000204886016", "type": "disk", "fstype": null, "vendor": "ATA     ", "model": "ST1000DM003-1CH1", "uuid": null
+      },
+      {"name": "sr0", "size": "1073741312", "type": "rom", "fstype": null, "vendor": "HL-DT-ST", "model": "DVD+-RW GA50N   ", "uuid": null}
+   ]
+}
+"""
+
+def return_fake_lsblk_output_good_1_diskinfo():
+    diskinfo = {}
+
+    #Fictional /dev/nvme0n1
+    diskinfo["/dev/nvme0n1"] = {}
+    diskinfo["/dev/nvme0n1"]["Name"] = "/dev/nvme0n1"
+    diskinfo["/dev/nvme0n1"]["Type"] = "Device"
+    diskinfo["/dev/nvme0n1"]["HostDevice"] = "N/A"
+    diskinfo["/dev/nvme0n1"]["Partitions"] = ["/dev/nvme0n1p1"]
+    diskinfo["/dev/nvme0n1"]["Vendor"] = "ATA"
+    diskinfo["/dev/nvme0n1"]["Product"] = "Samsung SSD 860"
+    diskinfo["/dev/nvme0n1"]["UUID"] = "N/A"
+    diskinfo["/dev/nvme0n1"]["FileSystem"] = "N/A"
+    diskinfo["/dev/nvme0n1"]["RawCapacity"] = "1000204886016"
+    diskinfo["/dev/nvme0n1"]["Capacity"] = "1 TB"
+    diskinfo["/dev/nvme0n1"]["BootRecord"], diskinfo["/dev/nvme0n1"]["BootRecordStrings"] = (b"Unknown", [b"Unknown"])
+    diskinfo["/dev/nvme0n1"]["Description"] = "NVME Disk"
+    diskinfo["/dev/nvme0n1"]["Flags"] = "Unknown"
+    diskinfo["/dev/nvme0n1"]["Partitioning"] = "Unknown"
+    diskinfo["/dev/nvme0n1"]["ID"] = "Unknown"
+
+    #Fictional /dev/nvme0n1p1
+    diskinfo["/dev/nvme0n1p1"] = {}
+    diskinfo["/dev/nvme0n1p1"]["Name"] = "/dev/nvme0n1p1"
+    diskinfo["/dev/nvme0n1p1"]["Type"] = "Partition"
+    diskinfo["/dev/nvme0n1p1"]["HostDevice"] = "/dev/nvme0n1"
+    diskinfo["/dev/nvme0n1p1"]["Partitions"] = []
+
+    diskinfo["/dev/nvme0n1p1"]["Vendor"] = "N/A"
+    diskinfo["/dev/nvme0n1p1"]["Product"] = "Host Device: Samsung SSD 860"
+    diskinfo["/dev/nvme0n1p1"]["UUID"] = "8033-0331"
+    diskinfo["/dev/nvme0n1p1"]["FileSystem"] = "vfat"
+    diskinfo["/dev/nvme0n1p1"]["RawCapacity"] = "524288000"
+    diskinfo["/dev/nvme0n1p1"]["Capacity"] = "524 MB"
+    diskinfo["/dev/nvme0n1p1"]["BootRecord"], diskinfo["/dev/nvme0n1p1"]["BootRecordStrings"] = (b"Unknown", [b"Unknown"])
+    diskinfo["/dev/nvme0n1p1"]["Description"] = "N/A"
+    diskinfo["/dev/nvme0n1p1"]["Flags"] = "Unknown"
+    diskinfo["/dev/nvme0n1p1"]["Partitioning"] = "N/A"
+    diskinfo["/dev/nvme0n1p1"]["ID"] = "Unknown"
+
+    #Fictional /dev/nvme1n1
+    diskinfo["/dev/nvme1n1"] = {}
+    diskinfo["/dev/nvme1n1"]["Name"] = "/dev/nvme1n1"
+    diskinfo["/dev/nvme1n1"]["Type"] = "Device"
+    diskinfo["/dev/nvme1n1"]["HostDevice"] = "N/A"
+    diskinfo["/dev/nvme1n1"]["Partitions"] = []
+    diskinfo["/dev/nvme1n1"]["Vendor"] = "ATA"
+    diskinfo["/dev/nvme1n1"]["Product"] = "ST1000DM003-1CH1"
+    diskinfo["/dev/nvme1n1"]["UUID"] = "N/A"
+    diskinfo["/dev/nvme1n1"]["FileSystem"] = "N/A"
+    diskinfo["/dev/nvme1n1"]["RawCapacity"] = "1000204886016"
+    diskinfo["/dev/nvme1n1"]["Capacity"] = "1 TB"
+    diskinfo["/dev/nvme1n1"]["BootRecord"], diskinfo["/dev/nvme1n1"]["BootRecordStrings"] = (b"Unknown", [b"Unknown"])
+    diskinfo["/dev/nvme1n1"]["Description"] = "NVME Disk"
+    diskinfo["/dev/nvme1n1"]["Flags"] = "Unknown"
+    diskinfo["/dev/nvme1n1"]["Partitioning"] = "Unknown"
+    diskinfo["/dev/nvme1n1"]["ID"] = "Unknown"
+
+    return diskinfo
+
+#-------------- Missing Vendor, Model, and Size elements for different devices. ---------------
+def return_fake_lsblk_output_bad_1():
+    return b"""{
+   "blockdevices": [
+      {"name": "nvme0n1", "size": "1000204886016", "type": "disk", "fstype": null, "model": "Samsung SSD 860 "
+      },
+      {"name": "nvme1n1", "type": "disk", "fstype": null, "vendor": "ATA     "
+      },
+      {"name": "sr0", "type": "rom", "fstype": null, "vendor": "HL-DT-ST", "model": "DVD+-RW GA50N   "}
+   ]
+}"""
+
+def return_fake_lsblk_output_bad_1_diskinfo():
+    diskinfo = {}
+
+    #Fictional /dev/nvme0n1
+    diskinfo["/dev/nvme0n1"] = {}
+    diskinfo["/dev/nvme0n1"]["Name"] = "/dev/nvme0n1"
+    diskinfo["/dev/nvme0n1"]["Type"] = "Device"
+    diskinfo["/dev/nvme0n1"]["HostDevice"] = "N/A"
+    diskinfo["/dev/nvme0n1"]["Partitions"] = []
+    diskinfo["/dev/nvme0n1"]["Vendor"] = "Unknown"
+    diskinfo["/dev/nvme0n1"]["Product"] = "Samsung SSD 860"
+    diskinfo["/dev/nvme0n1"]["UUID"] = "N/A"
+    diskinfo["/dev/nvme0n1"]["FileSystem"] = "N/A"
+    diskinfo["/dev/nvme0n1"]["RawCapacity"] = "1000204886016"
+    diskinfo["/dev/nvme0n1"]["Capacity"] = "1 TB"
+    diskinfo["/dev/nvme0n1"]["BootRecord"], diskinfo["/dev/nvme0n1"]["BootRecordStrings"] = (b"Unknown", [b"Unknown"])
+    diskinfo["/dev/nvme0n1"]["Description"] = "NVME Disk"
+    diskinfo["/dev/nvme0n1"]["Flags"] = "Unknown"
+    diskinfo["/dev/nvme0n1"]["Partitioning"] = "Unknown"
+    diskinfo["/dev/nvme0n1"]["ID"] = "Unknown"
+
+    #Fictional /dev/nvme1n1
+    diskinfo["/dev/nvme1n1"] = {}
+    diskinfo["/dev/nvme1n1"]["Name"] = "/dev/nvme1n1"
+    diskinfo["/dev/nvme1n1"]["Type"] = "Device"
+    diskinfo["/dev/nvme1n1"]["HostDevice"] = "N/A"
+    diskinfo["/dev/nvme1n1"]["Partitions"] = []
+    diskinfo["/dev/nvme1n1"]["Vendor"] = "ATA"
+    diskinfo["/dev/nvme1n1"]["Product"] = "Unknown"
+    diskinfo["/dev/nvme1n1"]["UUID"] = "N/A"
+    diskinfo["/dev/nvme1n1"]["FileSystem"] = "N/A"
+    diskinfo["/dev/nvme1n1"]["RawCapacity"] = "Unknown"
+    diskinfo["/dev/nvme1n1"]["Capacity"] = "Unknown"
+    diskinfo["/dev/nvme1n1"]["BootRecord"], diskinfo["/dev/nvme1n1"]["BootRecordStrings"] = (b"Unknown", [b"Unknown"])
+    diskinfo["/dev/nvme1n1"]["Description"] = "NVME Disk"
+    diskinfo["/dev/nvme1n1"]["Flags"] = "Unknown"
+    diskinfo["/dev/nvme1n1"]["Partitioning"] = "Unknown"
+    diskinfo["/dev/nvme1n1"]["ID"] = "Unknown"
+
+    return diskinfo
+
+#------------------- Missing uuid, fstype, and size elements for children. ----------------
+def return_fake_lsblk_output_bad_2():
+    return b"""{
+   "blockdevices": [
+      {"name": "nvme0n1", "size": "1000204886016", "type": "disk", "fstype": null, "vendor": "ATA     ", "model": "Samsung SSD 860 ",
+         "children": [
+            {"name": "nvme0n1p1", "size": "524288000", "type": "part", "fstype": "vfat", "vendor": null, "model": null},
+            {"name": "nvme0n1p2", "type": "part", "fstype": null, "vendor": null, "model": null, "uuid": "8033-0331"},
+            {"name": "nvme0n1p3", "size": "9376366592", "type": "part", "vendor": null, "model": null}
+         ]
+      }
+   ]
+}"""
+
+def return_fake_lsblk_output_bad_2_diskinfo():
+    diskinfo = {}
+
+    #Fictional /dev/nvme0n1
+    diskinfo["/dev/nvme0n1"] = {}
+    diskinfo["/dev/nvme0n1"]["Name"] = "/dev/nvme0n1"
+    diskinfo["/dev/nvme0n1"]["Type"] = "Device"
+    diskinfo["/dev/nvme0n1"]["HostDevice"] = "N/A"
+    diskinfo["/dev/nvme0n1"]["Partitions"] = ["/dev/nvme0n1p1", "/dev/nvme0n1p2", "/dev/nvme0n1p3"]
+    diskinfo["/dev/nvme0n1"]["Vendor"] = "ATA"
+    diskinfo["/dev/nvme0n1"]["Product"] = "Samsung SSD 860"
+    diskinfo["/dev/nvme0n1"]["UUID"] = "N/A"
+    diskinfo["/dev/nvme0n1"]["FileSystem"] = "N/A"
+    diskinfo["/dev/nvme0n1"]["RawCapacity"] = "1000204886016"
+    diskinfo["/dev/nvme0n1"]["Capacity"] = "1 TB"
+    diskinfo["/dev/nvme0n1"]["BootRecord"], diskinfo["/dev/nvme0n1"]["BootRecordStrings"] = (b"Unknown", [b"Unknown"])
+    diskinfo["/dev/nvme0n1"]["Description"] = "NVME Disk"
+    diskinfo["/dev/nvme0n1"]["Flags"] = "Unknown"
+    diskinfo["/dev/nvme0n1"]["Partitioning"] = "Unknown"
+    diskinfo["/dev/nvme0n1"]["ID"] = "Unknown"
+
+    #Fictional /dev/nvme0n1p1
+    diskinfo["/dev/nvme0n1p1"] = {}
+    diskinfo["/dev/nvme0n1p1"]["Name"] = "/dev/nvme0n1p1"
+    diskinfo["/dev/nvme0n1p1"]["Type"] = "Partition"
+    diskinfo["/dev/nvme0n1p1"]["HostDevice"] = "/dev/nvme0n1"
+    diskinfo["/dev/nvme0n1p1"]["Partitions"] = []
+
+    diskinfo["/dev/nvme0n1p1"]["Vendor"] = "N/A"
+    diskinfo["/dev/nvme0n1p1"]["Product"] = "Host Device: Samsung SSD 860"
+    diskinfo["/dev/nvme0n1p1"]["UUID"] = "Unknown"
+    diskinfo["/dev/nvme0n1p1"]["FileSystem"] = "vfat"
+    diskinfo["/dev/nvme0n1p1"]["RawCapacity"] = "524288000"
+    diskinfo["/dev/nvme0n1p1"]["Capacity"] = "524 MB"
+    diskinfo["/dev/nvme0n1p1"]["BootRecord"], diskinfo["/dev/nvme0n1p1"]["BootRecordStrings"] = (b"Unknown", [b"Unknown"])
+    diskinfo["/dev/nvme0n1p1"]["Description"] = "N/A"
+    diskinfo["/dev/nvme0n1p1"]["Flags"] = "Unknown"
+    diskinfo["/dev/nvme0n1p1"]["Partitioning"] = "N/A"
+    diskinfo["/dev/nvme0n1p1"]["ID"] = "Unknown"
+
+    #Fictional /dev/nvme0n1p2
+    diskinfo["/dev/nvme0n1p2"] = {}
+    diskinfo["/dev/nvme0n1p2"]["Name"] = "/dev/nvme0n1p2"
+    diskinfo["/dev/nvme0n1p2"]["Type"] = "Partition"
+    diskinfo["/dev/nvme0n1p2"]["HostDevice"] = "/dev/nvme0n1"
+    diskinfo["/dev/nvme0n1p2"]["Partitions"] = []
+
+    diskinfo["/dev/nvme0n1p2"]["Vendor"] = "N/A"
+    diskinfo["/dev/nvme0n1p2"]["Product"] = "Host Device: Samsung SSD 860"
+    diskinfo["/dev/nvme0n1p2"]["UUID"] = "8033-0331"
+    diskinfo["/dev/nvme0n1p2"]["FileSystem"] = "Unknown"
+    diskinfo["/dev/nvme0n1p2"]["RawCapacity"] = "Unknown"
+    diskinfo["/dev/nvme0n1p2"]["Capacity"] = "Unknown"
+    diskinfo["/dev/nvme0n1p2"]["BootRecord"], diskinfo["/dev/nvme0n1p2"]["BootRecordStrings"] = (b"Unknown", [b"Unknown"])
+    diskinfo["/dev/nvme0n1p2"]["Description"] = "N/A"
+    diskinfo["/dev/nvme0n1p2"]["Flags"] = "Unknown"
+    diskinfo["/dev/nvme0n1p2"]["Partitioning"] = "N/A"
+    diskinfo["/dev/nvme0n1p2"]["ID"] = "Unknown"
+
+    #Fictional /dev/nvme0n1p3
+    diskinfo["/dev/nvme0n1p3"] = {}
+    diskinfo["/dev/nvme0n1p3"]["Name"] = "/dev/nvme0n1p3"
+    diskinfo["/dev/nvme0n1p3"]["Type"] = "Partition"
+    diskinfo["/dev/nvme0n1p3"]["HostDevice"] = "/dev/nvme0n1"
+    diskinfo["/dev/nvme0n1p3"]["Partitions"] = []
+
+    diskinfo["/dev/nvme0n1p3"]["Vendor"] = "N/A"
+    diskinfo["/dev/nvme0n1p3"]["Product"] = "Host Device: Samsung SSD 860"
+    diskinfo["/dev/nvme0n1p3"]["UUID"] = "Unknown"
+    diskinfo["/dev/nvme0n1p3"]["FileSystem"] = "Unknown"
+    diskinfo["/dev/nvme0n1p3"]["RawCapacity"] = "9376366592"
+    diskinfo["/dev/nvme0n1p3"]["Capacity"] = "9 GB"
+    diskinfo["/dev/nvme0n1p3"]["BootRecord"], diskinfo["/dev/nvme0n1p3"]["BootRecordStrings"] = (b"Unknown", [b"Unknown"])
+    diskinfo["/dev/nvme0n1p3"]["Description"] = "N/A"
+    diskinfo["/dev/nvme0n1p3"]["Flags"] = "Unknown"
+    diskinfo["/dev/nvme0n1p3"]["Partitioning"] = "N/A"
+    diskinfo["/dev/nvme0n1p3"]["ID"] = "Unknown"
+    return diskinfo
+
+#------------------------------- Not valid JSON -------------------------------
+def return_fake_lsblk_output_bad_3():
+    return b"""this is n(ot) valid JSON ()*"""
