@@ -151,6 +151,10 @@ def get_info():
     global LSBLKOUTPUT
     LSBLKOUTPUT = cmd.communicate()[0]
 
+    #Convert to unicode if needed to allow NVME drive detection on Python 3.5 (Ubuntu 16.04)
+    if isinstance(LSBLKOUTPUT, bytes):
+        LSBLKOUTPUT = LSBLKOUTPUT.decode("utf-8", errors="replace")
+
     #Ignore exceptions in this code - it is temporary and unlikely to fail.
     try:
         parse_lsblk_output()
