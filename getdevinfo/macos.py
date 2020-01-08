@@ -45,22 +45,8 @@ module, but you can call it directly if you like.
 
 """
 
-#Do future imports to support python 3.
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-
 import subprocess
 import plistlib
-import sys
-
-#Make unicode an alias for str in Python 3.
-if sys.version_info[0] == 3:
-    unicode = str
-
-    #Plist hack for Python 3.
-    plistlib.readPlistFromString = plistlib.loads
 
 #Define global variables to make pylint happy.
 DISKINFO = None
@@ -98,7 +84,7 @@ def get_info():
     #Parse the plist (Property List).
     global PLIST
 
-    PLIST = plistlib.readPlistFromString(stdout)
+    PLIST = plistlib.loads(stdout)
 
     #Find the disks.
     for disk in PLIST["AllDisks"]:
@@ -107,7 +93,7 @@ def get_info():
         stdout = runcmd.communicate()[0]
 
         #Parse the plist (Property List).
-        PLIST = plistlib.readPlistFromString(stdout)
+        PLIST = plistlib.loads(stdout)
 
         #Check if the disk is a partition.
         disk_is_partition = is_partition(disk)
@@ -319,7 +305,7 @@ def get_capacity():
 
     try:
         raw_capacity = PLIST["TotalSize"]
-        raw_capacity = unicode(raw_capacity)
+        raw_capacity = str(raw_capacity)
 
     except KeyError:
         return "Unknown", "Unknown"
@@ -330,7 +316,7 @@ def get_capacity():
     human_readable_size = int(raw_capacity)
 
     try:
-        while len(unicode(human_readable_size)) > 3:
+        while len(str(human_readable_size)) > 3:
             #Shift up one unit.
             unit = unit_list[unit_list.index(unit)+1]
             human_readable_size = human_readable_size//1000
@@ -339,7 +325,7 @@ def get_capacity():
         return "Unknown", "Unknown"
 
     #Include the unit in the result for both exact and human-readable sizes.
-    return raw_capacity, unicode(human_readable_size)+" "+unit
+    return raw_capacity, str(human_readable_size)+" "+unit
 
 def get_description(disk):
     """
@@ -388,7 +374,7 @@ def get_description(disk):
     bus_protocol = "Unknown"
 
     if "BusProtocol" in PLIST.keys():
-        bus_protocol = unicode(PLIST["BusProtocol"])
+        bus_protocol = str(PLIST["BusProtocol"])
 
     #Assemble info into a string.
     if bus_protocol != "Unknown":
@@ -509,17 +495,17 @@ def compute_block_size(disk, stdout):
 
     #Parse the plist (Property List).
     try:
-        plist = plistlib.readPlistFromString(stdout)
+        plist = plistlib.loads(stdout)
 
     except:
         return None
 
     else:
         if "DeviceBlockSize" in plist:
-            result = unicode(plist["DeviceBlockSize"])
+            result = str(plist["DeviceBlockSize"])
 
         elif "VolumeBlockSize" in plist:
-            result = unicode(plist["VolumeBlockSize"])
+            result = str(plist["VolumeBlockSize"])
 
         else:
             result = None

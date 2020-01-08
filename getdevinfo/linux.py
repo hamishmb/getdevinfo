@@ -45,22 +45,11 @@ module, but you can call it directly if you like.
 
 """
 
-#Do future imports to prepare to support python 3. Use unicode strings rather than ASCII strings, as they fix potential problems.
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-
 import subprocess
 import os
-import sys
 import json
 import bs4
 from bs4 import BeautifulSoup
-
-#Make unicode an alias for str in Python 3.
-if sys.version_info[0] == 3:
-    unicode = str
 
 #Define global variables to make pylint happy.
 DISKINFO = None
@@ -186,7 +175,7 @@ def get_device_info(node):
     >>> host_disk = get_device_info(<aNode>)
     """
 
-    host_disk = unicode(node.logicalname.string) #FIXME is this ever bytes?
+    host_disk = str(node.logicalname.string) #FIXME is this ever bytes?
     DISKINFO[host_disk] = {}
     DISKINFO[host_disk]["Name"] = host_disk
     DISKINFO[host_disk]["Type"] = "Device"
@@ -202,7 +191,7 @@ def get_device_info(node):
     else:
         DISKINFO[host_disk]["RawCapacity"], DISKINFO[host_disk]["Capacity"] = get_capacity(node)
 
-    DISKINFO[host_disk]["Description"] = unicode(node.description.string) #FIXME is this ever bytes?
+    DISKINFO[host_disk]["Description"] = str(node.description.string) #FIXME is this ever bytes?
     DISKINFO[host_disk]["Flags"] = get_capabilities(node)
     DISKINFO[host_disk]["Partitioning"] = get_partitioning(host_disk)
     DISKINFO[host_disk]["FileSystem"] = "N/A"
@@ -244,10 +233,10 @@ def get_partition_info(subnode, host_disk):
     """
 
     try:
-        volume = unicode(subnode.logicalname.string) #FIXME is this ever bytes?
+        volume = str(subnode.logicalname.string) #FIXME is this ever bytes?
 
     except AttributeError:
-        volume = host_disk+unicode(subnode.physid.string) #FIXME is this ever bytes?
+        volume = host_disk+str(subnode.physid.string) #FIXME is this ever bytes?
 
     #Fix bug on Pmagic, if the volume already exists in DISKINFO, or if it is an optical drive, ignore it here.
     if volume in DISKINFO or "/dev/cdrom" in volume or "/dev/sr" in volume or "/dev/dvd" in volume:
@@ -262,7 +251,7 @@ def get_partition_info(subnode, host_disk):
     DISKINFO[volume]["Vendor"] = get_vendor(subnode)
     DISKINFO[volume]["Product"] = "Host Device: "+DISKINFO[host_disk]["Product"]
     DISKINFO[volume]["RawCapacity"], DISKINFO[volume]["Capacity"] = get_capacity(subnode)
-    DISKINFO[volume]["Description"] = unicode(subnode.description.string) #FIXME is this ever bytes?
+    DISKINFO[volume]["Description"] = str(subnode.description.string) #FIXME is this ever bytes?
     DISKINFO[volume]["Flags"] = get_capabilities(subnode)
 
     #Fx bug: don't try to get file systems of extended partitions.
@@ -469,7 +458,7 @@ def parse_lsblk_output():
         try:
             human_readable_size = int(DISKINFO[host_disk]["RawCapacity"])
 
-            while len(unicode(human_readable_size)) > 3:
+            while len(str(human_readable_size)) > 3:
                 #Shift up one unit.
                 unit = unit_list[unit_list.index(unit)+1]
                 human_readable_size = human_readable_size//1000
@@ -478,7 +467,7 @@ def parse_lsblk_output():
             DISKINFO[host_disk]["Capacity"] = "Unknown"
 
         else:
-            DISKINFO[host_disk]["Capacity"] = unicode(human_readable_size)+" "+unit
+            DISKINFO[host_disk]["Capacity"] = str(human_readable_size)+" "+unit
 
         DISKINFO[host_disk]["BootRecord"], DISKINFO[host_disk]["BootRecordStrings"] = get_boot_record(host_disk)
 
@@ -531,7 +520,7 @@ def parse_lsblk_output():
                     human_readable_size = int(DISKINFO[child_disk]["RawCapacity"])
 
 
-                    while len(unicode(human_readable_size)) > 3:
+                    while len(str(human_readable_size)) > 3:
                         #Shift up one unit.
                         unit = unit_list[unit_list.index(unit)+1]
                         human_readable_size = human_readable_size//1000
@@ -540,7 +529,7 @@ def parse_lsblk_output():
                     DISKINFO[child_disk]["Capacity"] = "Unknown"
 
                 else:
-                    DISKINFO[child_disk]["Capacity"] = unicode(human_readable_size)+" "+unit
+                    DISKINFO[child_disk]["Capacity"] = str(human_readable_size)+" "+unit
 
                 DISKINFO[child_disk]["BootRecord"], DISKINFO[child_disk]["BootRecordStrings"] = get_boot_record(child_disk)
 
@@ -574,7 +563,7 @@ def get_vendor(node):
         if isinstance(node.vendor.string, bytes):
             return node.vendor.string.decode("utf-8", errors="replace")
 
-        elif isinstance(node.vendor.string, unicode):
+        elif isinstance(node.vendor.string, str):
             return node.vendor.string #Already a unicode string.
 
     return "Unknown"
@@ -604,7 +593,7 @@ def get_product(node):
         if isinstance(node.product.string, bytes):
             return node.product.string.decode("utf-8", errors="replace")
 
-        elif isinstance(node.product.string, unicode):
+        elif isinstance(node.product.string, str):
             return node.product.string #Already a unicode string.
 
     return "Unknown"
@@ -633,11 +622,11 @@ def get_capacity(node):
 
     if hasattr(node, "size") and hasattr(node.size, "string"):
         #This is actually an int, despite the misleading name.
-        raw_capacity = unicode(node.size.string)
+        raw_capacity = str(node.size.string)
 
     elif hasattr(node, "capacity") and hasattr(node.capacity, "string"):
         #This is actually an int, despite the misleading name.
-        raw_capacity = unicode(node.capacity.string)
+        raw_capacity = str(node.capacity.string)
 
     else:
         return "Unknown", "Unknown"
@@ -654,7 +643,7 @@ def get_capacity(node):
         return "Unknown", "Unknown"
 
     try:
-        while len(unicode(human_readable_size)) > 3:
+        while len(str(human_readable_size)) > 3:
             #Shift up one unit.
             unit = unit_list[unit_list.index(unit)+1]
             human_readable_size = human_readable_size//1000
@@ -663,7 +652,7 @@ def get_capacity(node):
         return "Unknown", "Unknown"
 
     #Include the unit in the result for both exact and human-readable sizes.
-    return raw_capacity, unicode(human_readable_size)+" "+unit
+    return raw_capacity, str(human_readable_size)+" "+unit
 
 def get_capabilities(node):
     """
@@ -696,7 +685,7 @@ def get_capabilities(node):
             if isinstance(capability["id"], bytes):
                 flags.append(capability["id"].decode("utf-8", errors="replace"))
 
-            elif isinstance(capability["id"], unicode):
+            elif isinstance(capability["id"], str):
                 flags.append(capability["id"])
 
     except AttributeError:
@@ -717,7 +706,7 @@ def get_partitioning(disk):
                       the disk info dictionary.
 
     Returns:
-        string (unicode). The partition scheme:
+        string (str). The partition scheme:
 
             - "Unknown"     - Couldn't find it.
             - "mbr"         - Old-style MBR partitioning
@@ -776,7 +765,7 @@ def get_file_system(node):
                 if isinstance(config["value"], bytes):
                     file_system = config["value"].decode("utf-8", errors="replace")
 
-                elif isinstance(config["value"], unicode):
+                elif isinstance(config["value"], str):
                     file_system = config["value"] #Already a unicode string.
 
                 #Use different terminology where wanted.

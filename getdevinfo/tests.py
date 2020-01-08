@@ -15,22 +15,12 @@
 # You should have received a copy of the GNU General Public License
 # along with GetDevInfo.  If not, see <http://www.gnu.org/licenses/>.
 
-#Do future imports to support python 3.
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-
 #Import modules.
 import unittest
 import logging
 import getopt
 import sys
 import os
-
-#Make unicode an alias for str in Python 3.
-if sys.version_info[0] == 3:
-    unicode = str
 
 #Global vars.
 VERSION = "1.0.7"
@@ -63,7 +53,7 @@ try:
 except getopt.GetoptError as err:
     #Invalid option. Show the help message and then exit.
     #Show the error.
-    print(unicode(err))
+    print(str(err))
     usage()
     sys.exit(2)
 

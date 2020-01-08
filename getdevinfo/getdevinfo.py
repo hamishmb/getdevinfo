@@ -49,12 +49,6 @@ disk information as a dictionary.
 
 """
 
-#Do future imports to support python 3.
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-
 import platform
 
 #Declare version; useful for users of the module.
@@ -109,11 +103,11 @@ if __name__ == "__main__":
     #Run with python -m from outside package.
     # eg:
     #   python(3) -m getdevinfo.getdevinfo
-    diskinfo = get_info()
+    disk_info = get_info()
 
     #Print the info in a (semi :D) readable way.
-    keys = list(diskinfo)
+    keys = list(disk_info)
     keys.sort()
 
     for key in keys:
-        print("\n\n", diskinfo[key], "\n\n")
+        print("\n\n", disk_info[key], "\n\n")

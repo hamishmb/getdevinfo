@@ -15,12 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with GetDevInfo.  If not, see <http://www.gnu.org/licenses/>.
 
-#Do future imports to support python 3.
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-
 def get_lv_aliases(line):
     """Obtain and verify the name of an LVM volume. Return it once found."""
     alias_list = []

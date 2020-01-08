@@ -18,18 +18,7 @@
 #Note: The non-roman characters in this test data are random.
 #If they by some random chance spell something offensive, I apologise.
 
-#Do future imports to support python 3.
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-
-import sys
 import bs4
-
-#Make unicode an alias for str in Python 3.
-if sys.version_info[0] == 3:
-    unicode = str
 
 #Classes for test cases.
 #--------------------------------------- Good Nodes, unicode strings ------------------------------------
@@ -51,7 +40,7 @@ class Node1:
 
         for _id in range(0, 200):
             tag = bs4.element.Tag(name="capability")
-            tag["id"] = "test"+unicode(_id)
+            tag["id"] = "test"+str(_id)
             children.append(tag)
 
     class configuration:
@@ -169,7 +158,7 @@ class ByteNode1:
 
         for _id in range(0, 200):
             tag = bs4.element.Tag(name="capability")
-            tag["id"] = b"test"+unicode(_id).encode("utf-8")
+            tag["id"] = b"test"+str(_id).encode("utf-8")
             children.append(tag)
 
     class configuration:

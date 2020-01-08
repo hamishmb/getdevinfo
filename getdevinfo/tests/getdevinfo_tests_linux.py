@@ -18,12 +18,6 @@
 #Note: The non-roman characters in these tests are random.
 #If they by some random chance spell something offensive, I apologise.
 
-#Do future imports to support python 3.
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-
 #import modules.
 import unittest
 import os
@@ -33,20 +27,6 @@ import plistlib
 #import test data and functions.
 from . import getdevinfo_test_data as data
 from . import getdevinfo_test_functions as functions
-
-#Make unicode an alias for str in Python 3.
-#Workaround for python 3 support.
-if sys.version_info[0] == 3:
-    unicode = str
-    plistlib.readPlistFromString = plistlib.loads
-
-#Plistlib workaround for python 3.x support.
-def to_bytestring(string):
-    if sys.version_info[0] == 3:
-        return bytes(string, "utf-8")
-
-    else:
-        return string
 
 sys.path.insert(0, os.path.abspath('../'))
 sys.path.insert(0, os.path.abspath('../..'))
@@ -187,7 +167,7 @@ class TestMain(unittest.TestCase):
         expected_capabilities = []
 
         for _id in range(0, 200):
-            expected_capabilities.append("test"+unicode(_id))
+            expected_capabilities.append("test"+str(_id))
 
         self.assertEqual(capabilities, expected_capabilities)
 
@@ -213,7 +193,7 @@ class TestMain(unittest.TestCase):
         expected_capabilities = []
 
         for _id in range(0, 200):
-            expected_capabilities.append("test"+unicode(_id))
+            expected_capabilities.append("test"+str(_id))
 
         self.assertEqual(capabilities, expected_capabilities)
 

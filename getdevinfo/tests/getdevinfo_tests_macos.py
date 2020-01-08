@@ -18,12 +18,6 @@
 #Note: The non-roman characters in these tests are random.
 #If they by some random chance spell something offensive, I apologise.
 
-#Do future imports to support python 3.
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-
 #import modules.
 import unittest
 import os
@@ -33,20 +27,6 @@ import plistlib
 #import test data and functions.
 from . import getdevinfo_test_data as data
 from . import getdevinfo_test_functions as functions
-
-#Make unicode an alias for str in Python 3.
-#Workaround for python 3 support.
-if sys.version_info[0] == 3:
-    unicode = str
-    plistlib.readPlistFromString = plistlib.loads
-
-#Plistlib workaround for python 3.x support.
-def to_bytestring(string):
-    if sys.version_info[0] == 3:
-        return bytes(string, "utf-8")
-
-    else:
-        return string
 
 sys.path.insert(0, os.path.abspath('../'))
 sys.path.insert(0, os.path.abspath('../..'))
@@ -78,14 +58,14 @@ class TestIsPartition(unittest.TestCase):
 class TestGetVendorProductCapacityDescription(unittest.TestCase):
     def setUp(self):
         macos.DISKINFO = data.return_fake_disk_info_mac()
-        self.badplist0 = plistlib.readPlistFromString(to_bytestring(data.return_fake_diskutil_info_bad_disk0_plist()))
-        self.plist0 = plistlib.readPlistFromString(to_bytestring(data.return_fake_diskutil_info_disk0_plist()))
+        self.badplist0 = plistlib.loads(bytes(data.return_fake_diskutil_info_bad_disk0_plist(), "utf-8"))
+        self.plist0 = plistlib.loads(bytes(data.return_fake_diskutil_info_disk0_plist(), "utf-8"))
 
-        self.plist0nonroman = plistlib.readPlistFromString(to_bytestring(data.return_fake_diskutil_info_disk0_plist_nonroman()))
+        self.plist0nonroman = plistlib.loads(bytes(data.return_fake_diskutil_info_disk0_plist_nonroman(), "utf-8"))
 
-        self.plist0s1 = plistlib.readPlistFromString(to_bytestring(data.return_fake_diskutil_info_disk0s1_plist()))
-        self.plist0s2 = plistlib.readPlistFromString(to_bytestring(data.return_fake_diskutil_info_disk0s2_plist()))
-        self.plist0s3 = plistlib.readPlistFromString(to_bytestring(data.return_fake_diskutil_info_disk0s3_plist()))
+        self.plist0s1 = plistlib.loads(bytes(data.return_fake_diskutil_info_disk0s1_plist(), "utf-8"))
+        self.plist0s2 = plistlib.loads(bytes(data.return_fake_diskutil_info_disk0s2_plist(), "utf-8"))
+        self.plist0s3 = plistlib.loads(bytes(data.return_fake_diskutil_info_disk0s3_plist(), "utf-8"))
 
     def tearDown(self):
         del macos.DISKINFO
@@ -268,7 +248,7 @@ class TestComputeBlockSize(unittest.TestCase):
         """
 
         for testdata in self.block_sizes:
-            self.assertEqual(macos.compute_block_size("FakeDisk", to_bytestring(testdata)), self.correct_results[self.block_sizes.index(testdata)])
+            self.assertEqual(macos.compute_block_size("FakeDisk", bytes(testdata, "utf-8")), self.correct_results[self.block_sizes.index(testdata)])
 
 class TestGetInfo(unittest.TestCase):
     def test_get_info(self):
