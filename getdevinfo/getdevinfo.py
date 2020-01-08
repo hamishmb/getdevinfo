@@ -20,7 +20,7 @@ This is the part of the package that you would normally import and use.
 It detects your platform (Linux or macOS), and runs the correct tools
 for that platform.
 
-For example (Python 2 or 3):
+For example:
 
 >>> import getdevinfo
 >>> getdevinfo.getdevinfo.get_info()
@@ -58,7 +58,7 @@ from __future__ import unicode_literals
 import platform
 
 #Declare version; useful for users of the module.
-VERSION = "1.0.6"
+VERSION = "1.0.7"
 
 def get_info():
     """

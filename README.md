@@ -16,7 +16,7 @@ Uses the operating system\'s built-in tools to gather lots of helpful informatio
 Dependencies:
 -------------
 
-On Linux it requires lshw, blkid, lvdisplay, and blockdev to be installed. On Linux, you need the beautifulsoup4 (bs4), and lxml python packages to use this tool. On macOS, nothing beyond a standard python2.x/python3.x install is required, but you still need bs4 and lxml if you want to install using the python wheel/through pip.
+On Linux it requires lshw, blkid, lvdisplay, and blockdev to be installed. On Linux, you need the beautifulsoup4 (bs4), and lxml python packages to use this tool. On macOS, nothing beyond a standard python3.x install is required, but you still need bs4 and lxml if you want to install using the python wheel/through pip.
 
 Building
 ========
@@ -33,21 +33,21 @@ Wheels
 
 Make sure you've installed the "wheel" package:
 
-"pip/pip3 install wheel"
+"pip3 install wheel"
 
 Universal Wheel
 ---------------
 
-This tool runs unmodified on both python 3 and 2, so this is the recommended choice.
+This is the recommended choice, though GetDevInfo no longer runs on Python 2 from version 1.0.7 onwards,
 
-"python setup.py bdist_wheel --universal"
+"python3 setup.py bdist_wheel --universal"
 
 Pure Python Wheel
 -----------------
 
 Not sure why you'd do this, but you can run:
 
-"python2/python3 setup.py bdist_wheel"
+"python3 setup.py bdist_wheel"
 
 to acheive this if you want.
 
@@ -66,17 +66,13 @@ Running The Tests
 
 These have to be run as the superuser, because low-level access to hardware is required to gather information.
 
-The process for running these is the same on both Linux and macOS. It can be done on both Python 2 and Python 3.
+The process for running these is the same on both Linux and macOS. Note that prior to version 1.0.7, GetDevInfo ran on Python 2 as well.
 
 Without Coverage Reporting
 --------------------------
 Change directory to the getdevinfo subfolder, and run:
 
 "sudo python3 ./tests.py"
-
-or:
-
-"sudo python2 ./tests.py"
 
 With Coverage Reporting
 -----------------------
@@ -86,16 +82,8 @@ Change directory to the getdevinfo subfolder, and run:
 
 "sudo python3 -m coverage run --rcfile=../.coveragerc ./tests.py"
 
-or:
-
-"sudo python2 -m coverage run --rcfile=../.coveragerc ./tests.py"
-
 To run the tests. Then run:
 
 "sudo python3 -m coverage report"
-
-or:
-
-"sudo python2 -m coverage report"
 
 To see the report.

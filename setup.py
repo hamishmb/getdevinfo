@@ -14,7 +14,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='getdevinfo',
-    version='1.0.6',
+    version='1.0.7',
     description='A device information gatherer for Linux and macOS',
     long_description=long_description,
 
@@ -31,8 +31,6 @@ setup(
         'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
 
         #Python versions.
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
@@ -45,7 +43,6 @@ setup(
         'Natural Language :: English',
         'Operating System :: MacOS :: MacOS X',
         'Operating System :: POSIX :: Linux',
-        'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 3',
         'Topic :: Utilities'
 
@@ -54,5 +51,5 @@ setup(
     keywords='devices hardware',
     packages=find_packages(),
     install_requires=['bs4', 'lxml'],
-    python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
+    python_requires='>=2.8, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
 )
