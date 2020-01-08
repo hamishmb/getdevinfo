@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # Unit tests for GetDevInfo
 # This file is part of GetDevInfo.
-# Copyright (C) 2013-2019 Hamish McIntyre-Bhatty
+# Copyright (C) 2013-2020 Hamish McIntyre-Bhatty
 # GetDevInfo is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License version 3 or,
 # at your option, any later version.
@@ -50,7 +50,7 @@ def usage():
     print("       -h, --help:                   Display this help text.")
     print("       -D, --debug:                  Set logging level to debug, to show all logging messages. Default: show only critical logging messages.")
     print("GetDevinfo "+VERSION+" is released under the GNU GPL Version 3")
-    print("Copyright (C) Hamish McIntyre-Bhatty 2013-2019")
+    print("Copyright (C) Hamish McIntyre-Bhatty 2013-2020")
 
 #Exit if not running as root.
 if os.geteuid() != 0:
