@@ -51,6 +51,6 @@ setup(
 
     keywords='devices hardware',
     packages=find_packages(),
-    install_requires=['bs4', 'lxml'],
+    install_requires=['beautifulsoup4', 'lxml'],
     python_requires='>=2.8, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
 )
