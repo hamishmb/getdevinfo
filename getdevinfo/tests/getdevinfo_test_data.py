@@ -1168,7 +1168,7 @@ def fake_get_boot_record(disk):
     return (b"Unknown", [b"Unknown"])
 
 def return_fake_lsblk_output_good_1():
-    return b"""{
+    return """{
    "blockdevices": [
       {"name": "nvme0n1", "size": "1000204886016", "type": "disk", "fstype": null, "vendor": "ATA     ", "model": "Samsung SSD 860 ", "uuid": null,
          "children": [
@@ -1244,7 +1244,7 @@ def return_fake_lsblk_output_good_1_diskinfo():
 
 #-------------- Missing Vendor, Model, and Size elements for different devices. ---------------
 def return_fake_lsblk_output_bad_1():
-    return b"""{
+    return """{
    "blockdevices": [
       {"name": "nvme0n1", "size": "1000204886016", "type": "disk", "fstype": null, "model": "Samsung SSD 860 "
       },
@@ -1297,7 +1297,7 @@ def return_fake_lsblk_output_bad_1_diskinfo():
 
 #------------------- Missing uuid, fstype, and size elements for children. ----------------
 def return_fake_lsblk_output_bad_2():
-    return b"""{
+    return """{
    "blockdevices": [
       {"name": "nvme0n1", "size": "1000204886016", "type": "disk", "fstype": null, "vendor": "ATA     ", "model": "Samsung SSD 860 ",
          "children": [
@@ -1390,4 +1390,4 @@ def return_fake_lsblk_output_bad_2_diskinfo():
 
 #------------------------------- Not valid JSON -------------------------------
 def return_fake_lsblk_output_bad_3():
-    return b"""this is n(ot) valid JSON ()*"""
+    return """this is n(ot) valid JSON ()*"""
