@@ -21,8 +21,8 @@ For example:
 
     >>> DISKINFO['/dev/disk1s1']
 
-Inside this sub-dictionary:
-===========================
+Inside this sub-dictionary (standard devices):
+==============================================
 
 Various information is collected and organised here.
 
@@ -192,3 +192,58 @@ Various information is collected and organised here.
     .. note::
         Not yet available on macOS.
 
+
+Inside this sub-dictionary (specifics for LVM disks):
+=====================================================
+
+These are keys that are only present for LVM disks (where "Product" is "LVM Partition").
+
+'Aliases':
+    Any aliases the disk has. LVM disks can often be accessed using multiple
+    different names. This is a list of those names.
+
+    Example:
+        >>> DISKINFO['/dev/mapper/fedora/root']['Aliases']
+        >>> ['/dev/mapper/fedora/root', '/dev/fedora--localhost-root']
+
+'LVName':
+    The name of the logical volume.
+
+    Example:
+        >>> DISKINFO['/dev/mapper/fedora/root']['LVName']
+        >>> "root"
+
+'VGName':
+    The name of the volume group the logical volume belongs to.
+
+    Example:
+        >>> DISKINFO['/dev/mapper/fedora/root']['VGName']
+        >>> "fedora"
+
+'HostPartition':
+    The partition that contains this logical volume.
+
+    Example:
+        >>> DISKINFO['/dev/mapper/fedora/root']['HostPartition']
+        >>> "/dev/sda"
+
+    .. note::
+        Not always available depending on disk configuration.
+
+.. warning::
+    "UUID" may or may not be available for certain disks.
+
+.. warning::
+    "Capacity" and "RawCapacity" may not be available for certain disks.
+
+.. warning::
+    "HostPartition" and "HostDevice" may not be available for certain disks.
+
+
+Inside this sub-dictionary (NVME disks):
+==============================================
+
+TODO update this before release.
+
+.. warning::
+    Various standard keys are not available for NVME disks as they aren't supported by lshw.
