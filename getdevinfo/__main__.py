@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Device Information Obtainer Package
+# Device Information Obtainer Package default executable
 # This file is part of GetDevInfo.
 # Copyright (C) 2013-2020 Hamish McIntyre-Bhatty
 # GetDevInfo is free software: you can redistribute it and/or modify it
@@ -16,6 +16,5 @@
 # along with GetDevInfo.  If not, see <http://www.gnu.org/licenses/>.
 from __future__ import absolute_import
 
-if __name__ == "__main__":
-    from . import getdevinfo
-    getdevinfo.run()
+from . import getdevinfo
+getdevinfo.run()

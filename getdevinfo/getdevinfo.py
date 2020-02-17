@@ -99,7 +99,7 @@ def get_info():
     return diskinfo
 
 #For development only.
-if __name__ == "__main__":
+def run():
     #Run with python -m from outside package.
     # eg:
     #   python(3) -m getdevinfo.getdevinfo
@@ -111,3 +111,6 @@ if __name__ == "__main__":
 
     for key in keys:
         print("\n\n", disk_info[key], "\n\n")
+
+if __name__ == "__main__":
+    run()
