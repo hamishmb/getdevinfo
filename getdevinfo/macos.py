@@ -376,14 +376,17 @@ def get_description(disk):
     if "BusProtocol" in PLIST.keys():
         bus_protocol = str(PLIST["BusProtocol"])
 
-    # -- APFS containers & volumes --
+    # -- APFS containers, volumes, physical stores --
     apfs_string = ""
 
-    if "APFSPhysicalStores" in PLIST.keys():
-        apfs_string = " (APFS Volume)"
+    if "Content" in PLIST.keys() and PLIST["Content"] == "Apple_APFS":
+        apfs_string = " (APFS Physical Store)"
 
-    elif "APFSContainerReference" in PLIST.keys():
+    elif "APFSContainerReference" in PLIST.keys() and PLIST["APFSContainerReference"] == disk:
         apfs_string = " (APFS Container)"
+
+    elif "FilesystemType" in PLIST.keys() and PLIST["FilesystemType"] == "apfs":
+        apfs_string = " (APFS Volume)"
 
     #Assemble info into a string.
     if bus_protocol != "Unknown":
