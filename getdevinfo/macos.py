@@ -376,15 +376,24 @@ def get_description(disk):
     if "BusProtocol" in PLIST.keys():
         bus_protocol = str(PLIST["BusProtocol"])
 
+    # -- APFS containers & volumes --
+    apfs_string = ""
+
+    if "APFSPhysicalStores" in PLIST.keys():
+        apfs_string = " (APFS Volume)"
+
+    elif "APFSContainerReference" in PLIST.keys():
+        apfs_string = " (APFS Container)"
+
     #Assemble info into a string.
     if bus_protocol != "Unknown":
-        return internal_or_external+disk_type+"(Connected through "+bus_protocol+")"
+        return internal_or_external+disk_type+"(Connected through "+bus_protocol+")"+apfs_string
 
     elif disk_type != "Unknown ":
-        return internal_or_external+disk_type
+        return internal_or_external+disk_type+apfs_string
 
     elif internal_or_external != "Unknown ":
-        return internal_or_external+"Unknown Disk"
+        return internal_or_external+"Unknown Disk"+apfs_string
 
     else:
         return "N/A"
