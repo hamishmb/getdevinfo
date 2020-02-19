@@ -345,7 +345,7 @@ def get_description(disk):
     >>> description = get_description(<aDisk>)
     """
     #Gather info from diskutil to create some descriptions.
-    #Internal or external.
+    # -- Internal or external --
     internal_or_external = "Unknown "
 
     if "Internal" in PLIST.keys():
@@ -355,7 +355,7 @@ def get_description(disk):
         else:
             internal_or_external = "External "
 
-    #Type: Removable, SSD, or HDD.
+    # -- Type: Removable, SSD, or HDD --
     disk_type = "Unknown "
 
     if ("Removable" in PLIST.keys() and PLIST['Removable']) or \
@@ -370,7 +370,7 @@ def get_description(disk):
     elif disk_type == "Unknown ":
         disk_type = "Hard Disk Drive "
 
-    #Bus protocol.
+    # -- Bus protocol --
     bus_protocol = "Unknown"
 
     if "BusProtocol" in PLIST.keys():
