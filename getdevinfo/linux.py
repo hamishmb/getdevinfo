@@ -134,8 +134,8 @@ def get_info():
     parse_lvm_output()
 
     #Find any NVME disks (lshw currently doesn't detect these).
-    cmd = subprocess.Popen("lsblk -o NAME,SIZE,TYPE,FSTYPE,VENDOR,MODEL -b -J", stdout=subprocess.PIPE,
-                           stderr=subprocess.STDOUT, shell=True)
+    cmd = subprocess.Popen("LC_ALL=C lsblk -o NAME,SIZE,TYPE,FSTYPE,VENDOR,MODEL,UUID -b -J",
+                           stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
 
     global LSBLKOUTPUT
     LSBLKOUTPUT = cmd.communicate()[0]
