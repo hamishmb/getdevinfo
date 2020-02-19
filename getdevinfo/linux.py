@@ -261,12 +261,6 @@ def get_partition_info(subnode, host_disk):
     else:
         DISKINFO[volume]["FileSystem"] = get_file_system(subnode)
 
-    #Fix for Ubuntu 14.04.
-    if DISKINFO[volume]["FileSystem"] == "Unknown":
-        #Try to use the description to determine if this is a vfat volume (difficult detecting in Ubuntu 14.04).
-        if "FAT" in subnode.description.string:
-            DISKINFO[volume]["FileSystem"] = "vfat"
-
     DISKINFO[volume]["Partitioning"] = "N/A"
     DISKINFO[volume]["UUID"] = get_uuid(volume)
     DISKINFO[volume]["ID"] = get_id(volume)
