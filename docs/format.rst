@@ -243,7 +243,5 @@ These are keys that are only present for LVM disks (where "Product" is "LVM Part
 Inside this sub-dictionary (NVME disks):
 ==============================================
 
-TODO update this before release.
-
 .. warning::
     Various standard keys are not available for NVME disks as they aren't supported by lshw.
