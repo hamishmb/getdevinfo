@@ -137,19 +137,19 @@ def get_info():
     if isinstance(LSBLKOUTPUT, bytes):
         LSBLKOUTPUT = LSBLKOUTPUT.decode("utf-8", errors="replace")
 
-    #Find any LVM disks. Don't use -c because it doesn't give us enough information.
-    cmd = subprocess.Popen("LC_ALL=C lvdisplay --maps", stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
-    global LVMOUTPUT
-    LVMOUTPUT = cmd.communicate()[0].split(b"\n")
-
-    parse_lvm_output()
-
     #Ignore exceptions in this code - it is temporary and unlikely to fail.
     try:
         parse_lsblk_output()
 
     except Exception:
         pass
+
+    #Find any LVM disks. Don't use -c because it doesn't give us enough information.
+    cmd = subprocess.Popen("LC_ALL=C lvdisplay --maps", stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+    global LVMOUTPUT
+    LVMOUTPUT = cmd.communicate()[0].split(b"\n")
+
+    parse_lvm_output()
 
     #Check we found some disks.
     if not DISKINFO:
