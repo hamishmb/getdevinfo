@@ -126,13 +126,6 @@ def get_info():
             #partitions.
             get_partition_info(subnode, host_disk)
 
-    #Find any LVM disks. Don't use -c because it doesn't give us enough information.
-    cmd = subprocess.Popen("LC_ALL=C lvdisplay --maps", stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
-    global LVMOUTPUT
-    LVMOUTPUT = cmd.communicate()[0].split(b"\n")
-
-    parse_lvm_output()
-
     #Find any NVME disks (lshw currently doesn't detect these).
     cmd = subprocess.Popen("LC_ALL=C lsblk -o NAME,SIZE,TYPE,FSTYPE,VENDOR,MODEL,UUID -b -J",
                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
@@ -143,6 +136,13 @@ def get_info():
     #Convert to unicode if needed to allow NVME drive detection on Python 3.5 (Ubuntu 16.04)
     if isinstance(LSBLKOUTPUT, bytes):
         LSBLKOUTPUT = LSBLKOUTPUT.decode("utf-8", errors="replace")
+
+    #Find any LVM disks. Don't use -c because it doesn't give us enough information.
+    cmd = subprocess.Popen("LC_ALL=C lvdisplay --maps", stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+    global LVMOUTPUT
+    LVMOUTPUT = cmd.communicate()[0].split(b"\n")
+
+    parse_lvm_output()
 
     #Ignore exceptions in this code - it is temporary and unlikely to fail.
     try:
