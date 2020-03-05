@@ -254,10 +254,18 @@ def get_partition_info(subnode, host_disk):
     except AttributeError:
         if isinstance(subnode.physid.string, bytes):
             #NOTE: is this ever bytes?
-            volume = host_disk+subnode.physid.string.decode("utf-8")
+            if "nvme" in volume:
+                volume = host_disk+"p"+subnode.physid.string.decode("utf-8")
+
+            else:
+                volume = host_disk+subnode.physid.string.decode("utf-8")
 
         else:
-            volume = host_disk+subnode.physid.string
+            if "nvme" in volume:
+                volume = host_disk+"p"+subnode.physid.string
+
+            else:
+                volume = host_disk+subnode.physid.string
 
     #Fix bug on Pmagic, if the volume already exists in DISKINFO, or if it is an optical drive, ignore it here.
     if volume in DISKINFO or "/dev/cdrom" in volume or "/dev/sr" in volume or "/dev/dvd" in volume:
