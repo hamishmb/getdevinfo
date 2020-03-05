@@ -467,7 +467,7 @@ def parse_lsblk_output():
         DISKINFO[host_disk]["FileSystem"] = "N/A"
 
         try:
-            DISKINFO[host_disk]["RawCapacity"] = disk["size"]
+            DISKINFO[host_disk]["RawCapacity"] = str(disk["size"])
 
         except Exception:
             DISKINFO[host_disk]["RawCapacity"] = "Unknown"
@@ -528,7 +528,7 @@ def parse_lsblk_output():
                     DISKINFO[child_disk]["FileSystem"] = "Unknown"
 
                 try:
-                    DISKINFO[child_disk]["RawCapacity"] = child["size"]
+                    DISKINFO[child_disk]["RawCapacity"] = str(child["size"])
 
                 except Exception:
                     DISKINFO[child_disk]["RawCapacity"] = "Unknown"
