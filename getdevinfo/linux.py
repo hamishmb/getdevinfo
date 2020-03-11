@@ -254,14 +254,14 @@ def get_partition_info(subnode, host_disk):
     except AttributeError:
         if isinstance(subnode.physid.string, bytes):
             #NOTE: is this ever bytes?
-            if "nvme" in volume:
+            if "nvme" in host_disk:
                 volume = host_disk+"p"+subnode.physid.string.decode("utf-8")
 
             else:
                 volume = host_disk+subnode.physid.string.decode("utf-8")
 
         else:
-            if "nvme" in volume:
+            if "nvme" in host_disk:
                 volume = host_disk+"p"+subnode.physid.string
 
             else:
