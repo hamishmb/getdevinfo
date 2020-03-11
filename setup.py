@@ -1,5 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 """Setup module for GetDevInfo.
 """
+
+import shutil
+import platform
 
 # Always prefer setuptools over distutils
 from setuptools import setup, find_packages
@@ -8,6 +14,31 @@ from codecs import open
 from os import path
 
 here = path.abspath(path.dirname(__file__))
+
+if platform.system() == "Linux":
+    LINUX = True
+    dependencies = ("lshw", "blkid", "lsblk", "lvdisplay", "dd", "strings", "blockdev")
+
+elif platform.system() == "Darwin":
+    LINUX = False
+    dependencies = ("diskutil")
+
+#Check that non-python dependencies are available.
+print("Checking non-Python dependencies are present...")
+
+failed_list = []
+
+for cmd in dependencies:
+    if shutil.which(cmd) is None:
+        failed_list.append(cmd)
+
+#Error out with a warning if any dependencies weren't found.
+if failed_list:
+    print("Dependency check failed!")
+    print("Please install the following programs/packages:")
+    print(', '.join(failed_list))
+    print("\n\nInstall aborted.")
+    raise RuntimeError("Dependencies not met")
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
