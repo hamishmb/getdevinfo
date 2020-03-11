@@ -21,7 +21,7 @@ if platform.system() == "Linux":
 
 elif platform.system() == "Darwin":
     LINUX = False
-    dependencies = ("diskutil")
+    dependencies = ()
 
 #Check that non-python dependencies are available.
 print("Checking non-Python dependencies are present...")
