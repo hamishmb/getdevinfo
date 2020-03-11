@@ -504,7 +504,7 @@ def parse_lsblk_output():
         DISKINFO[host_disk]["Description"] = "NVME Disk"
         DISKINFO[host_disk]["Flags"] = "Unknown"
         DISKINFO[host_disk]["Partitioning"] = "Unknown"
-        DISKINFO[host_disk]["ID"] = "Unknown"
+        DISKINFO[host_disk]["ID"] = get_id(host_disk)
 
         #Get any partitions as well.
         if "children" in disk:
@@ -566,7 +566,7 @@ def parse_lsblk_output():
                 DISKINFO[child_disk]["Description"] = "N/A"
                 DISKINFO[child_disk]["Flags"] = "Unknown"
                 DISKINFO[child_disk]["Partitioning"] = "N/A"
-                DISKINFO[child_disk]["ID"] = "Unknown"
+                DISKINFO[child_disk]["ID"] = get_id(child_disk)
 
 def get_vendor(node):
     """
