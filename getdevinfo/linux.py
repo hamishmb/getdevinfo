@@ -651,11 +651,11 @@ def get_capacity(node):
     """
 
     if hasattr(node, "size") and hasattr(node.size, "string"):
-        #This is actually an int, despite the misleading name.
+        #XXX This is actually an int, despite the misleading name.
         raw_capacity = str(node.size.string)
 
     elif hasattr(node, "capacity") and hasattr(node.capacity, "string"):
-        #This is actually an int, despite the misleading name.
+        #XXX This is actually an int, despite the misleading name.
         raw_capacity = str(node.capacity.string)
 
     else:

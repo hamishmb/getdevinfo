@@ -14,7 +14,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='getdevinfo',
-    version='1.0.8',
+    version='1.0.9',
     description='A device information gatherer for Linux and macOS',
     long_description=long_description,
 

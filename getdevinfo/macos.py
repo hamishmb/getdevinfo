@@ -28,7 +28,7 @@ module, but you can call it directly if you like.
         function to get a block size, as documented below.
 
 .. warning::
-        Feel free to experiment, but be aware that you may be able to
+        Feel free to experiment, but be aware that you may be able to cause
         crashes, exceptions, and generally weird situations by calling
         these methods directly if you get it wrong. A good place to
         look if you're interested in this is the unit tests (in tests/).
@@ -52,7 +52,6 @@ import plistlib
 DISKINFO = None
 PLIST = None
 
-#TODO This is more limited than the Linux version. Might be good to change that.
 def get_info():
     """
     This function is the macOS-specific way of getting disk information.
@@ -110,8 +109,6 @@ def get_info():
     #Check we found some disks.
     if not DISKINFO:
         raise RuntimeError("No Disks found!")
-
-    return DISKINFO
 
 def get_device_info(disk):
     """
@@ -196,7 +193,7 @@ def get_partition_info(disk, host_disk):
 
     return volume
 
-def is_partition(disk): #Note: Could change to use "Whole" attrib. Good idea?
+def is_partition(disk): #TODO: Could change to use "Whole" attrib. Good idea?
     """
     Private, implementation detail.
 
