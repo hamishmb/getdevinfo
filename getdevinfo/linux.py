@@ -53,9 +53,9 @@ from bs4 import BeautifulSoup
 
 #Define global variables to make pylint happy.
 DISKINFO = None
-BLKIDOUTPUT = None
+LSUUIDOUTPUT = None
 LSBLKOUTPUT = None
-LSOUTPUT = None
+LSIDOUTPUT = None
 LVMOUTPUT = None
 
 def get_info():
@@ -88,16 +88,20 @@ def get_info():
 
     #Save some info for later use.
     #UUIDs.
-    global BLKIDOUTPUT
+    global LSUUIDOUTPUT
 
-    cmd = subprocess.Popen("blkid -o list", stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
-    BLKIDOUTPUT = cmd.communicate()[0]
+    cmd = subprocess.Popen("ls -l /dev/disk/by-uuid/", stdout=subprocess.PIPE,
+                           stderr=subprocess.STDOUT, shell=True)
+
+    LSUUIDOUTPUT = cmd.communicate()[0]
 
     #IDs.
-    global LSOUTPUT
+    global LSIDOUTPUT
 
-    cmd = subprocess.Popen("ls -l /dev/disk/by-id/", stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
-    LSOUTPUT = cmd.communicate()[0]
+    cmd = subprocess.Popen("ls -l /dev/disk/by-id/", stdout=subprocess.PIPE,
+                           stderr=subprocess.STDOUT, shell=True)
+
+    LSIDOUTPUT = cmd.communicate()[0]
 
     #Parse the XML.
     output = BeautifulSoup(stdout, "xml")
@@ -521,7 +525,10 @@ def parse_lsblk_output():
                 DISKINFO[child_disk]["Product"] = "Host Device: "+DISKINFO[host_disk]["Product"]
 
                 try:
-                    DISKINFO[child_disk]["UUID"] = child["uuid"]
+                    if child["uuid"] is None:
+                        DISKINFO[child_disk]["UUID"] = "Unknown"
+                    else:
+                        DISKINFO[child_disk]["UUID"] = child["uuid"]
 
                 except KeyError:
                     DISKINFO[child_disk]["UUID"] = "Unknown"
@@ -832,19 +839,19 @@ def get_uuid(disk):
 
     uuid = "Unknown"
 
-    #Try to get the UUID from blkid's output.
-    for line in BLKIDOUTPUT.split(b'\n'):
-        line = line.decode("utf-8", errors="replace").replace("'", "")
+    #Try to get the UUID from ls's output.
+    for line in LSUUIDOUTPUT.split(b'\n'):
+        try:
+            line = line.decode("utf-8", errors="replace").replace("'", "")
 
-        if disk in line:
-            uuid = line.split()[-1]
+            split_line = line.split()
 
-            #Fix a bug where an invalid UUID is used when blkid couldn't find one.
-            if uuid == "mounted)":
-                uuid = "Unknown"
-
-            else:
+            if "../../"+disk.split('/')[-1] == split_line[-1]:
+                uuid = split_line[-3]
                 break
+
+        except Exception:
+            pass
 
     return uuid
 
@@ -871,7 +878,7 @@ def get_id(disk):
     disk_id = "Unknown"
 
     #Try to get the ID from ls's output.
-    for line in LSOUTPUT.split(b'\n'):
+    for line in LSIDOUTPUT.split(b'\n'):
         try:
             line = line.decode("utf-8", errors="replace").replace("'", "")
 
