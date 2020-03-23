@@ -1043,8 +1043,8 @@ def get_lv_and_vg_name(volume):
         if "--" in volume:
             separator = "--" #Weird Ubuntu LVM thing.
 
-        volume_group = volume.replace("/dev/mapper/", "").split(separator)[1]
-        logical_volume = volume.replace("/dev/mapper/", "").split(separator)[0]
+        volume_group = volume.replace("/dev/mapper/", "").split(separator)[0]
+        logical_volume = volume.replace("/dev/mapper/", "").split(separator)[1]
 
     elif "/dev/" in volume:
         volume_group = volume.split("/")[2]
