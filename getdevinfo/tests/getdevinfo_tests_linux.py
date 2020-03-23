@@ -38,11 +38,11 @@ class TestMain(unittest.TestCase):
         #Disk info.
         linux.DISKINFO = data.return_fake_disk_info_linux()
 
-        #Blkid output.
-        linux.BLKIDOUTPUT = data.return_fake_blkid_output()
+        #Ls ID output.
+        linux.LSIDOUTPUT = data.return_fake_lsid_output()
 
-        #Ls output.
-        linux.LSOUTPUT = data.return_fake_ls_output()
+        #Ls UUID output.
+        linux.LSUUIDOUTPUT = data.return_fake_lsuuid_output()
 
         #Good nodes, unicode strings.
         self.node1 = data.Node1().get_copy()
@@ -67,8 +67,8 @@ class TestMain(unittest.TestCase):
 
     def tearDown(self):
         del linux.DISKINFO
-        del linux.BLKIDOUTPUT
-        del linux.LSOUTPUT
+        del linux.LSIDOUTPUT
+        del linux.LSUUIDOUTPUT
 
         del self.node1
         del self.node2
@@ -308,7 +308,8 @@ class TestParseLSBLKOutput(unittest.TestCase):
     def test_parse_lsblk_output_1(self):
         """Test #1: Test that this returns expected results with good data in normal circumstances"""
         linux.LSBLKOUTPUT = data.return_fake_lsblk_output_good_1()
-        linux.LSOUTPUT = b""
+        linux.LSUUIDOUTPUT = b""
+        linux.LSIDOUTPUT = b""
 
         diskinfo = data.return_fake_lsblk_output_good_1_diskinfo()
 
@@ -319,7 +320,8 @@ class TestParseLSBLKOutput(unittest.TestCase):
     def test_parse_lsblk_output_2(self):
         """Test #2: Test that this returns expected results with missing vendor, model and size elements for devices"""
         linux.LSBLKOUTPUT = data.return_fake_lsblk_output_bad_1()
-        linux.LSOUTPUT = b""
+        linux.LSUUIDOUTPUT = b""
+        linux.LSIDOUTPUT = b""
 
         diskinfo = data.return_fake_lsblk_output_bad_1_diskinfo()
 
@@ -330,7 +332,8 @@ class TestParseLSBLKOutput(unittest.TestCase):
     def test_parse_lsblk_output_3(self):
         """Test #3: Test that this returns expected results with missing uuid, fstype, and size elements for children"""
         linux.LSBLKOUTPUT = data.return_fake_lsblk_output_bad_2()
-        linux.LSOUTPUT = b""
+        linux.LSUUIDOUTPUT = b""
+        linux.LSIDOUTPUT = b""
 
         diskinfo = data.return_fake_lsblk_output_bad_2_diskinfo()
 
@@ -341,7 +344,8 @@ class TestParseLSBLKOutput(unittest.TestCase):
     def test_parse_lsblk_output_4(self):
         """Test #4: Test that this returns nothing when lsblk returns invalid JSON"""
         linux.LSBLKOUTPUT = data.return_fake_lsblk_output_bad_3()
-        linux.LSOUTPUT = b""
+        linux.LSUUIDOUTPUT = b""
+        linux.LSIDOUTPUT = b""
 
         diskinfo = {}
 

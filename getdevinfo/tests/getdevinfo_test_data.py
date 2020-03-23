@@ -1110,23 +1110,21 @@ def return_fake_lvm_output():
    
    """.split("\n")
 
-def return_fake_blkid_output():
-    return b"""device     fs_type label    mount point    UUID
--------------------------------------------------------------------------------
-/dev/sda1  vfat    ESP      /boot/efi      8243-0631
-/dev/sda2  vfat    DIAGS    (not mounted)  9B4C-DEED
-/dev/sda4  ntfs    WINRECOVERY (not mounted) EAC64F91C64F0CEF
-/dev/sda5  ntfs    WIN10    /media/WIN10   02E053D7F053CF91
-/dev/sda6  ntfs             (not mounted)  880CE2C20CE29A88
-/dev/sda7  ntfs             (not mounted)  A636D41B36D44E45
-/dev/sda8  ntfs             (not mounted)  80125090124FFA24
-/dev/sda9  ext4             /              33ec5956-b699-4da7-8046-e4ce7bcf8521
-/dev/sda10 ext4             /media/VirtualBox fcacb083-163d-4d0a-94a1-22536f5bba9b
-/dev/sdb1  swap             [SWAP]         b507c745-d3c9-4c43-8e88-0487913fbf00
-/dev/sdb2  ext4             /home          83788ffc-d36b-4f3a-b48f-18638f1591a8
-/dev/sda3                   (not mounted)  """
+def return_fake_lsuuid_output():
+    return b"""total 0
+lrwxrwxrwx 1 root root 15 Mar 23 08:16 8243-0631 -> ../../sda1
+lrwxrwxrwx 1 root root 15 Mar 23 08:16 9B4C-DEED -> ../../sda2
+lrwxrwxrwx 1 root root 15 Mar 23 08:16 EAC64F91C64F0CEF -> ../../sda4
+lrwxrwxrwx 1 root root 15 Mar 23 08:16 02E053D7F053CF91 -> ../../sda5
+lrwxrwxrwx 1 root root 15 Mar 23 08:16 880CE2C20CE29A88 -> ../../sda6
+lrwxrwxrwx 1 root root 11 Mar 23 08:16 A636D41B36D44E45 -> ../../sda7
+lrwxrwxrwx 1 root root 15 Mar 23 08:16 80125090124FFA24 -> ../../sda8
+lrwxrwxrwx 1 root root 15 Mar 23 08:16 33ec5956-b699-4da7-8046-e4ce7bcf8521 -> ../../sda9
+lrwxrwxrwx 1 root root 15 Mar 23 08:16 fcacb083-163d-4d0a-94a1-22536f5bba9b -> ../../sda10
+lrwxrwxrwx 1 root root 11 Mar 23 08:16 b507c745-d3c9-4c43-8e88-0487913fbf00 -> ../../sdb1
+lrwxrwxrwx 1 root root 15 Mar 23 08:16 83788ffc-d36b-4f3a-b48f-18638f1591a8 -> ../../sdb2"""
 
-def return_fake_ls_output():
+def return_fake_lsid_output():
     return b"""total 0
 lrwxrwxrwx 1 root root  9 Oct 17 08:45 ata-HL-DT-ST_DVD+_-RW_GA50N_K0ADADE0046 -> ../../sr0
 lrwxrwxrwx 1 root root  9 Oct 17 08:45 ata-Samsung_SSD_850_EVO_500GB_S21JNXAGC48182L -> ../../sda
