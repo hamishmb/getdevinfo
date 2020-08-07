@@ -689,7 +689,7 @@ def compute_block_size(stdout):
     """
 
     try:
-        data = json.loads(stdout.decode("utf-8", errors="replace"))
+        data = json.loads(stdout)
 
     except ValueError:
         #Not a valid JSON document!
