@@ -661,7 +661,7 @@ def get_block_size(disk):
     """
 
     #Run /sbin/blockdev to try and get blocksize information.
-    command = ["smartctl", "-i", disk, "-j"]
+    command = ["/usr/sbin/smartctl", "-i", disk, "-j"]
 
     runcmd = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=False)
 

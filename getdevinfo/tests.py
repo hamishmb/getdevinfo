@@ -20,17 +20,21 @@ import unittest
 import logging
 import getopt
 import sys
+import platform
 import os
 
 #Global vars.
-VERSION = "1.0.10"
+VERSION = "1.1.0"
 
 #Determine the platform.
 LINUX = ("linux" in sys.platform)
+CYGWIN = ("CYGWIN" in platform.system())
 
-if LINUX:
+if LINUX and not CYGWIN:
     from tests import getdevinfo_tests_linux as gd_tests
 
+elif CYGWIN:
+    from tests import getdevinfo_tests_cygwin as gd_tests
 else:
     from tests import getdevinfo_tests_macos as gd_tests
 
