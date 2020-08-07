@@ -513,7 +513,7 @@ def get_file_system(output):
     file_system = "Unknown"
 
     for line in output:
-        if "TYPE=" in line:
+        if "TYPE=" in line and "PTTYPE=" not in line:
             file_system = line.replace("TYPE=", "")
 
             #Use different terminology where wanted.
