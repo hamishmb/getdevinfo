@@ -76,7 +76,7 @@ def get_info():
     for disk in os.listdir("/dev"):
         #HDDs, SSDs, NVME SSDs, Optical drives, Tape drives.
         if "sd" in disk or "sr" in disk or "nvme" in disk \
-            or "st" in disk:
+            or "st" in disk and "std" not in disk:
 
             DISKINFO[disk] = {}
             DISKINFO[disk]["Name"] = disk
