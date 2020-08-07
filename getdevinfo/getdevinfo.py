@@ -42,7 +42,7 @@ disk information as a dictionary.
         later.
 
 .. module: getdevinfo.py
-    :platform: Linux, macOS
+    :platform: Linux, macOS, Cygwin
     :synopsis: The main part of the GetDevInfo module.
 
 .. moduleauthor:: Hamish McIntyre-Bhatty <hamishmb@live.co.uk>
@@ -52,7 +52,7 @@ disk information as a dictionary.
 import platform
 
 #Declare version; useful for users of the module.
-VERSION = "1.0.10"
+VERSION = "1.0.11"
 
 def get_info():
     """
@@ -82,14 +82,25 @@ def get_info():
     #Determine if running on Linux or Mac.
     if platform.system() == 'Linux':
         linux = True
+        cygwin = False
+
+    elif "CYGWIN" in platform.system():
+        linux = True
+        cygwin = True
 
     elif platform.system() == "Darwin":
         linux = False
+        cygwin = False
 
-    if linux:
+    if linux and not cygwin:
         from . import linux
         linux.get_info()
         diskinfo = linux.DISKINFO
+
+    elif cygwin:
+        from . import cygwin
+        cygwin.get_info()
+        diskinfo = cygwin.DISKINFO
 
     else:
         from . import macos
