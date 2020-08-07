@@ -118,7 +118,7 @@ def get_device_info(host_disk):
     cmd = subprocess.run(["/usr/sbin/smartctl", "-i", host_disk, "-j"], stdout=subprocess.PIPE,
                          stderr=subprocess.STDOUT, check=False)
 
-    output = cmd.stdout
+    output = cmd.stdout.decode("utf-8", errors="replace")
 
     try:
         data = json.loads(output)
@@ -162,7 +162,7 @@ def get_device_info(host_disk):
         DISKINFO[host_disk]["UUID"] = "Unknown"
 
     else:
-        output = cmd.stdout.split("\n")
+        output = cmd.stdout.decode("utf-8", errors="replace").split("\n")
 
         DISKINFO[host_disk]["Partitioning"] = get_partitioning(output)
         DISKINFO[host_disk]["FileSystem"] = get_file_system(output)
@@ -402,7 +402,7 @@ def get_description(data, disk):
         pass
 
     else:
-        output = cmd.stdout
+        output = cmd.stdout.decode("utf-8", errors="replace")
 
         #\\.\ signals that this is a Windows path.
         if "\\\\.\\" in output:
@@ -671,7 +671,7 @@ def compute_block_size(stdout):
     """
 
     try:
-        data = json.loads(stdout)
+        data = json.loads(stdout.decode("utf-8", errors="replace"))
 
     except ValueError:
         #Not a valid JSON document!
