@@ -52,7 +52,7 @@ disk information as a dictionary.
 import platform
 
 #Declare version; useful for users of the module.
-VERSION = "1.0.11"
+VERSION = "1.1.0"
 
 def get_info():
     """
