@@ -606,9 +606,9 @@ def get_boot_record(disk):
         return (b"Unknown", [b"Unknown"])
 
     #Get the readable strings in the boot record.
-    cmd = subprocess.run("strings", stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=False, shell=True)
+    cmd = subprocess.Popen("strings", stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
     cmd.stdin.write(boot_record)
-    boot_record_strings = cmd.stdout.replace(b" ", b"").split(b"\n")
+    boot_record_strings = cmd.communicate()[0].replace(b" ", b"").split(b"\n")
     return_value = cmd.returncode
 
     if return_value != 0:
