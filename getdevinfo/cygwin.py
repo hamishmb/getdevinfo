@@ -404,7 +404,7 @@ def get_description(data, disk):
         pass
 
     else:
-        output = cmd.stdout.decode("utf-8", errors="replace")
+        output = cmd.stdout.decode("utf-8", errors="replace").strip()
 
         #\\.\ signals that this is a Windows path.
         if "\\\\.\\" in output:
