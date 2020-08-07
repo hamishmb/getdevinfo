@@ -78,6 +78,8 @@ def get_info():
         if "sd" in disk or "sr" in disk or "nvme" in disk \
             or "st" in disk and "std" not in disk:
 
+            disk = "/dev/"+disk
+
             DISKINFO[disk] = {}
             DISKINFO[disk]["Name"] = disk
 
