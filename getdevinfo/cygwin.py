@@ -598,7 +598,7 @@ def get_boot_record(disk):
     """
 
     #Use status=none to avoid getting status messages from dd in our boot record.
-    cmd = subprocess.Popen("dd if="+disk+" bs=512 count=1 status=none", stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+    cmd = subprocess.run("dd if="+disk+" bs=512 count=1 status=none", stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=False, shell=True)
     boot_record = cmd.stdout
     return_value = cmd.returncode
 
@@ -606,7 +606,7 @@ def get_boot_record(disk):
         return (b"Unknown", [b"Unknown"])
 
     #Get the readable strings in the boot record.
-    cmd = subprocess.Popen("strings", stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+    cmd = subprocess.run("strings", stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=False, shell=True)
     cmd.stdin.write(boot_record)
     boot_record_strings = cmd.stdout.replace(b" ", b"").split(b"\n")
     return_value = cmd.returncode
