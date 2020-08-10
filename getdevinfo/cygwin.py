@@ -48,6 +48,19 @@ import subprocess
 import os
 import json
 
+#Determine path to blkid and smartctl.
+if os.getenv("RESOURCEPATH") is None:
+    #Installed in Cygwin as usual.
+    BLKID = "/sbin/blkid"
+    SMARTCTL = "/usr/sbin/smartctl"
+
+else:
+    #Bundled with DDRescue-GUI.
+    RESOURCEPATH = os.getenv("RESOURCEPATH")
+
+    BLKID = RESOURCEPATH+"/bin/blkid"
+    SMARTCTL = RESOURCEPATH+"/bin/smartctl"
+
 #Define global variables to make pylint happy.
 DISKINFO = None
 
@@ -119,7 +132,7 @@ def get_device_info(host_disk):
     DISKINFO[host_disk]["Partitions"] = []
 
     #Get smartctl output for more disk info.
-    cmd = subprocess.run(["/usr/sbin/smartctl", "-i", host_disk, "-j"], stdout=subprocess.PIPE,
+    cmd = subprocess.run([SMARTCTL, "-i", host_disk, "-j"], stdout=subprocess.PIPE,
                          stderr=subprocess.STDOUT, check=False)
 
     output = cmd.stdout.decode("utf-8", errors="replace")
@@ -157,7 +170,7 @@ def get_device_info(host_disk):
 
     #Get blkid output for these.
     try:
-        cmd = subprocess.run(["/sbin/blkid", host_disk, "-o", "export"], stdout=subprocess.PIPE,
+        cmd = subprocess.run([BLKID, host_disk, "-o", "export"], stdout=subprocess.PIPE,
                              stderr=subprocess.STDOUT, check=True)
 
     except subprocess.CalledProcessError:
@@ -661,7 +674,7 @@ def get_block_size(disk):
     """
 
     #Run /sbin/blockdev to try and get blocksize information.
-    command = ["/usr/sbin/smartctl", "-i", disk, "-j"]
+    command = [SMARTCTL, "-i", disk, "-j"]
 
     runcmd = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=False)
 
