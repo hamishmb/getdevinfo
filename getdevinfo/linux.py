@@ -1084,9 +1084,9 @@ def get_block_size(disk):
     """
 
     #Run /sbin/blockdev to try and get blocksize information.
-    command = "blockdev --getpbsz "+disk
+    command = ["blockdev",  "--getpbsz", disk]
 
-    runcmd = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+    runcmd = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
     #Get the output and pass it to compute_block_size.
     return compute_block_size(runcmd.communicate()[0].decode("utf-8", errors="replace"))
