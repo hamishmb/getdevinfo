@@ -298,7 +298,7 @@ def get_vendor(data):
     try:
         return data["model_name"].split()[0]
 
-    except IndexError:
+    except (IndexError, KeyError):
         return "Unknown"
 
 def get_product(data):
@@ -325,7 +325,7 @@ def get_product(data):
     try:
         return ' '.join(data["model_name"].split()[1:])
 
-    except IndexError:
+    except (IndexError, KeyError):
         return "Unknown"
 
 def get_capacity(data):
@@ -350,7 +350,7 @@ def get_capacity(data):
     >>> raw_size, human_size = get_capacity(<smartctl-data>)
     """
 
-    if "bytes" not in data["user_capacity"].keys():
+    if "user_capacity" not in data.keys() or "bytes" not in data["user_capacity"].keys():
         return "Unknown", "Unknown"
 
     raw_capacity = data["user_capacity"]["bytes"]
@@ -376,7 +376,7 @@ def get_capacity(data):
         return "Unknown", "Unknown"
 
     #Include the unit in the result for both exact and human-readable sizes.
-    return raw_capacity, str(human_readable_size)+" "+unit
+    return str(raw_capacity), str(human_readable_size)+" "+unit
 
 def get_description(data, disk):
     """
@@ -557,7 +557,7 @@ def get_uuid(output):
     uuid = "Unknown"
 
     for line in output:
-        if "UUID=" in line:
+        if "UUID=" in line and "PTUUID=" not in line and "PARTUUID=" not in line:
             uuid = line.replace("UUID=", "")
 
             break
@@ -675,7 +675,7 @@ def compute_block_size(stdout):
     Used to process and tidy up the block size output from smartctl.
 
     Args:
-        stdout (str):       blockdev's output.
+        stdout (str):       The block size.
 
     Returns:
         int/None: The block size:
@@ -699,6 +699,6 @@ def compute_block_size(stdout):
     if "logical_block_size" not in data:
         return None
 
-    return data["logical_block_size"]
+    return str(data["logical_block_size"])
 
 #End Main Class.

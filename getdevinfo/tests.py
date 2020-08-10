@@ -35,6 +35,7 @@ if LINUX and not CYGWIN:
 
 elif CYGWIN:
     from tests import getdevinfo_tests_cygwin as gd_tests
+
 else:
     from tests import getdevinfo_tests_macos as gd_tests
 
