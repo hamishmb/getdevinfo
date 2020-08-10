@@ -475,9 +475,9 @@ def get_block_size(disk):
     """
 
     #Run diskutil list to get disk names.
-    command = "diskutil info -plist "+disk
+    command = ["diskutil", "info", "-plist", disk]
 
-    runcmd = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+    runcmd = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
     #Get the output and pass it to compute_block_size.
     return compute_block_size(disk, runcmd.communicate()[0])

@@ -20,16 +20,21 @@ import unittest
 import logging
 import getopt
 import sys
+import platform
 import os
 
 #Global vars.
-VERSION = "1.0.10"
+VERSION = "1.1.0"
 
 #Determine the platform.
 LINUX = ("linux" in sys.platform)
+CYGWIN = ("CYGWIN" in platform.system())
 
-if LINUX:
+if LINUX and not CYGWIN:
     from tests import getdevinfo_tests_linux as gd_tests
+
+elif CYGWIN:
+    from tests import getdevinfo_tests_cygwin as gd_tests
 
 else:
     from tests import getdevinfo_tests_macos as gd_tests
@@ -42,9 +47,12 @@ def usage():
     print("GetDevinfo "+VERSION+" is released under the GNU GPL Version 3")
     print("Copyright (C) Hamish McIntyre-Bhatty 2013-2020")
 
-#Exit if not running as root.
-if os.geteuid() != 0:
+#Exit if not running as root (if not on Cygwin).
+if os.geteuid() != 0 and not CYGWIN:
     sys.exit("You must run the tests as root! Exiting...")
+
+elif CYGWIN:
+    print("NOTE: These tests won't work correctly without administrator privileges.")
 
 #Check all cmdline options are valid.
 try:

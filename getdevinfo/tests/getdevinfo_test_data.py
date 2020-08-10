@@ -80,6 +80,179 @@ class Node2:
         tag["value"] = "ext4"
         children.append(tag)
 
+def return_good_smartctl_output_1():
+    return """{
+  "json_format_version": [
+    1,
+    0
+  ],
+  "smartctl": {
+    "version": [
+      7,
+      1
+    ],
+    "svn_revision": "5022",
+    "platform_info": "x86_64-linux-5.4.0-42-generic",
+    "build_info": "(local build)",
+    "argv": [
+      "smartctl",
+      "-i",
+      "/dev/sda",
+      "-j"
+    ],
+    "exit_status": 0
+  },
+  "device": {
+    "name": "/dev/sda",
+    "info_name": "/dev/sda [SAT]",
+    "type": "sat",
+    "protocol": "ATA"
+  },
+  "model_name": "FakeVendor FakeProduct",
+  "serial_number": "XXXXXXXXX",
+  "firmware_version": "XXXXXXX",
+  "user_capacity": {
+    "blocks": 1953525168,
+    "bytes": 100000000000
+  },
+  "logical_block_size": 512,
+  "physical_block_size": 512,
+  "rotation_rate": 0,
+  "form_factor": {
+    "ata_value": 3,
+    "name": "2.5 inches"
+  },
+  "in_smartctl_database": false,
+  "ata_version": {
+    "string": "ACS-4 T13/BSR INCITS 529 revision 5",
+    "major_value": 2556,
+    "minor_value": 94
+  },
+  "sata_version": {
+    "string": "SATA 3.2",
+    "value": 255
+  },
+  "interface_speed": {
+    "max": {
+      "sata_value": 14,
+      "string": "6.0 Gb/s",
+      "units_per_second": 60,
+      "bits_per_unit": 100000000
+    },
+    "current": {
+      "sata_value": 3,
+      "string": "6.0 Gb/s",
+      "units_per_second": 60,
+      "bits_per_unit": 100000000
+    }
+  },
+  "local_time": {
+    "time_t": 1597056860,
+    "asctime": "Mon Aug 10 11:54:20 2020 BST"
+  }
+}
+"""
+
+def return_good_smartctl_output_2():
+    return """{
+  "json_format_version": [
+    1,
+    0
+  ],
+  "smartctl": {
+    "version": [
+      7,
+      1
+    ],
+    "svn_revision": "5022",
+    "platform_info": "x86_64-linux-5.4.0-42-generic",
+    "build_info": "(local build)",
+    "argv": [
+      "smartctl",
+      "-i",
+      "/dev/sda",
+      "-j"
+    ],
+    "exit_status": 0
+  },
+  "device": {
+    "name": "/dev/sda",
+    "info_name": "/dev/sda [SAT]",
+    "type": "sat",
+    "protocol": "ATA"
+  },
+  "model_name": "FakeVendor2 FakeProduct2",
+  "serial_number": "XXXXXXXXX",
+  "firmware_version": "XXXXXXX",
+  "user_capacity": {
+    "blocks": 1953525168,
+    "bytes": 10000000000000000000
+  },
+  "logical_block_size": 1024,
+  "physical_block_size": 512,
+  "rotation_rate": 0,
+  "form_factor": {
+    "ata_value": 3,
+    "name": "2.5 inches"
+  },
+  "in_smartctl_database": false,
+  "ata_version": {
+    "string": "ACS-4 T13/BSR INCITS 529 revision 5",
+    "major_value": 2556,
+    "minor_value": 94
+  },
+  "sata_version": {
+    "string": "SATA 3.2",
+    "value": 255
+  },
+  "interface_speed": {
+    "max": {
+      "sata_value": 14,
+      "string": "6.0 Gb/s",
+      "units_per_second": 60,
+      "bits_per_unit": 100000000
+    },
+    "current": {
+      "sata_value": 3,
+      "string": "6.0 Gb/s",
+      "units_per_second": 60,
+      "bits_per_unit": 100000000
+    }
+  },
+  "local_time": {
+    "time_t": 1597056860,
+    "asctime": "Mon Aug 10 11:54:20 2020 BST"
+  }
+}
+"""
+
+def return_good_blkid_output_1():
+    return """DEVNAME=/dev/sda
+PTUUID=xxxxxxxx-cx5a-xxxx-b421-e90d7f3axxxx
+PTTYPE=gpt
+TYPE=vfat
+""".split("\n")
+
+def return_good_blkid_output_2():
+    return """DEVNAME=/dev/sdb
+PTUUID=xxxxxxxx-cx5a-xxxx-b421-e90d7f3axxxx
+PTTYPE=dos
+TYPE=ext4
+""".split("\n")
+
+def return_good_blkid_output_3():
+    return """DEVNAME=/dev/sdc
+PTUUID=xxxxxxxx-cx5a-xxxx-b421-e90d7f3axxxx
+PTTYPE=apm
+TYPE=vfat
+""".split("\n")
+
+def return_good_blkid_output_4():
+    return """DEVNAME=/dev/sda1
+TYPE=vfat
+UUID=8243-0631
+""".split("\n")
+
 # ---------------------------------------------- non-roman chars --------------------------------------
 class Node3: #Greek characters.
     def get_copy(self):
@@ -138,6 +311,165 @@ class Node4: #Yi characters.
         tag["id"] = "filesystem"
         tag["value"] = "ꀒꀲꀯꀭꁎꀦꀄewrhtyjthgrfeꀴꀿꀬꀝꅮꅧꅌ"
         children.append(tag)
+
+def return_good_smartctl_output_3():
+    return """{
+  "json_format_version": [
+    1,
+    0
+  ],
+  "smartctl": {
+    "version": [
+      7,
+      1
+    ],
+    "svn_revision": "5022",
+    "platform_info": "x86_64-linux-5.4.0-42-generic",
+    "build_info": "(local build)",
+    "argv": [
+      "smartctl",
+      "-i",
+      "/dev/sda",
+      "-j"
+    ],
+    "exit_status": 0
+  },
+  "device": {
+    "name": "/dev/sda",
+    "info_name": "/dev/sda [SAT]",
+    "type": "sat",
+    "protocol": "ATA"
+  },
+  "model_name": "ΉΜήυΟομἝἲϾᾍᾈᾁὮᾌ 𐅛𐅣𐅸𐅒𐅌𐅮𐅺𐅷𐅑𐅮𐆀𐅸𝈢𝈵𝈭",
+  "serial_number": "XXXXXXXXX",
+
+  "firmware_version": "XXXXXXX",
+  "user_capacity": {
+    "blocks": 1953525168,
+    "bytes": 1000204886016
+  },
+  "logical_block_size": 2048,
+  "physical_block_size": 512,
+  "rotation_rate": 0,
+  "form_factor": {
+    "ata_value": 3,
+    "name": "2.5 inches"
+  },
+  "in_smartctl_database": false,
+  "ata_version": {
+    "string": "ACS-4 T13/BSR INCITS 529 revision 5",
+    "major_value": 2556,
+    "minor_value": 94
+  },
+  "sata_version": {
+    "string": "SATA 3.2",
+    "value": 255
+  },
+  "interface_speed": {
+    "max": {
+      "sata_value": 14,
+      "string": "6.0 Gb/s",
+      "units_per_second": 60,
+      "bits_per_unit": 100000000
+    },
+    "current": {
+      "sata_value": 3,
+      "string": "6.0 Gb/s",
+      "units_per_second": 60,
+      "bits_per_unit": 100000000
+    }
+  },
+  "local_time": {
+    "time_t": 1597056860,
+    "asctime": "Mon Aug 10 11:54:20 2020 BST"
+  }
+}
+"""
+
+def return_good_smartctl_output_4():
+    return """{
+  "json_format_version": [
+    1,
+    0
+  ],
+  "smartctl": {
+    "version": [
+      7,
+      1
+    ],
+    "svn_revision": "5022",
+    "platform_info": "x86_64-linux-5.4.0-42-generic",
+    "build_info": "(local build)",
+    "argv": [
+      "smartctl",
+      "-i",
+      "/dev/sda",
+      "-j"
+    ],
+    "exit_status": 0
+  },
+  "device": {
+    "name": "/dev/sda",
+    "info_name": "/dev/sda [SAT]",
+    "type": "sat",
+    "protocol": "ATA"
+  },
+  "model_name": "ꀒꀲꀯꀭꁎꀦꀄꀴꀿꀬꀝꅮꅧꅌ ꍜꍧꍼꍟꍏꍄꌲꍏꌽꍛꍷꍼꍴ",
+  "serial_number": "XXXXXXXXX",
+  "firmware_version": "XXXXXXX",
+  "user_capacity": {
+    "blocks": 1953525168,
+    "bytes": 1000204886016
+  },
+  "logical_block_size": 4096,
+  "physical_block_size": 512,
+  "rotation_rate": 0,
+  "form_factor": {
+    "ata_value": 3,
+    "name": "2.5 inches"
+  },
+  "in_smartctl_database": false,
+  "ata_version": {
+    "string": "ACS-4 T13/BSR INCITS 529 revision 5",
+    "major_value": 2556,
+    "minor_value": 94
+  },
+  "sata_version": {
+    "string": "SATA 3.2",
+    "value": 255
+  },
+  "interface_speed": {
+    "max": {
+      "sata_value": 14,
+      "string": "6.0 Gb/s",
+      "units_per_second": 60,
+      "bits_per_unit": 100000000
+    },
+    "current": {
+      "sata_value": 3,
+      "string": "6.0 Gb/s",
+      "units_per_second": 60,
+      "bits_per_unit": 100000000
+    }
+  },
+  "local_time": {
+    "time_t": 1597056860,
+    "asctime": "Mon Aug 10 11:54:20 2020 BST"
+  }
+}
+"""
+
+def return_good_blkid_output_5():
+    return """DEVNAME=/dev/sdc1
+PTUUID=xxxxxxxx-cx5a-xxxx-b421-e90d7f3axxxx
+PTTYPE=apm
+TYPE=ΉΜήυΟομἝἲϾᾍᾈᾁὮᾌ
+""".split("\n")
+
+def return_good_blkid_output_6():
+    return """DEVNAME=/dev/sdc2
+TYPE=ꀒꀲꀯꀭꁎꀦꀄewrhtyjthgrfeꀴꀿꀬꀝꅮꅧꅌ
+""".split("\n")
 
 #------------------------------------- Good Nodes, byte strings -----------------------------------------
 class ByteNode1:
@@ -311,6 +643,219 @@ class BadNode3:
     class capabilities:
         #Empty capabilities list.
         children = []
+
+def return_bad_smartctl_output_1():
+    return """{
+  "json_format_version": [
+    1,
+    0
+  ],
+  "smartctl": {
+    "version": [
+      7,
+      1
+    ],
+    "svn_revision": "5022",
+    "platform_info": "x86_64-linux-5.4.0-42-generic",
+    "build_info": "(local build)",
+    "argv": [
+      "smartctl",
+      "-i",
+      "/dev/sda",
+      "-j"
+    ],
+    "exit_status": 0
+  },
+  "device": {
+    "name": "/dev/sda",
+    "info_name": "/dev/sda [SAT]",
+    "type": "sat",
+    "protocol": "ATA"
+  },
+  "serial_number": "XXXXXXXXX",
+  "firmware_version": "XXXXXXX",
+  "physical_block_size": 512,
+  "rotation_rate": 0,
+  "form_factor": {
+    "ata_value": 3,
+    "name": "2.5 inches"
+  },
+  "in_smartctl_database": false,
+  "ata_version": {
+    "string": "ACS-4 T13/BSR INCITS 529 revision 5",
+    "major_value": 2556,
+    "minor_value": 94
+  },
+  "sata_version": {
+    "string": "SATA 3.2",
+    "value": 255
+  },
+  "interface_speed": {
+    "max": {
+      "sata_value": 14,
+      "string": "6.0 Gb/s",
+      "units_per_second": 60,
+      "bits_per_unit": 100000000
+    },
+    "current": {
+      "sata_value": 3,
+      "string": "6.0 Gb/s",
+      "units_per_second": 60,
+      "bits_per_unit": 100000000
+    }
+  },
+  "local_time": {
+    "time_t": 1597056860,
+    "asctime": "Mon Aug 10 11:54:20 2020 BST"
+  }
+}
+"""
+
+def return_bad_smartctl_output_2():
+    return """{
+  "json_format_version": [
+    1,
+    0
+  ],
+  "smartctl": {
+    "version": [
+      7,
+      1
+    ],
+    "svn_revision": "5022",
+    "platform_info": "x86_64-linux-5.4.0-42-generic",
+    "build_info": "(local build)",
+    "argv": [
+      "smartctl",
+      "-i",
+      "/dev/sda",
+      "-j"
+    ],
+    "exit_status": 0
+  },
+  "device": {
+    "name": "/dev/sda",
+    "info_name": "/dev/sda [SAT]",
+    "type": "sat",
+    "protocol": "ATA"
+  },
+  "model_name": "ꀒꀲꀯꀭꁎꀦꀄꀴꀿꀬꀝꅮꅧꅌ ꍜꍧꍼꍟꍏꍄꌲꍏꌽꍛꍷꍼꍴ",
+  "serial_number": "XXXXXXXXX",
+  "firmware_version": "XXXXXXX",
+  "user_capacity": {
+    "blocks": 1953525168,
+    "bytes": 1000204886016000000000000000000000000000000
+  },
+  "logical_block_size": 512,
+  "physical_block_size": 512,
+  "rotation_rate": 0,
+  "form_factor": {
+    "ata_value": 3,
+    "name": "2.5 inches"
+  },
+  "in_smartctl_database": false,
+  "ata_version": {
+    "string": "ACS-4 T13/BSR INCITS 529 revision 5",
+    "major_value": 2556,
+    "minor_value": 94
+  },
+  "sata_version": {
+    "string": "SATA 3.2",
+    "value": 255
+  },
+  "interface_speed": {
+    "max": {
+      "sata_value": 14,
+      "string": "6.0 Gb/s",
+      "units_per_second": 60,
+      "bits_per_unit": 100000000
+    },
+    "current": {
+      "sata_value": 3,
+      "string": "6.0 Gb/s",
+      "units_per_second": 60,
+      "bits_per_unit": 100000000
+    }
+  },
+  "local_time": {
+    "time_t": 1597056860,
+    "asctime": "Mon Aug 10 11:54:20 2020 BST"
+  }
+}
+"""
+
+def return_bad_smartctl_output_3():
+    return """{
+  "json_format_version": [
+    1,
+    0
+  ],
+  "smartctl": {
+    "version": [
+      7,
+      1
+    ],
+    "svn_revision": "5022",
+    "platform_info": "x86_64-linux-5.4.0-42-generic",
+    "build_info": "(local build)",
+    "argv": [
+      "smartctl",
+      "-i",
+      "/dev/sda",
+      "-j"
+    ],
+    "exit_status": 0
+  },
+  "device": {
+    "name": "/dev/sda",
+    "info_name": "/dev/sda [SAT]",
+    "type": "sat",
+    "protocol": "ATA"
+  },
+  "model_name": "ꀒꀲꀯꀭꁎꀦꀄꀴꀿꀬꀝꅮꅧꅌ ꍜꍧꍼꍟꍏꍄꌲꍏꌽꍛꍷꍼꍴ",
+  "serial_number": "XXXXXXXXX",
+  "firmware_version": "XXXXXXX",
+  "user_capacity": {
+    "blocks": 1953525168,
+    "bytes": "test"
+  },
+  "logical_block_size": 512,
+  "physical_block_size": 512,
+  "rotation_rate": 0,
+  "form_factor": {
+    "ata_value": 3,
+    "name": "2.5 inches"
+  },
+  "in_smartctl_database": false,
+  "ata_version": {
+    "string": "ACS-4 T13/BSR INCITS 529 revision 5",
+    "major_value": 2556,
+    "minor_value": 94
+  },
+  "sata_version": {
+    "string": "SATA 3.2",
+    "value": 255
+  },
+  "interface_speed": {
+    "max": {
+      "sata_value": 14,
+      "string": "6.0 Gb/s",
+      "units_per_second": 60,
+      "bits_per_unit": 100000000
+    },
+    "current": {
+      "sata_value": 3,
+      "string": "6.0 Gb/s",
+      "units_per_second": 60,
+      "bits_per_unit": 100000000
+    }
+  },
+  "local_time": {
+    "time_t": 1597056860,
+    "asctime": "Mon Aug 10 11:54:20 2020 BST"
+  }
+}
+"""
 
 #-------------------------------- Functions to return fake diskinfo dictionary. --------------------------------
 def return_fake_disk_info_linux():

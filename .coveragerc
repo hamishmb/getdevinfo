@@ -6,6 +6,7 @@ branch = True
 include =
     linux.py
     macos.py
+    cygwin.py
 
 [report]
 # Regexes for lines to exclude from consideration

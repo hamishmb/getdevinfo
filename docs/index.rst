@@ -14,6 +14,7 @@ Contents:
    format
    getdevinfo
    linux
+   cygwin
    macos
 
 

@@ -5,11 +5,15 @@ This module outputs data in a precisely-formatted dictionary object.
 In order for it to be useful, this format, and the information that
 is provided in it, needs to be explained precisely.
 
-This format is the same on both Linux and macOS, but the macOS version
-of this library currently has less functionality, so some of the
-information isn't present on that version. Instead, placeholders
-like "N/A" or "Unknown" are used. Those instances will be pointed out
-here.
+This format is the same on Linux, macOS, and Cygwin (Windows), but the
+macOS and Cygwin versions of this library currently have less functionality,
+so some of the information isn't present on those platforms version. Instead,
+placeholders like "N/A" or "Unknown" are used. Those instances will be pointed
+out here.
+
+.. note::
+    On Linux and Cygwin, superuser/administrator privileges are required for
+    GetDevInfo to work correctly.
 
 For each device and partition:
 ==============================
@@ -35,6 +39,9 @@ Various information is collected and organised here.
     For example:
         >>> DISKINFO['/dev/sda']['Type']
         >>> "Device"
+
+    .. note::
+        Due to Cygwin limitations, all disks are considered devices on Cygwin.
 
 'HostDevice':
     The "parent" or "host" device of a partition, stored as a string.
@@ -69,6 +76,9 @@ Various information is collected and organised here.
         >>> DISKINFO['/dev/disk0']['Partitions']
         >>> ["/dev/disk0s1", "/dev/disk0s2"]
 
+    .. note::
+        Not yet available on Cygwin.
+
 'Vendor':
     The device's/partition's vendor. For a device, this is often the brand. For
     partitions this is more random, but often has something to do with the
@@ -85,6 +95,9 @@ Various information is collected and organised here.
     Example 3:
         >>> DISKINFO['/dev/disk0s1']['Vendor']
         >>> "VBOX"
+
+    .. note::
+        Not available for all disks yet on Cygwin.
 
 'Product':
     The device's product information. Often model information such as a model
@@ -103,11 +116,17 @@ Various information is collected and organised here.
         >>> DISKINFO['/dev/disk0']['Product']
         >>> "HARDDISK"
 
+    .. note::
+        Not available for all disks yet on Cygwin.
+
 'Capacity', and 'RawCapacity':
     The disk's capacity, in both human-readable form, and program-friendly form.
     Ignored for some types of disks, like optical drives. The human-readable
     capacity is rounded to make it a 3 digit number. The machine-readable size is
     measured in bytes, and it is not rounded.
+
+    .. note::
+        Not available for all disks yet on Cygwin.
 
     Example:
         >>> DISKINFO['/dev/sda']['Capacity']
@@ -120,7 +139,8 @@ Various information is collected and organised here.
     A human-readable description of the disk. Simply here to make it easier
     for a human to identify a disk. On Linux, these are the descriptions provided by
     lshw (except for logical volumes), and they are fairly basic. On macOS, these are
-    generated using information from diskutil.
+    generated using information from diskutil. On Cygwin, these are generated and provide
+    information like the drive letter and bus used (eg ATA).
 
     Example 1:
         >>> DISKINFO['/dev/sda']['Description']
@@ -134,7 +154,7 @@ Various information is collected and organised here.
     The disk's capabilities, stored as a list.
 
     .. note::
-        Not yet available on macOS, or for logical volumes.
+        Not yet available on macOS, Cygwin, or for logical volumes on Linux.
 
     For example:
         >>> DISKINFO['/dev/cdrom']['Flags']
@@ -179,7 +199,7 @@ Various information is collected and organised here.
     The disk's ID.
 
     .. note::
-        Not yet available on macOS.
+        Not yet available on macOS or Cygwin.
 
     Example:
         >>> DISKINFO['/dev/sda']['ID']
@@ -193,8 +213,8 @@ Various information is collected and organised here.
         Not yet available on macOS.
 
 
-Inside this sub-dictionary (specifics for LVM disks):
-=====================================================
+Inside this sub-dictionary (specifics for LVM disks on Linux):
+==============================================================
 
 These are keys that are only present for LVM disks (where "Product" is "LVM Partition").
 
