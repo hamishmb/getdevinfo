@@ -19,6 +19,11 @@ if platform.system() == "Linux":
     LINUX = True
     dependencies = ("lshw", "blkid", "lsblk", "lvdisplay", "dd", "strings", "blockdev")
 
+elif "CYGWIN" in platform.system():
+    LINUX = True
+    CYGWIN = True
+    dependencies = ("/sbin/blkid", "/usr/sbin/smartctl", "cygpath", "dd", "strings")
+
 elif platform.system() == "Darwin":
     LINUX = False
     dependencies = ()
@@ -45,7 +50,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='getdevinfo',
-    version='1.0.10',
+    version='1.1.0',
     description='A device information gatherer for Linux and macOS',
     long_description=long_description,
 
