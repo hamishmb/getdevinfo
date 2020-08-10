@@ -154,6 +154,10 @@ def get_device_info(host_disk):
         except IndexError:
             DISKINFO[host_disk]["Product"] = "Unknown"
 
+    else:
+        DISKINFO[host_disk]["Vendor"] = "Unknown"
+        DISKINFO[host_disk]["Product"] = "Unknown"
+
     #Ignore capacities for all optical media.
     if "/dev/cdrom" not in host_disk and "/dev/sr" not in host_disk and "/dev/dvd" not in host_disk \
         and "user_capacity" in data:
