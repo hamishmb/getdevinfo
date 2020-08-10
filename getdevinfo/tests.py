@@ -47,9 +47,12 @@ def usage():
     print("GetDevinfo "+VERSION+" is released under the GNU GPL Version 3")
     print("Copyright (C) Hamish McIntyre-Bhatty 2013-2020")
 
-#Exit if not running as root.
-if os.geteuid() != 0:
+#Exit if not running as root (if not on Cygwin).
+if os.geteuid() != 0 and not CYGWIN:
     sys.exit("You must run the tests as root! Exiting...")
+
+elif CYGWIN:
+    print("NOTE: These tests won't work correctly without administrator privileges.")
 
 #Check all cmdline options are valid.
 try:
