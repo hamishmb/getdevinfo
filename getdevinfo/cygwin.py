@@ -132,10 +132,22 @@ def get_device_info(host_disk):
     DISKINFO[host_disk]["Partitions"] = []
 
     #Get smartctl output for more disk info.
-    cmd = subprocess.run([SMARTCTL, "-i", host_disk, "-j"], stdout=subprocess.PIPE,
-                         stderr=subprocess.STDOUT, check=False)
+    #Due to fork errors, try this up to five times.
+    count = 0
+    output = ""
 
-    output = cmd.stdout.decode("utf-8", errors="replace")
+    while count < 5:
+        try:
+            cmd = subprocess.run([SMARTCTL, "-i", host_disk, "-j"], stdout=subprocess.PIPE,
+                                 stderr=subprocess.STDOUT, check=False)
+
+            output = cmd.stdout.decode("utf-8", errors="replace")
+
+        except OSError:
+            count += 1
+
+        else:
+            break
 
     try:
         data = json.loads(output)
@@ -173,9 +185,24 @@ def get_device_info(host_disk):
     DISKINFO[host_disk]["Flags"] = get_capabilities(host_disk)
 
     #Get blkid output for these.
+    #Due to fork errors, try this up to five times.
+    count = 0
+    output = ""
+
     try:
-        cmd = subprocess.run([BLKID, host_disk, "-o", "export"], stdout=subprocess.PIPE,
-                             stderr=subprocess.STDOUT, check=True)
+        while count < 5:
+            try:
+                cmd = subprocess.run([BLKID, host_disk, "-o", "export"], stdout=subprocess.PIPE,
+                                     stderr=subprocess.STDOUT, check=True)
+
+            except OSError:
+                count += 1
+
+                if count >= 5:
+                    raise subprocess.CalledProcessError(None, "Fork error encountered too many times")
+
+            else:
+                break
 
     except subprocess.CalledProcessError:
         DISKINFO[host_disk]["Partitioning"] = "Unknown"
@@ -677,10 +704,25 @@ def get_block_size(disk):
     >>> block_size = get_block_size(<aDeviceName>)
     """
 
-    #Run /sbin/blockdev to try and get blocksize information.
+    #Run smartctl to try and get blocksize information.
     command = [SMARTCTL, "-i", disk, "-j"]
 
-    runcmd = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=False)
+    #Due to fork errors, try this up to five times.
+    count = 0
+
+    while count < 5:
+        try:
+            runcmd = subprocess.run(command, stdout=subprocess.PIPE,
+                                    stderr=subprocess.STDOUT, check=False)
+
+        except OSError:
+            count += 1
+
+            if count >= 5:
+                return None
+
+        else:
+            break
 
     #Get the output and pass it to compute_block_size.
     return compute_block_size(runcmd.stdout.decode("utf-8", errors="replace"))
