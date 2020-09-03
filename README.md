@@ -18,7 +18,7 @@ Uses the operating system\'s built-in tools to gather lots of helpful informatio
 Dependencies:
 -------------
 
-On Linux it requires lshw, blkid, lvdisplay, and blockdev to be installed. On Cygwin, you need the smartmontools and blkid packages. On Linux and Cygwin, you also need the beautifulsoup4 (bs4), and lxml python packages to use this tool. On macOS, nothing beyond a standard python3.x install is required, but you still need bs4 and lxml if you want to install using the python wheel/through pip.
+On Linux it requires lshw, blkid, lvdisplay, and blockdev to be installed. On Cygwin, you need the smartmontools and util-linux packages. On Linux and Cygwin, you also need the beautifulsoup4 (bs4), and lxml python packages to use this tool. On macOS, nothing beyond a standard python3.x install is required, but you still need bs4 and lxml if you want to install using the python wheel/through pip.
 
 Building
 ========
