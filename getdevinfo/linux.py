@@ -418,7 +418,12 @@ def assemble_lvm_disk_info(line_counter, testing=False):
 
         elif "Physical volume" in line:
             DISKINFO[volume]["HostPartition"] = line.split()[-1]
-            DISKINFO[volume]["HostDevice"] = DISKINFO[DISKINFO[volume]["HostPartition"]]["HostDevice"]
+
+            if DISKINFO[volume]["HostPartition"] in DISKINFO:
+                DISKINFO[volume]["HostDevice"] = DISKINFO[DISKINFO[volume]["HostPartition"]]["HostDevice"]
+
+            else:
+                DISKINFO[volume]["HostDevice"] = "Unknown"
 
     #If there are any entries called "Unknown" (disks that we couldn't get the name for), remove them now to prevent issues.
     if "Unknown" in DISKINFO:
