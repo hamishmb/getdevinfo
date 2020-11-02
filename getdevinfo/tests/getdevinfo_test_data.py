@@ -26,6 +26,9 @@ class Node1:
     def get_copy(self):
         return self
 
+    class logicalname:
+        string = "/dev/nada"
+
     class vendor:
         string = "FakeVendor"
 
@@ -54,6 +57,9 @@ class Node1:
 class Node2:
     def get_copy(self):
         return self
+
+    class logicalname:
+        string = "/dev/nada"
 
     class vendor:
         string = "FakeVendor2"
@@ -258,6 +264,9 @@ class Node3: #Greek characters.
     def get_copy(self):
         return self
 
+    class logicalname:
+        string = "/dev/nada"
+
     class vendor:
         string = "ΉΜήυΟομἝἲϾᾍᾈᾁὮᾌ"
 
@@ -286,6 +295,9 @@ class Node3: #Greek characters.
 class Node4: #Yi characters.
     def get_copy(self):
         return self
+
+    class logicalname:
+        string = "/dev/nada"
 
     class vendor:
         string = "ꀒꀲꀯꀭꁎꀦꀄꀴꀿꀬꀝꅮꅧꅌ"
@@ -476,6 +488,9 @@ class ByteNode1:
     def get_copy(self):
         return self
 
+    class logicalname:
+        string = "/dev/nada"
+
     class vendor:
         string = b"FakeVendor"
 
@@ -504,6 +519,9 @@ class ByteNode1:
 class ByteNode2:
     def get_copy(self):
         return self
+
+    class logicalname:
+        string = "/dev/nada"
 
     class vendor:
         string = b"FakeVendor2"
@@ -535,6 +553,9 @@ class ByteNode3: #Greek characters.
     def get_copy(self):
         return self
 
+    class logicalname:
+        string = "/dev/nada"
+
     class vendor:
         string = "ΉΜήυΟομἝἲϾᾍᾈᾁὮᾌ".encode("utf-8")
 
@@ -563,6 +584,9 @@ class ByteNode3: #Greek characters.
 class ByteNode4: #Yi characters.
     def get_copy(self):
         return self
+
+    class logicalname:
+        string = "/dev/nada"
 
     class vendor:
         string = "ꀒꀲꀯꀭꁎꀦꀄꀴꀿꀬꀝꅮꅧꅌ".encode("utf-8")
@@ -594,6 +618,9 @@ class BadNode1:
     def get_copy(self):
         return self
 
+    class logicalname:
+        string = "/dev/nada"
+
     class vendor:
         notstring = ""
 
@@ -607,6 +634,9 @@ class BadNode1:
 class BadNode2:
     def get_copy(self):
         return self
+
+    class logicalname:
+        string = "/dev/nada"
 
     class vendor:
         notstring = ""
@@ -629,6 +659,9 @@ class BadNode2:
 class BadNode3:
     def get_copy(self):
         return self
+
+    class logicalname:
+        string = "/dev/nada"
 
     class vendor:
         notstring = ""
