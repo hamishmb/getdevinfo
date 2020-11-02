@@ -798,6 +798,12 @@ def get_file_system(node):
 
     file_system = "Unknown"
 
+    if isinstance(node.logicalname.string, bytes):
+        diskname = node.logicalname.string.decode("utf-8") #NOTE: is this ever bytes?
+
+    else:
+        diskname = node.logicalname.string
+
     try:
         for config in node.configuration.children:
             if (not isinstance(config, bs4.element.Tag)) or config.name != "setting":
@@ -817,7 +823,9 @@ def get_file_system(node):
                 break
 
     except AttributeError:
-        return "Unknown"
+        #Fall back to LVM equivelant (works on all disks and
+        #detects some things that lshw does not).
+        return get_lv_file_system(diskname)
 
     else:
         return file_system
@@ -960,7 +968,7 @@ def get_lv_file_system(disk):
     if isinstance(output, bytes):
         output = output.decode("utf-8", errors="replace")
 
-    return output.split("=")[-1].replace("\"", "").replace("\n", "")
+    return output.split("TYPE=")[-1].split(" ")[0].replace("\"", "").replace("\n", "")
 
 def get_lv_aliases(line):
     """
