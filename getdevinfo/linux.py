@@ -454,10 +454,6 @@ def parse_lsblk_output():
     for disk in data["blockdevices"]:
         host_disk = "/dev/"+disk["name"]
 
-        #If this is not an NVME disk, ignore it.
-        if "nvme" not in host_disk:
-            continue
-
         #If this disk is already in the DISKINFO dictionary, ignore it.
         if host_disk in DISKINFO:
             continue

@@ -315,6 +315,9 @@ class TestParseLSBLKOutput(unittest.TestCase):
 
         linux.parse_lsblk_output()
 
+        #Remove any extra CD devices detected.
+        linux.DISKINFO.pop("/dev/sr0", None)
+
         self.assertEqual(linux.DISKINFO, diskinfo)
 
     def test_parse_lsblk_output_2(self):
@@ -326,6 +329,9 @@ class TestParseLSBLKOutput(unittest.TestCase):
         diskinfo = data.return_fake_lsblk_output_bad_1_diskinfo()
 
         linux.parse_lsblk_output()
+
+        #Remove any extra CD devices detected.
+        linux.DISKINFO.pop("/dev/sr0", None)
 
         self.assertEqual(linux.DISKINFO, diskinfo)
 
