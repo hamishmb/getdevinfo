@@ -24,7 +24,7 @@ import platform
 import os
 
 #Global vars.
-VERSION = "1.1.0"
+VERSION = "1.1.1"
 
 #Determine the platform.
 LINUX = ("linux" in sys.platform)
