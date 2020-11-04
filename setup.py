@@ -72,6 +72,7 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
 
         #Misc.
         'Environment :: MacOS X',
@@ -88,5 +89,5 @@ setup(
     keywords='devices hardware',
     packages=find_packages(),
     install_requires=['beautifulsoup4', 'lxml'],
-    python_requires='>=2.8, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
+    python_requires='>=2.8, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*',
 )
