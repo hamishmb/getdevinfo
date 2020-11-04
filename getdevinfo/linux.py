@@ -794,11 +794,15 @@ def get_file_system(node):
 
     file_system = "Unknown"
 
-    if isinstance(node.logicalname.string, bytes):
-        diskname = node.logicalname.string.decode("utf-8") #NOTE: is this ever bytes?
+    try:
+        if isinstance(node.logicalname.string, bytes):
+            diskname = node.logicalname.string.decode("utf-8") #NOTE: is this ever bytes?
 
-    else:
-        diskname = node.logicalname.string
+        else:
+            diskname = node.logicalname.string
+
+    except AttributeError:
+        pass
 
     try:
         for config in node.configuration.children:
@@ -821,7 +825,11 @@ def get_file_system(node):
     except AttributeError:
         #Fall back to LVM equivelant (works on all disks and
         #detects some things that lshw does not).
-        return get_lv_file_system(diskname)
+        if diskname != "Unknown":
+            return get_lv_file_system(diskname)
+
+        else:
+            return "Unknown"
 
     else:
         return file_system
