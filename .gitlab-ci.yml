@@ -2,7 +2,7 @@ default:
   image: python:3.9
   before_script:
     - apt-get update
-    - apt-get install -y lshw lvm2 util-linux binutils coreutils pylint lsb-release
+    - apt-get install -y lshw lvm2 util-linux binutils coreutils pylint lsb-release python3-sphinx
     - python --version
     - lsb_release -a
     - pip install -U pip beautifulsoup4 lxml
@@ -10,6 +10,7 @@ default:
 stages:
     - Static Analysis
     - Tests
+    - Doc Generation
 
 pylint:
   stage: Static Analysis
@@ -25,3 +26,10 @@ pyunit:
     - ls -l
     - python3 ./tests.py
 
+sphinx:
+  stage: Doc Generation
+  script:
+    - cd docs
+    - make html
+    - make epub
+    - make latexpdf
