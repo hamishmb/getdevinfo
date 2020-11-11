@@ -21,8 +21,6 @@ pyunit:
   script:
     - cd getdevinfo
     - ls -l
-    - ls -l /usr/lib/python3.9/site-packages/
-    - ls -l /usr/lib/python3.9/dist-packages/
     - ls -l /usr/lib/python3/site-packages/
     - ls -l /usr/lib/python3/dist-packages/
     - python3 ./tests.py
