@@ -2,8 +2,10 @@ default:
   image: python:3.9
   before_script:
     - apt-get update
-    - apt-get install -y lshw lvm2 util-linux python3-bs4 python3-lxml binutils coreutils pylint
+    - apt-get install -y lshw lvm2 util-linux binutils coreutils pylint lsb-release
     - python --version
+    - lsb_release -a
+    - pip install -U pip python3-bs4 python3-lxml
 
 stages:
     - Static Analysis
@@ -21,7 +23,5 @@ pyunit:
   script:
     - cd getdevinfo
     - ls -l
-    - ls -l /usr/lib/python3/site-packages/
-    - ls -l /usr/lib/python3/dist-packages/
     - python3 ./tests.py
 
