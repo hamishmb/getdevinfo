@@ -1,0 +1,23 @@
+default:
+  image: python:3.9
+  before_script:
+    - apt-get update
+    - apt-get install -y lshw lvm2 util-linux python3-bs4 python3-lxml binutils coreutils pylint
+    - python --version
+
+stages:
+    - Static Analysis
+    - Tests
+
+pylint:
+  stage: Static Analysis
+  script:
+    - pylint getdevinfo/(.py
+
+pyunit:
+  stage: Tests
+  allow_failure: true
+  script:
+    - cd getdevinfo
+    - python3 ./tests.py
+
