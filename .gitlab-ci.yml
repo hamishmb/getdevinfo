@@ -12,7 +12,7 @@ stages:
 pylint:
   stage: Static Analysis
   script:
-    - pylint getdevinfo/(.py
+    - pylint getdevinfo/*.py
 
 pyunit:
   stage: Tests
