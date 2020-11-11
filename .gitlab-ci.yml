@@ -11,13 +11,13 @@ stages:
 
 pylint:
   stage: Static Analysis
+  allow_failure: true
   script:
     - ls -l
     - pylint getdevinfo/*.py
 
 pyunit:
   stage: Tests
-  allow_failure: true
   script:
     - cd getdevinfo
     - python3 ./tests.py
