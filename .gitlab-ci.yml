@@ -5,7 +5,7 @@ default:
     - apt-get install -y lshw lvm2 util-linux binutils coreutils pylint lsb-release
     - python --version
     - lsb_release -a
-    - pip install -U pip python3-bs4 python3-lxml
+    - pip install -U pip beautifulsoup4 lxml
 
 stages:
     - Static Analysis
