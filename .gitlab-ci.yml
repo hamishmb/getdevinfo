@@ -17,7 +17,7 @@ pylint:
   allow_failure: true
   script:
     - ls -l
-    - pylint getdevinfo/*.py
+    - pylint getdevinfo/*.py || FAILED=true
 
 pyunit:
   stage: Tests
