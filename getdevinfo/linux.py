@@ -41,7 +41,7 @@ module, but you can call it directly if you like.
     :synopsis: The part of the GetDevInfo module that houses the Linux
                tools.
 
-.. moduleauthor:: Hamish McIntyre-Bhatty <hamishmb@live.co.uk>
+.. moduleauthor:: Hamish McIntyre-Bhatty <support@hamishmb.com>
 
 """
 

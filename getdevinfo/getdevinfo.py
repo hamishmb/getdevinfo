@@ -45,7 +45,7 @@ disk information as a dictionary.
     :platform: Linux, macOS, Cygwin
     :synopsis: The main part of the GetDevInfo module.
 
-.. moduleauthor:: Hamish McIntyre-Bhatty <hamishmb@live.co.uk>
+.. moduleauthor:: Hamish McIntyre-Bhatty <support@hamishmb.com>
 
 """
 
