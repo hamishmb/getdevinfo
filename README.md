@@ -71,10 +71,6 @@ Running directly from the command line
 
 Run:
 
-"sudo python3 -m getdevinfo.getdevinfo"
-
-Or (v1.0.8 onwards):
-
 "sudo python3 -m getdevinfo"
 
 Running The Tests

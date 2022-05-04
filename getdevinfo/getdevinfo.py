@@ -122,6 +122,3 @@ def run():
 
     for key in keys:
         print("\n\n", disk_info[key], "\n\n")
-
-if __name__ == "__main__":
-    run()
