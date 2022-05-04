@@ -50,7 +50,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='getdevinfo',
-    version='1.1.1',
+    version='2.0.0',
     description='A device information gatherer for Linux, macOS, and Cygwin/Windows',
     long_description=long_description,
 
