@@ -180,8 +180,6 @@ def get_device_info(host_disk):
         DISKINFO[host_disk]["RawCapacity"], DISKINFO[host_disk]["Capacity"] = ("N/A", "N/A")
 
     DISKINFO[host_disk]["Description"] = get_description(data, host_disk)
-
-    #TODO
     DISKINFO[host_disk]["Flags"] = get_capabilities(host_disk)
 
     #Get blkid output for these.
@@ -216,7 +214,6 @@ def get_device_info(host_disk):
         DISKINFO[host_disk]["FileSystem"] = get_file_system(output)
         DISKINFO[host_disk]["UUID"] = get_uuid(output)
 
-    #TODO.
     DISKINFO[host_disk]["ID"] = get_id(host_disk)
 
     #Don't try to get Boot Records for optical drives.
@@ -256,67 +253,6 @@ def get_partition_info(subnode, host_disk):
     """
     #TODO not yet implemented on Cygwin.
     return
-
-    try:
-        if isinstance(subnode.logicalname.string, bytes):
-            #NOTE: is this ever bytes?
-            volume = subnode.logicalname.string.decode("utf-8")
-
-        else:
-            volume = subnode.logicalname.string
-
-    except AttributeError:
-        if isinstance(subnode.physid.string, bytes):
-            #NOTE: is this ever bytes?
-            if "nvme" in host_disk:
-                volume = host_disk+"p"+subnode.physid.string.decode("utf-8")
-
-            else:
-                volume = host_disk+subnode.physid.string.decode("utf-8")
-
-        else:
-            if "nvme" in host_disk:
-                volume = host_disk+"p"+subnode.physid.string
-
-            else:
-                volume = host_disk+subnode.physid.string
-
-    #Fix bug on Pmagic, if the volume already exists in DISKINFO, or if it is an optical drive, ignore it here.
-    if volume in DISKINFO or "/dev/cdrom" in volume or "/dev/sr" in volume or "/dev/dvd" in volume:
-        return volume
-
-    DISKINFO[volume] = {}
-    DISKINFO[volume]["Name"] = volume
-    DISKINFO[volume]["Type"] = "Partition"
-    DISKINFO[volume]["HostDevice"] = host_disk
-    DISKINFO[volume]["Partitions"] = []
-    DISKINFO[host_disk]["Partitions"].append(volume)
-    DISKINFO[volume]["Vendor"] = get_vendor(subnode)
-    DISKINFO[volume]["Product"] = "Host Device: "+DISKINFO[host_disk]["Product"]
-    DISKINFO[volume]["RawCapacity"], DISKINFO[volume]["Capacity"] = get_capacity(subnode)
-
-    if isinstance(subnode.description.string, bytes):
-        #NOTE: is this ever bytes?
-        DISKINFO[volume]["Description"] = subnode.description.string.decode("utf-8")
-
-    else:
-        DISKINFO[volume]["Description"] = subnode.description.string
-
-    DISKINFO[volume]["Flags"] = get_capabilities(subnode)
-
-    #Fix bug: don't try to get file systems of extended partitions.
-    if "extended" in DISKINFO[volume]["Flags"]:
-        DISKINFO[volume]["FileSystem"] = "N/A"
-
-    else:
-        DISKINFO[volume]["FileSystem"] = get_file_system(subnode)
-
-    DISKINFO[volume]["Partitioning"] = "N/A"
-    DISKINFO[volume]["UUID"] = get_uuid(volume)
-    DISKINFO[volume]["ID"] = get_id(volume)
-    DISKINFO[volume]["BootRecord"], DISKINFO[volume]["BootRecordStrings"] = get_boot_record(volume)
-
-    return volume
 
 def get_vendor(data):
     """
