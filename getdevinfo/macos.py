@@ -75,7 +75,7 @@ def get_info():
     DISKINFO = {}
 
     #Run diskutil list to get disk names.
-    runcmd = subprocess.Popen("diskutil list -plist", stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+    runcmd = subprocess.Popen(["diskutil", "list", "-plist"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
     #Get the output.
     stdout = runcmd.communicate()[0]
@@ -88,7 +88,7 @@ def get_info():
     #Find the disks.
     for disk in PLIST["AllDisks"]:
         #Run diskutil info to get disk info.
-        runcmd = subprocess.Popen("diskutil info -plist "+disk, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+        runcmd = subprocess.Popen(["diskutil", "info", "-plist", disk], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         stdout = runcmd.communicate()[0]
 
         #Parse the plist (Property List).
