@@ -193,7 +193,7 @@ def get_partition_info(disk, host_disk):
 
     return volume
 
-def is_partition(disk): #TODO: Could change to use "Whole" attrib. Good idea?
+def is_partition(disk):
     """
     Private, implementation detail.
 
@@ -452,9 +452,9 @@ def get_block_size(disk):
 
     .. note:
         It is perfectly safe to use this. The block size information
-        isn't calculated when getting device information, so if you
-        need some, just call this function with a device name to get
-        it.
+        is calculated on demand, rather that when collecting device
+        information - just call this function with a device name to get
+        the block size.
 
     This function uses the diskutil info command to get the block size
     of the given device.
