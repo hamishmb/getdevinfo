@@ -518,7 +518,7 @@ def parse_lsblk_output():
 
         DISKINFO[host_disk]["BootRecord"], DISKINFO[host_disk]["BootRecordStrings"] = get_boot_record(host_disk)
 
-        DISKINFO[host_disk]["Description"] = "NVME Disk"
+        DISKINFO[host_disk]["Description"] = generate_description(host_disk)
         DISKINFO[host_disk]["Flags"] = "Unknown"
         DISKINFO[host_disk]["Partitioning"] = "Unknown"
         DISKINFO[host_disk]["ID"] = get_id(host_disk)
@@ -743,6 +743,38 @@ def get_capabilities(node):
 
     else:
         return flags
+
+def generate_description(disk):
+    """
+    Private, implementation detail.
+
+    This function generates a description for the given disk. This is used when
+    the disk came from lsblk's output, so we don't have a description generated
+    from lshw to use.
+
+    Args:
+        disk (str):   The name of a device/partition in
+                      the disk info dictionary.
+
+    Returns:
+        string (str). A description.
+
+    Usage:
+
+    >>> description = generate_description(<aDiskName>)
+    """
+
+    if "nvme" in disk:
+        return "NVME Disk"
+
+    elif "cdrom" in disk or "sr" in disk or "scd" in disk:
+        return "Optical Drive"
+
+    elif "sd" in disk or "hd" in disk:
+        return "Hard Disk Drive or SATA SSD"
+
+    else:
+        return "None"
 
 def get_partitioning(disk):
     """
