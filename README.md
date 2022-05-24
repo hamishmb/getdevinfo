@@ -3,7 +3,10 @@
 This repository holds my new getdevinfo module. This module was originally integrated directly into the source code of Wine Autostart, DDRescue-GUI, and WxFixBoot, but has now been separated for ease of maintenance. Because it's on GitLab (https://gitlab.com/hamishmb/getdevinfo) and on PyPI (the Python Package Index) (https://pypi.org/project/getdevinfo/), and released under the GPLv3+, this means other people can use it too.
 
 [![pipeline status](https://gitlab.com/hamishmb/getdevinfo/badges/master/pipeline.svg)](https://gitlab.com/hamishmb/getdevinfo/-/commits/master)
-
+[![PyPI](https://img.shields.io/pypi/v/getdevinfo.svg)](https://pypi.org/project/getdevinfo)
+[![Total Downloads on PyPI](https://pepy.tech/badge/getdevinfo)](https://pepy.tech/project/getdevinfo)
+[![Downloads/Month on PyPI](https://pepy.tech/badge/getdevinfo/month)](https://pepy.tech/project/getdevinfo)
+[![Downloads/Week on PyPI](https://pepy.tech/badge/getdevinfo/week)](https://pepy.tech/project/getdevinfo)
 
 Description of Package
 ======================
