@@ -837,6 +837,7 @@ def get_file_system(node):
     """
 
     file_system = "Unknown"
+    diskname = "Unknown"
 
     try:
         if isinstance(node.logicalname.string, bytes):

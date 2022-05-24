@@ -159,12 +159,7 @@ def get_device_info(host_disk):
     #Vendor and product.
     if "model_name" in data.keys():
         DISKINFO[host_disk]["Vendor"] = get_vendor(data)
-
-        try:
-            DISKINFO[host_disk]["Product"] = get_product(data)
-
-        except IndexError:
-            DISKINFO[host_disk]["Product"] = "Unknown"
+        DISKINFO[host_disk]["Product"] = get_product(data)
 
     else:
         DISKINFO[host_disk]["Vendor"] = "Unknown"
