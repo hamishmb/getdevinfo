@@ -76,10 +76,12 @@ def get_info():
 
     >>> get_info()
     """
+    env = os.environ.copy()
+    env["LC_ALL"] = "C"
 
     #Run lshw to try and get disk information.
-    with subprocess.Popen("LC_ALL=C lshw -sanitize -class disk -class volume -xml",
-                          stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True) as cmd:
+    with subprocess.Popen(["lshw", "-sanitize", "-class", "disk", "-class", "volume", "-xml"],
+                          stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=env) as cmd:
 
         #Get the output.
         stdout = cmd.communicate()[0]
@@ -91,16 +93,16 @@ def get_info():
     #UUIDs.
     global LSUUIDOUTPUT
 
-    with subprocess.Popen("ls -l /dev/disk/by-uuid/", stdout=subprocess.PIPE,
-                           stderr=subprocess.STDOUT, shell=True) as cmd:
+    with subprocess.Popen(["ls", "-l", "/dev/disk/by-uuid/"], stdout=subprocess.PIPE,
+                           stderr=subprocess.STDOUT) as cmd:
 
         LSUUIDOUTPUT = cmd.communicate()[0]
 
     #IDs.
     global LSIDOUTPUT
 
-    with subprocess.Popen("ls -l /dev/disk/by-id/", stdout=subprocess.PIPE,
-                           stderr=subprocess.STDOUT, shell=True) as cmd:
+    with subprocess.Popen(["ls", "-l" ,"/dev/disk/by-id/"], stdout=subprocess.PIPE,
+                           stderr=subprocess.STDOUT) as cmd:
 
         LSIDOUTPUT = cmd.communicate()[0]
 
@@ -133,8 +135,8 @@ def get_info():
 
     #Find any NVME disks (lshw currently doesn't detect these).
     global LSBLKOUTPUT
-    with subprocess.Popen("LC_ALL=C lsblk -o NAME,SIZE,TYPE,FSTYPE,VENDOR,MODEL,UUID -b -J",
-                          stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True) as cmd:
+    with subprocess.Popen(["lsblk", "-o", "NAME,SIZE,TYPE,FSTYPE,VENDOR,MODEL,UUID", "-b", "-J"],
+                          stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=env) as cmd:
 
         LSBLKOUTPUT = cmd.communicate()[0]
 
@@ -151,8 +153,8 @@ def get_info():
 
     #Find any LVM disks. Don't use -c because it doesn't give us enough information.
     global LVMOUTPUT
-    with subprocess.Popen("LC_ALL=C lvdisplay --maps", stdout=subprocess.PIPE,
-                           stderr=subprocess.STDOUT, shell=True) as cmd:
+    with subprocess.Popen(["lvdisplay", "--maps"], stdout=subprocess.PIPE,
+                          stderr=subprocess.STDOUT, env=env) as cmd:
 
         LVMOUTPUT = cmd.communicate()[0].split(b"\n")
 
@@ -972,8 +974,8 @@ def get_boot_record(disk):
     """
 
     #Use status=none to avoid getting status messages from dd in our boot record.
-    with subprocess.Popen("dd if="+disk+" bs=512 count=1 status=none", stdout=subprocess.PIPE,
-                          stderr=subprocess.STDOUT, shell=True) as cmd:
+    with subprocess.Popen(["dd", "if="+disk, "bs=512", "count=1", "status=none"],
+                          stdout=subprocess.PIPE, stderr=subprocess.STDOUT) as cmd:
 
         boot_record = cmd.communicate()[0]
         return_value = cmd.returncode
@@ -982,8 +984,8 @@ def get_boot_record(disk):
         return (b"Unknown", [b"Unknown"])
 
     #Get the readable strings in the boot record.
-    with subprocess.Popen("strings", stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                          stderr=subprocess.STDOUT, shell=True) as cmd:
+    with subprocess.Popen(["strings"], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                          stderr=subprocess.STDOUT) as cmd:
 
         cmd.stdin.write(boot_record)
         boot_record_strings = cmd.communicate()[0].replace(b" ", b"").split(b"\n")
@@ -1010,9 +1012,11 @@ def get_lv_file_system(disk):
 
     >>> file_system = get_lv_file_system(<anLVName>)
     """
+    env = os.environ.copy()
+    env["LC_ALL"] = "C"
 
-    with subprocess.Popen("LC_ALL=C blkid "+disk, stdout=subprocess.PIPE,
-                          stderr=subprocess.STDOUT, shell=True) as cmd:
+    with subprocess.Popen(["blkid", disk], stdout=subprocess.PIPE,
+                          stderr=subprocess.STDOUT, env=env) as cmd:
 
         output = cmd.communicate()[0]
 
@@ -1153,7 +1157,7 @@ def get_block_size(disk):
     with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT) as cmd:
 
         #Get the output and pass it to compute_block_size.
-        return compute_block_size(runcmd.communicate()[0].decode("utf-8", errors="replace"))
+        return compute_block_size(cmd.communicate()[0].decode("utf-8", errors="replace"))
 
 def compute_block_size(stdout):
     """

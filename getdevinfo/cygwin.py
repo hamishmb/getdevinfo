@@ -188,11 +188,11 @@ def get_device_info(host_disk):
                 cmd = subprocess.run([BLKID, host_disk, "-o", "export"], stdout=subprocess.PIPE,
                                      stderr=subprocess.STDOUT, check=True)
 
-            except OSError as e:
+            except OSError as error:
                 count += 1
 
                 if count >= 5:
-                    raise subprocess.CalledProcessError(None, "Fork error encountered too many times") from e
+                    raise subprocess.CalledProcessError(None, "Fork error encountered too many times") from error
 
             else:
                 break
@@ -586,8 +586,8 @@ def get_boot_record(disk):
     """
 
     #Use status=none to avoid getting status messages from dd in our boot record.
-    cmd = subprocess.run("dd if="+disk+" bs=512 count=1 status=none", stdout=subprocess.PIPE,
-                         stderr=subprocess.STDOUT, check=False, shell=True)
+    cmd = subprocess.run(["dd", "if="+disk, "bs=512", "count=1", "status=none"],
+                        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=False)
 
     boot_record = cmd.stdout
     return_value = cmd.returncode
@@ -596,8 +596,8 @@ def get_boot_record(disk):
         return (b"Unknown", [b"Unknown"])
 
     #Get the readable strings in the boot record.
-    with subprocess.Popen("strings", stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                           stderr=subprocess.STDOUT, shell=True) as cmd:
+    with subprocess.Popen(["strings"], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                           stderr=subprocess.STDOUT) as cmd:
 
         cmd.stdin.write(boot_record)
         boot_record_strings = cmd.communicate()[0].replace(b" ", b"").split(b"\n")
