@@ -185,6 +185,10 @@ def get_device_info(node):
     else:
         host_disk = node.logicalname.string
 
+    #Ignore loop, zram, and nbd devices.
+    if "/dev/loop" in host_disk or "/dev/zram" in host_disk or "/dev/nbd" in host_disk:
+        return host_disk
+
     DISKINFO[host_disk] = {}
     DISKINFO[host_disk]["Name"] = host_disk
     DISKINFO[host_disk]["Type"] = "Device"
@@ -273,7 +277,11 @@ def get_partition_info(subnode, host_disk):
 
     #Fix bug on Pmagic, if the volume already exists in DISKINFO, or if it is an optical drive, ignore it here.
     if volume in DISKINFO or "/dev/cdrom" in volume or "/dev/sr" in volume or "/dev/dvd" in volume:
-        return volume
+        return None
+
+    #Ignore loop, zram, and nbd devices.
+    if "/dev/loop" in host_disk or "/dev/zram" in host_disk or "/dev/nbd" in host_disk:
+        return None
 
     DISKINFO[volume] = {}
     DISKINFO[volume]["Name"] = volume
@@ -456,6 +464,10 @@ def parse_lsblk_output():
 
         #If this disk is already in the DISKINFO dictionary, ignore it.
         if host_disk in DISKINFO:
+            continue
+
+        #Ignore loop, zram, and nbd devices.
+        if "/dev/loop" in host_disk or "/dev/zram" in host_disk or "/dev/nbd" in host_disk:
             continue
 
         DISKINFO[host_disk] = {}
