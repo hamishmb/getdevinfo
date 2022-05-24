@@ -75,10 +75,11 @@ def get_info():
     DISKINFO = {}
 
     #Run diskutil list to get disk names.
-    runcmd = subprocess.Popen(["diskutil", "list", "-plist"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    with subprocess.Popen(["diskutil", "list", "-plist"], stdout=subprocess.PIPE,
+                          stderr=subprocess.STDOUT) as cmd:
 
-    #Get the output.
-    stdout = runcmd.communicate()[0]
+        #Get the output.
+        stdout = cmd.communicate()[0]
 
     #Parse the plist (Property List).
     global PLIST
@@ -88,8 +89,10 @@ def get_info():
     #Find the disks.
     for disk in PLIST["AllDisks"]:
         #Run diskutil info to get disk info.
-        runcmd = subprocess.Popen(["diskutil", "info", "-plist", disk], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        stdout = runcmd.communicate()[0]
+        with subprocess.Popen(["diskutil", "info", "-plist", disk], stdout=subprocess.PIPE,
+                              stderr=subprocess.STDOUT) as cmd:
+
+            stdout = cmd.communicate()[0]
 
         #Parse the plist (Property List).
         PLIST = plistlib.loads(stdout)
@@ -239,14 +242,13 @@ def get_vendor(disk):
         #We need to use the info from the host disk, which will be whatever came before.
         return DISKINFO[DISKINFO["/dev/"+disk]["HostDevice"]]["Vendor"]
 
-    else:
-        try:
-            vendor = PLIST["MediaName"].split()[0]
+    try:
+        vendor = PLIST["MediaName"].split()[0]
 
-        except KeyError:
-            vendor = "Unknown"
+    except KeyError:
+        vendor = "Unknown"
 
-        return vendor
+    return vendor
 
 def get_product(disk):
     """
@@ -272,14 +274,13 @@ def get_product(disk):
         #We need to use the info from the host disk, which will be whatever came before.
         return DISKINFO[DISKINFO["/dev/"+disk]["HostDevice"]]["Product"]
 
-    else:
-        try:
-            product = ' '.join(PLIST["MediaName"].split()[1:])
+    try:
+        product = ' '.join(PLIST["MediaName"].split()[1:])
 
-        except KeyError:
-            product = "Unknown"
+    except KeyError:
+        product = "Unknown"
 
-        return product
+    return product
 
 def get_capacity():
     """
@@ -389,14 +390,13 @@ def get_description(disk):
     if bus_protocol != "Unknown":
         return internal_or_external+disk_type+"(Connected through "+bus_protocol+")"+apfs_string
 
-    elif disk_type != "Unknown ":
+    if disk_type != "Unknown ":
         return internal_or_external+disk_type+apfs_string
 
-    elif internal_or_external != "Unknown ":
+    if internal_or_external != "Unknown ":
         return internal_or_external+"Unknown Disk"+apfs_string
 
-    else:
-        return "N/A"
+    return "N/A"
 
 def get_capabilities(disk):
     """
@@ -477,10 +477,10 @@ def get_block_size(disk):
     #Run diskutil list to get disk names.
     command = ["diskutil", "info", "-plist", disk]
 
-    runcmd = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT) as cmd:
 
-    #Get the output and pass it to compute_block_size.
-    return compute_block_size(disk, runcmd.communicate()[0])
+        #Get the output and pass it to compute_block_size.
+        return compute_block_size(disk, cmd.communicate()[0])
 
 def compute_block_size(disk, stdout):
     """
@@ -507,6 +507,7 @@ def compute_block_size(disk, stdout):
         plist = plistlib.loads(stdout)
 
     except:
+        #TODO find which specific exceptions to handle, not in docs.
         return None
 
     else:

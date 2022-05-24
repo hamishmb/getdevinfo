@@ -111,9 +111,13 @@ def get_info():
 
 #For development only.
 def run():
+    """
+    Allows the module to be run with -m
+    """
+
     #Run with python -m from outside package.
     # eg:
-    #   python(3) -m getdevinfo.getdevinfo
+    #   python3 -m getdevinfo
     disk_info = get_info()
 
     #Print the info in a (semi :D) readable way.

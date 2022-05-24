@@ -166,8 +166,8 @@ def get_device_info(host_disk):
         DISKINFO[host_disk]["Product"] = "Unknown"
 
     #Ignore capacities for all optical media.
-    if "/dev/cdrom" not in host_disk and "/dev/sr" not in host_disk and "/dev/dvd" not in host_disk \
-        and "user_capacity" in data:
+    if "/dev/cdrom" not in host_disk and "/dev/sr" not in host_disk \
+        and "/dev/dvd" not in host_disk and "user_capacity" in data:
 
         DISKINFO[host_disk]["RawCapacity"], DISKINFO[host_disk]["Capacity"] = get_capacity(data)
 
@@ -188,11 +188,11 @@ def get_device_info(host_disk):
                 cmd = subprocess.run([BLKID, host_disk, "-o", "export"], stdout=subprocess.PIPE,
                                      stderr=subprocess.STDOUT, check=True)
 
-            except OSError:
+            except OSError as e:
                 count += 1
 
                 if count >= 5:
-                    raise subprocess.CalledProcessError(None, "Fork error encountered too many times")
+                    raise subprocess.CalledProcessError(None, "Fork error encountered too many times") from e
 
             else:
                 break
@@ -378,8 +378,8 @@ def get_description(data, disk):
     drive_letter = "<unknown>"
 
     try:
-        cmd = subprocess.run(["cygpath", "-w", disk], stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                             check=True)
+        cmd = subprocess.run(["cygpath", "-w", disk], stdout=subprocess.PIPE,
+                             stderr=subprocess.STDOUT, check=True)
 
     except (subprocess.CalledProcessError, OSError):
         #Disk doesn't exist or no Windows equivelant.
@@ -402,7 +402,7 @@ def get_description(data, disk):
     if bus_protocol != "Unknown":
         return "Drive "+drive_letter+", (Connected through "+bus_protocol+")"
 
-    elif drive_letter != "<unknown>":
+    if drive_letter != "<unknown>":
         return "Drive "+drive_letter
 
     return "N/A"
@@ -586,7 +586,9 @@ def get_boot_record(disk):
     """
 
     #Use status=none to avoid getting status messages from dd in our boot record.
-    cmd = subprocess.run("dd if="+disk+" bs=512 count=1 status=none", stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=False, shell=True)
+    cmd = subprocess.run("dd if="+disk+" bs=512 count=1 status=none", stdout=subprocess.PIPE,
+                         stderr=subprocess.STDOUT, check=False, shell=True)
+
     boot_record = cmd.stdout
     return_value = cmd.returncode
 
@@ -594,10 +596,12 @@ def get_boot_record(disk):
         return (b"Unknown", [b"Unknown"])
 
     #Get the readable strings in the boot record.
-    cmd = subprocess.Popen("strings", stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
-    cmd.stdin.write(boot_record)
-    boot_record_strings = cmd.communicate()[0].replace(b" ", b"").split(b"\n")
-    return_value = cmd.returncode
+    with subprocess.Popen("strings", stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                           stderr=subprocess.STDOUT, shell=True) as cmd:
+
+        cmd.stdin.write(boot_record)
+        boot_record_strings = cmd.communicate()[0].replace(b" ", b"").split(b"\n")
+        return_value = cmd.returncode
 
     if return_value != 0:
         return (boot_record, [b"Unknown"])

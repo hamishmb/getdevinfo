@@ -78,10 +78,11 @@ def get_info():
     """
 
     #Run lshw to try and get disk information.
-    runcmd = subprocess.Popen("LC_ALL=C lshw -sanitize -class disk -class volume -xml", stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+    with subprocess.Popen("LC_ALL=C lshw -sanitize -class disk -class volume -xml",
+                          stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True) as cmd:
 
-    #Get the output.
-    stdout = runcmd.communicate()[0]
+        #Get the output.
+        stdout = cmd.communicate()[0]
 
     global DISKINFO
     DISKINFO = {}
@@ -90,18 +91,18 @@ def get_info():
     #UUIDs.
     global LSUUIDOUTPUT
 
-    cmd = subprocess.Popen("ls -l /dev/disk/by-uuid/", stdout=subprocess.PIPE,
-                           stderr=subprocess.STDOUT, shell=True)
+    with subprocess.Popen("ls -l /dev/disk/by-uuid/", stdout=subprocess.PIPE,
+                           stderr=subprocess.STDOUT, shell=True) as cmd:
 
-    LSUUIDOUTPUT = cmd.communicate()[0]
+        LSUUIDOUTPUT = cmd.communicate()[0]
 
     #IDs.
     global LSIDOUTPUT
 
-    cmd = subprocess.Popen("ls -l /dev/disk/by-id/", stdout=subprocess.PIPE,
-                           stderr=subprocess.STDOUT, shell=True)
+    with subprocess.Popen("ls -l /dev/disk/by-id/", stdout=subprocess.PIPE,
+                           stderr=subprocess.STDOUT, shell=True) as cmd:
 
-    LSIDOUTPUT = cmd.communicate()[0]
+        LSIDOUTPUT = cmd.communicate()[0]
 
     #Parse the XML.
     output = BeautifulSoup(stdout, "xml")
@@ -131,17 +132,17 @@ def get_info():
             get_partition_info(subnode, host_disk)
 
     #Find any NVME disks (lshw currently doesn't detect these).
-    cmd = subprocess.Popen("LC_ALL=C lsblk -o NAME,SIZE,TYPE,FSTYPE,VENDOR,MODEL,UUID -b -J",
-                           stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
-
     global LSBLKOUTPUT
-    LSBLKOUTPUT = cmd.communicate()[0]
+    with subprocess.Popen("LC_ALL=C lsblk -o NAME,SIZE,TYPE,FSTYPE,VENDOR,MODEL,UUID -b -J",
+                          stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True) as cmd:
+
+        LSBLKOUTPUT = cmd.communicate()[0]
 
     #Convert to unicode if needed to allow NVME drive detection on Python 3.5 (Ubuntu 16.04)
     if isinstance(LSBLKOUTPUT, bytes):
         LSBLKOUTPUT = LSBLKOUTPUT.decode("utf-8", errors="replace")
 
-    #Ignore exceptions in this code - it is temporary and unlikely to fail.
+    #FIXME: Handle exceptions properly here.
     try:
         parse_lsblk_output()
 
@@ -149,9 +150,11 @@ def get_info():
         pass
 
     #Find any LVM disks. Don't use -c because it doesn't give us enough information.
-    cmd = subprocess.Popen("LC_ALL=C lvdisplay --maps", stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
     global LVMOUTPUT
-    LVMOUTPUT = cmd.communicate()[0].split(b"\n")
+    with subprocess.Popen("LC_ALL=C lvdisplay --maps", stdout=subprocess.PIPE,
+                           stderr=subprocess.STDOUT, shell=True) as cmd:
+
+        LVMOUTPUT = cmd.communicate()[0].split(b"\n")
 
     parse_lvm_output()
 
@@ -275,8 +278,11 @@ def get_partition_info(subnode, host_disk):
             else:
                 volume = host_disk+subnode.physid.string
 
-    #Fix bug on Pmagic, if the volume already exists in DISKINFO, or if it is an optical drive, ignore it here.
-    if volume in DISKINFO or "/dev/cdrom" in volume or "/dev/sr" in volume or "/dev/dvd" in volume:
+    #Fix bug on Pmagic, if the volume already exists in DISKINFO,
+    #or if it is an optical drive, ignore it here.
+    if volume in DISKINFO or "/dev/cdrom" in volume or "/dev/sr" in volume \
+        or "/dev/dvd" in volume:
+
         return None
 
     #Ignore loop, zram, and nbd devices.
@@ -381,8 +387,8 @@ def assemble_lvm_disk_info(line_counter, testing=False):
         try:
             line = line.decode("utf-8", errors="replace").replace("'", "")
 
-        except:
-            pass
+        except UnicodeError:
+            continue
 
         raw_lvm_info.append(line)
 
@@ -410,12 +416,15 @@ def assemble_lvm_disk_info(line_counter, testing=False):
             DISKINFO[volume]["Partitions"] = []
             DISKINFO[volume]["Vendor"] = "Linux"
             DISKINFO[volume]["Product"] = "LVM Partition"
-            DISKINFO[volume]["Description"] = "LVM partition "+DISKINFO[volume]["LVName"]+" in volume group "+DISKINFO[volume]["VGName"]
+            DISKINFO[volume]["Description"] = "LVM partition "+DISKINFO[volume]["LVName"] \
+                                              +" in volume group "+DISKINFO[volume]["VGName"]
+
             DISKINFO[volume]["Flags"] = []
             DISKINFO[volume]["FileSystem"] = get_lv_file_system(volume)
             DISKINFO[volume]["Partitioning"] = "N/A"
             DISKINFO[volume]["BootRecord"], DISKINFO[volume]["BootRecordStrings"] = get_boot_record(volume)
-            DISKINFO[volume]["ID"] = "dm-name-"+DISKINFO[volume]["VGName"]+"-"+DISKINFO[volume]["LVName"]
+            DISKINFO[volume]["ID"] = "dm-name-"+DISKINFO[volume]["VGName"]+"-" \
+                                     +DISKINFO[volume]["LVName"]
 
         elif "LV UUID" in line:
             DISKINFO[volume]["UUID"] = line.split()[-1]
@@ -475,26 +484,15 @@ def parse_lsblk_output():
         DISKINFO[host_disk]["Type"] = "Device"
         DISKINFO[host_disk]["HostDevice"] = "N/A"
         DISKINFO[host_disk]["Partitions"] = []
-
-        try:
-            DISKINFO[host_disk]["Vendor"] = disk["vendor"].strip()
-
-        except Exception:
-            DISKINFO[host_disk]["Vendor"] = "Unknown"
-
-        try:
-            DISKINFO[host_disk]["Product"] = disk["model"].strip()
-
-        except Exception:
-            DISKINFO[host_disk]["Product"] = "Unknown"
-
+        DISKINFO[host_disk]["Vendor"] = disk["vendor"].strip()
+        DISKINFO[host_disk]["Product"] = disk["model"].strip()
         DISKINFO[host_disk]["UUID"] = "N/A"
         DISKINFO[host_disk]["FileSystem"] = "N/A"
 
         try:
             DISKINFO[host_disk]["RawCapacity"] = str(disk["size"])
 
-        except Exception:
+        except KeyError:
             DISKINFO[host_disk]["RawCapacity"] = "Unknown"
 
         #Calculate human-readable capacity.
@@ -549,7 +547,7 @@ def parse_lsblk_output():
                 try:
                     DISKINFO[child_disk]["FileSystem"] = child["fstype"]
 
-                except Exception:
+                except KeyError:
                     DISKINFO[child_disk]["FileSystem"] = "Unknown"
 
                 if DISKINFO[child_disk]["FileSystem"] is None:
@@ -558,7 +556,7 @@ def parse_lsblk_output():
                 try:
                     DISKINFO[child_disk]["RawCapacity"] = str(child["size"])
 
-                except Exception:
+                except KeyError:
                     DISKINFO[child_disk]["RawCapacity"] = "Unknown"
 
                 #Calculate human-readable capacity.
@@ -613,7 +611,7 @@ def get_vendor(node):
         if isinstance(node.vendor.string, bytes):
             return node.vendor.string.decode("utf-8", errors="replace")
 
-        elif isinstance(node.vendor.string, str):
+        if isinstance(node.vendor.string, str):
             return node.vendor.string #Already a unicode string.
 
     return "Unknown"
@@ -643,7 +641,7 @@ def get_product(node):
         if isinstance(node.product.string, bytes):
             return node.product.string.decode("utf-8", errors="replace")
 
-        elif isinstance(node.product.string, str):
+        if isinstance(node.product.string, str):
             return node.product.string #Already a unicode string.
 
     return "Unknown"
@@ -767,14 +765,13 @@ def generate_description(disk):
     if "nvme" in disk:
         return "NVME Disk"
 
-    elif "cdrom" in disk or "sr" in disk or "scd" in disk:
+    if "cdrom" in disk or "sr" in disk or "scd" in disk:
         return "Optical Drive"
 
-    elif "sd" in disk or "hd" in disk:
+    if "sd" in disk or "hd" in disk:
         return "Hard Disk Drive or SATA SSD"
 
-    else:
-        return "None"
+    return "None"
 
 def get_partitioning(disk):
     """
@@ -873,8 +870,7 @@ def get_file_system(node):
         if diskname != "Unknown":
             return get_lv_file_system(diskname)
 
-        else:
-            return "Unknown"
+        return "Unknown"
 
     else:
         return file_system
@@ -912,7 +908,7 @@ def get_uuid(disk):
                 uuid = split_line[-3]
                 break
 
-        except Exception:
+        except (UnicodeError, IndexError):
             pass
 
     return uuid
@@ -950,7 +946,7 @@ def get_id(disk):
                 disk_id = split_line[-3]
                 break
 
-        except Exception:
+        except (UnicodeError, IndexError):
             pass
 
     return disk_id
@@ -976,18 +972,22 @@ def get_boot_record(disk):
     """
 
     #Use status=none to avoid getting status messages from dd in our boot record.
-    cmd = subprocess.Popen("dd if="+disk+" bs=512 count=1 status=none", stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
-    boot_record = cmd.communicate()[0]
-    return_value = cmd.returncode
+    with subprocess.Popen("dd if="+disk+" bs=512 count=1 status=none", stdout=subprocess.PIPE,
+                          stderr=subprocess.STDOUT, shell=True) as cmd:
+
+        boot_record = cmd.communicate()[0]
+        return_value = cmd.returncode
 
     if return_value != 0:
         return (b"Unknown", [b"Unknown"])
 
     #Get the readable strings in the boot record.
-    cmd = subprocess.Popen("strings", stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
-    cmd.stdin.write(boot_record)
-    boot_record_strings = cmd.communicate()[0].replace(b" ", b"").split(b"\n")
-    return_value = cmd.returncode
+    with subprocess.Popen("strings", stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                          stderr=subprocess.STDOUT, shell=True) as cmd:
+
+        cmd.stdin.write(boot_record)
+        boot_record_strings = cmd.communicate()[0].replace(b" ", b"").split(b"\n")
+        return_value = cmd.returncode
 
     if return_value != 0:
         return (boot_record, [b"Unknown"])
@@ -1011,13 +1011,15 @@ def get_lv_file_system(disk):
     >>> file_system = get_lv_file_system(<anLVName>)
     """
 
-    cmd = subprocess.Popen("LC_ALL=C blkid "+disk, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
-    output = cmd.communicate()[0]
+    with subprocess.Popen("LC_ALL=C blkid "+disk, stdout=subprocess.PIPE,
+                          stderr=subprocess.STDOUT, shell=True) as cmd:
+
+        output = cmd.communicate()[0]
 
     if isinstance(output, bytes):
         output = output.decode("utf-8", errors="replace")
 
-    return output.split("TYPE=")[-1].split(" ")[0].replace("\"", "").replace("\n", "")
+    return output.rsplit("TYPE=", maxsplit=1)[-1].split(" ")[0].replace("\"", "").replace("\n", "")
 
 def get_lv_aliases(line):
     """
@@ -1148,10 +1150,10 @@ def get_block_size(disk):
     #Run /sbin/blockdev to try and get blocksize information.
     command = ["blockdev",  "--getpbsz", disk]
 
-    runcmd = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT) as cmd:
 
-    #Get the output and pass it to compute_block_size.
-    return compute_block_size(runcmd.communicate()[0].decode("utf-8", errors="replace"))
+        #Get the output and pass it to compute_block_size.
+        return compute_block_size(runcmd.communicate()[0].decode("utf-8", errors="replace"))
 
 def compute_block_size(stdout):
     """
