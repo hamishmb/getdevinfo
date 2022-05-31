@@ -1028,7 +1028,11 @@ def get_lv_file_system(disk):
     if isinstance(output, bytes):
         output = output.decode("utf-8", errors="replace")
 
-    return output.rsplit("TYPE=", maxsplit=1)[-1].split(" ")[0].replace("\"", "").replace("\n", "")
+    if "TYPE=" in output:
+        return output.rsplit("TYPE=", maxsplit=1)[-1].split(" ")[0].replace("\"", "").replace("\n", "")
+
+    #We didn't find the type.
+    return "Unknown"
 
 def get_lv_aliases(line):
     """
