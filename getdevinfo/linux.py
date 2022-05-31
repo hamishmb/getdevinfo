@@ -433,6 +433,11 @@ def assemble_lvm_disk_info(line_counter, testing=False):
 
         elif "LV Size" in line:
             DISKINFO[volume]["Capacity"] = ' '.join(line.split()[-2:])
+
+            #Workaround for weird bug where size is garbled.
+            if DISKINFO[volume]["Capacity"] == "<size":
+                DISKINFO[volume]["Capacity"] = "Unknown"
+
             DISKINFO[volume]["RawCapacity"] = "Unknown"
 
         elif "Physical volume" in line:
