@@ -389,7 +389,10 @@ def assemble_lvm_disk_info(line_counter, testing=False):
         try:
             line = line.decode("utf-8", errors="replace").replace("'", "")
 
-        except (UnicodeError, AttributeError):
+        except AttributeError:
+            line = line.replace("'", "")
+
+        except UnicodeError:
             continue
 
         raw_lvm_info.append(line)
@@ -920,13 +923,20 @@ def get_uuid(disk):
         try:
             line = line.decode("utf-8", errors="replace").replace("'", "")
 
+        except AttributeError:
+            line = line.replace("'", "")
+
+        except UnicodeError:
+            pass
+
+        try:
             split_line = line.split()
 
             if "../../"+disk.split('/')[-1] == split_line[-1]:
                 uuid = split_line[-3]
                 break
 
-        except (UnicodeError, IndexError, AttributeError):
+        except IndexError:
             pass
 
     return uuid
@@ -958,13 +968,20 @@ def get_id(disk):
         try:
             line = line.decode("utf-8", errors="replace").replace("'", "")
 
+        except AttributeError:
+            line = line.replace("'", "")
+
+        except UnicodeError:
+            pass
+
+        try:
             split_line = line.split()
 
             if "../../"+disk.split('/')[-1] == split_line[-1]:
                 disk_id = split_line[-3]
                 break
 
-        except (UnicodeError, IndexError, AttributeError):
+        except IndexError:
             pass
 
     return disk_id

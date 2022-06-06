@@ -376,9 +376,13 @@ class TestParseLVMOutput(unittest.TestCase):
         """Test #1: Test that we run without error and that the result is as expected."""
         linux.parse_lvm_output(testing=True)
 
-        print(linux.DISKINFO)
+        try:
+            self.assertEqual(linux.DISKINFO, self.correct_disk_info)
 
-        self.assertEqual(linux.DISKINFO, self.correct_disk_info)
+        except AssertionError as e:
+            functions.print_dict_diffs(linux.DISKINFO, self.correct_disk_info)
+
+            raise e
 
 class TestComputeBlockSize(unittest.TestCase):
     def setUp(self):
