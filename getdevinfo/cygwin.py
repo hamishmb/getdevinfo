@@ -512,7 +512,7 @@ def get_uuid(output):
     """
     Private, implementation detail.
 
-    This function gets the partition scheme from
+    This function gets the UUID from
     blkid's output.
 
     Args:
