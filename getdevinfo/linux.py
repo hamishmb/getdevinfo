@@ -389,7 +389,7 @@ def assemble_lvm_disk_info(line_counter, testing=False):
         try:
             line = line.decode("utf-8", errors="replace").replace("'", "")
 
-        except UnicodeError:
+        except (UnicodeError, AttributeError):
             continue
 
         raw_lvm_info.append(line)
@@ -491,8 +491,19 @@ def parse_lsblk_output():
         DISKINFO[host_disk]["Type"] = "Device"
         DISKINFO[host_disk]["HostDevice"] = "N/A"
         DISKINFO[host_disk]["Partitions"] = []
-        DISKINFO[host_disk]["Vendor"] = disk["vendor"].strip()
-        DISKINFO[host_disk]["Product"] = disk["model"].strip()
+
+        try:
+            DISKINFO[host_disk]["Vendor"] = disk["vendor"].strip()
+
+        except KeyError:
+            DISKINFO[host_disk]["Vendor"] = "Unknown"
+
+        try:
+            DISKINFO[host_disk]["Product"] = disk["model"].strip()
+
+        except KeyError:
+            DISKINFO[host_disk]["Product"] = "Unknown"
+
         DISKINFO[host_disk]["UUID"] = "N/A"
         DISKINFO[host_disk]["FileSystem"] = "N/A"
 
@@ -915,7 +926,7 @@ def get_uuid(disk):
                 uuid = split_line[-3]
                 break
 
-        except (UnicodeError, IndexError):
+        except (UnicodeError, IndexError, AttributeError):
             pass
 
     return uuid
@@ -953,7 +964,7 @@ def get_id(disk):
                 disk_id = split_line[-3]
                 break
 
-        except (UnicodeError, IndexError):
+        except (UnicodeError, IndexError, AttributeError):
             pass
 
     return disk_id
