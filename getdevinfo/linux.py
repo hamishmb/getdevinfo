@@ -886,15 +886,14 @@ def get_file_system(node):
                 break
 
     except AttributeError:
-        #Fall back to LVM equivelant (works on all disks and
-        #detects some things that lshw does not).
-        if diskname != "Unknown":
-            return get_lv_file_system(diskname)
+        pass
 
-        return "Unknown"
+    #Fall back to LVM equivelant if needed (works on all disks and
+    #detects some things that lshw does not).
+    if file_system == "Unknown" and diskname != "Unknown":
+        return get_lv_file_system(diskname)
 
-    else:
-        return file_system
+    return file_system
 
 def get_uuid(disk):
     """
