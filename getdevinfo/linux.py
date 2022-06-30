@@ -81,11 +81,16 @@ def get_info():
     env["LC_ALL"] = "C"
 
     #Run lshw to try and get disk information.
-    with subprocess.Popen(["lshw", "-sanitize", "-class", "disk", "-class", "volume", "-xml"],
-                          stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=env) as cmd:
+    try:
+        cmd = subprocess.run(["lshw", "-sanitize", "-class", "disk", "-class", "volume", "-xml"],
+                             check=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=env)
 
+    except (OSError, subprocess.CalledProcessError) as err:
+        ERRORS.append("linux.get_info(): Exception: "+str(err)+" while running lshw\n")
+
+    else:
         #Get the output.
-        stdout = cmd.communicate()[0]
+        stdout = cmd.stdout.decode("utf-8", errors="replace")
 
     global DISKINFO
     DISKINFO = {}
@@ -94,18 +99,28 @@ def get_info():
     #UUIDs.
     global LSUUIDOUTPUT
 
-    with subprocess.Popen(["ls", "-l", "/dev/disk/by-uuid/"], stdout=subprocess.PIPE,
-                           stderr=subprocess.STDOUT) as cmd:
+    try:
+        cmd = subprocess.run(["ls", "-l", "/dev/disk/by-uuid/"], stdout=subprocess.PIPE,
+                             check=True, stderr=subprocess.STDOUT)
 
-        LSUUIDOUTPUT = cmd.communicate()[0]
+    except (OSError, subprocess.CalledProcessError) as err:
+        ERRORS.append("linux.get_info(): Exception: "+str(err)+" while running ls -l\n")
+
+    else:
+        LSUUIDOUTPUT = cmd.stdout.decode("utf-8", errors="replace")
 
     #IDs.
     global LSIDOUTPUT
 
-    with subprocess.Popen(["ls", "-l" ,"/dev/disk/by-id/"], stdout=subprocess.PIPE,
-                           stderr=subprocess.STDOUT) as cmd:
+    try:
+        cmd = subprocess.run(["ls", "-l" ,"/dev/disk/by-id/"], stdout=subprocess.PIPE,
+                             check=True, stderr=subprocess.STDOUT)
 
-        LSIDOUTPUT = cmd.communicate()[0]
+    except (OSError, subprocess.CalledProcessError) as err:
+        ERRORS.append("linux.get_info(): Exception: "+str(err)+" while running ls -l\n")
+
+    else:
+        LSIDOUTPUT = cmd.stdout.decode("utf-8", errors="replace")
 
     #Parse the XML.
     output = BeautifulSoup(stdout, "xml")
@@ -137,10 +152,17 @@ def get_info():
 
     #Find any NVME disks (lshw currently doesn't detect these).
     global LSBLKOUTPUT
-    with subprocess.Popen(["lsblk", "-o", "NAME,SIZE,TYPE,FSTYPE,VENDOR,MODEL,UUID", "-b", "-J"],
-                          stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=env) as cmd:
 
-        LSBLKOUTPUT = cmd.communicate()[0]
+    try:
+        cmd = subprocess.run(["lsblk", "-o", "NAME,SIZE,TYPE,FSTYPE,VENDOR,MODEL,UUID", "-b",
+                              "-J"], check=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                             env=env)
+
+    except (OSError, subprocess.CalledProcessError) as err:
+        ERRORS.append("linux.get_info(): Exception: "+str(err)+" while running lsblk\n")
+
+    else:
+        LSBLKOUTPUT = cmd.stdout.decode("utf-8", errors="replace")
 
     #Convert to unicode if needed to allow NVME drive detection on Python 3.5 (Ubuntu 16.04)
     if isinstance(LSBLKOUTPUT, bytes):
@@ -156,10 +178,15 @@ def get_info():
 
     #Find any LVM disks. Don't use -c because it doesn't give us enough information.
     global LVMOUTPUT
-    with subprocess.Popen(["lvdisplay", "--maps"], stdout=subprocess.PIPE,
-                          stderr=subprocess.STDOUT, env=env) as cmd:
+    try:
+        cmd = subprocess.run(["lvdisplay", "--maps"], check=True, stdout=subprocess.PIPE,
+                             stderr=subprocess.STDOUT, env=env)
 
-        LVMOUTPUT = cmd.communicate()[0].split(b"\n")
+    except (OSError, subprocess.CalledProcessError) as err:
+        ERRORS.append("linux.get_info(): Exception: "+str(err)+" while running lvdisplay --maps\n")
+
+    else:
+        LVMOUTPUT = cmd.stdout.decode("utf-8", errors="replace").split(b"\n")
 
     parse_lvm_output()
 
@@ -1014,10 +1041,15 @@ def get_boot_record(disk):
     """
 
     #Use status=none to avoid getting status messages from dd in our boot record.
-    with subprocess.Popen(["dd", "if="+disk, "bs=512", "count=1", "status=none"],
-                          stdout=subprocess.PIPE, stderr=subprocess.STDOUT) as cmd:
+    try:
+        cmd = subprocess.run(["dd", "if="+disk, "bs=512", "count=1", "status=none"],
+                             check=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
-        boot_record = cmd.communicate()[0]
+    except (OSError, subprocess.CalledProcessError) as err:
+        ERRORS.append("linux.get_boot_record(): Exception: "+str(err)+" while running dd\n")
+
+    else:
+        boot_record = cmd.stdout.decode("utf-8", errors="replace")
         return_value = cmd.returncode
 
     if return_value != 0:
@@ -1028,7 +1060,7 @@ def get_boot_record(disk):
                           stderr=subprocess.STDOUT) as cmd:
 
         cmd.stdin.write(boot_record)
-        boot_record_strings = cmd.communicate()[0].replace(b" ", b"").split(b"\n")
+        boot_record_strings = cmd.communicate()[0].decode("utf-8", errors="replace").replace(b" ", b"").split(b"\n")
         return_value = cmd.returncode
 
     if return_value != 0:
@@ -1055,10 +1087,15 @@ def get_lv_file_system(disk):
     env = os.environ.copy()
     env["LC_ALL"] = "C"
 
-    with subprocess.Popen(["blkid", disk], stdout=subprocess.PIPE,
-                          stderr=subprocess.STDOUT, env=env) as cmd:
+    try:
+        cmd = subprocess.run(["blkid", disk], stdout=subprocess.PIPE,
+                             stderr=subprocess.STDOUT, check=True, env=env)
 
-        output = cmd.communicate()[0]
+    except (OSError, subprocess.CalledProcessError) as err:
+        ERRORS.append("linux.get_lv_file_system(): Exception: "+str(err)+" while running blkid\n")
+
+    else:
+        output = cmd.stdout.decode("utf-8", errors="replace")
 
     if isinstance(output, bytes):
         output = output.decode("utf-8", errors="replace")
@@ -1198,10 +1235,16 @@ def get_block_size(disk):
     #Run /sbin/blockdev to try and get blocksize information.
     command = ["blockdev",  "--getpbsz", disk]
 
-    with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT) as cmd:
+    try:
+        cmd = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=True)
 
+    except (OSError, subprocess.CalledProcessError) as err:
+        ERRORS.append("linux.get_block_size(): Exception: "+str(err)+" while running blockdev\n")
+        return None
+
+    else:
         #Get the output and pass it to compute_block_size.
-        return compute_block_size(cmd.communicate()[0].decode("utf-8", errors="replace"))
+        return compute_block_size(cmd.stdout.decode("utf-8", errors="replace"))
 
 def compute_block_size(stdout):
     """

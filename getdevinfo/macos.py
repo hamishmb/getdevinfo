@@ -76,11 +76,17 @@ def get_info():
     DISKINFO = {}
 
     #Run diskutil list to get disk names.
-    with subprocess.Popen(["diskutil", "list", "-plist"], stdout=subprocess.PIPE,
-                          stderr=subprocess.STDOUT) as cmd:
+    try:
+        cmd = subprocess.run(["diskutil", "list", "-plist"], stdout=subprocess.PIPE,
+                             stderr=subprocess.STDOUT, check=True)
 
+    except (OSError, subprocess.CalledProcessError) as err:
+        ERRORS.append("macos.get_info(): Exception: "+str(err)+" while running "
+                      + "diskutil list\n")
+
+    else:
         #Get the output.
-        stdout = cmd.communicate()[0]
+        stdout = cmd.stdout.decode("utf-8", errors="replace")
 
     #Parse the plist (Property List).
     global PLIST
@@ -98,10 +104,17 @@ def get_info():
     #Find the disks.
     for disk in PLIST["AllDisks"]:
         #Run diskutil info to get disk info.
-        with subprocess.Popen(["diskutil", "info", "-plist", disk], stdout=subprocess.PIPE,
-                              stderr=subprocess.STDOUT) as cmd:
+        try:
+            cmd = subprocess.run(["diskutil", "info", "-plist", disk], stdout=subprocess.PIPE,
+                              stderr=subprocess.STDOUT, check=True)
 
-            stdout = cmd.communicate()[0]
+        except (OSError, subprocess.CalledProcessError) as err:
+            ERRORS.append("macos.get_info(): Exception: "+str(err)+" while running "
+                          + "diskutil info\n")
+
+        else:
+            #Get the output.
+            stdout = cmd.stdout.decode("utf-8", errors="replace")
 
         #Parse the plist (Property List).
         try:
@@ -494,10 +507,18 @@ def get_block_size(disk):
     #Run diskutil list to get disk names.
     command = ["diskutil", "info", "-plist", disk]
 
-    with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT) as cmd:
+    try:
+        cmd = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=True)
 
+    except (OSError, subprocess.CalledProcessError) as err:
+        ERRORS.append("macos.get_block_size(): Exception: "+str(err)+" while running "
+                      + "diskutil info\n")
+
+        return None
+
+    else:
         #Get the output and pass it to compute_block_size.
-        return compute_block_size(disk, cmd.communicate()[0])
+        return compute_block_size(disk, cmd.stdout.decode("utf-8", errors="replace"))
 
 def compute_block_size(disk, stdout):
     """
