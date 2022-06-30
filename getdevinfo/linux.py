@@ -57,6 +57,7 @@ LSUUIDOUTPUT = None
 LSBLKOUTPUT = None
 LSIDOUTPUT = None
 LVMOUTPUT = None
+ERRORS = []
 
 def get_info():
     """
@@ -110,7 +111,8 @@ def get_info():
     output = BeautifulSoup(stdout, "xml")
 
     if output.list is None:
-        raise RuntimeError("No Disks found!")
+        ERRORS.append("linux.get_info(): No disks found!\n")
+        raise RuntimeError("No disks found!")
 
     list_of_devices = output.list.children
 
@@ -148,8 +150,9 @@ def get_info():
     try:
         parse_lsblk_output()
 
-    except Exception:
-        pass
+    except Exception as e:
+        ERRORS.append("linux.get_info(): Unhandled exception: "+str(e)
+                      + " while parsing lsblk output\n")
 
     #Find any LVM disks. Don't use -c because it doesn't give us enough information.
     global LVMOUTPUT
@@ -162,7 +165,8 @@ def get_info():
 
     #Check we found some disks.
     if not DISKINFO:
-        raise RuntimeError("No Disks found!")
+        ERRORS.append("linux.get_info(): No disks found!\n")
+        raise RuntimeError("No disks found!")
 
 def get_device_info(node):
     """
@@ -393,6 +397,7 @@ def assemble_lvm_disk_info(line_counter, testing=False):
             line = line.replace("'", "")
 
         except UnicodeError:
+            ERRORS.append("linux.assemble_lvm_disk_information(): UnicodeError!\n")
             continue
 
         raw_lvm_info.append(line)
@@ -476,6 +481,8 @@ def parse_lsblk_output():
 
     except ValueError:
         #Not a valid JSON document!
+        ERRORS.append("linux.parse_lsblk_output(): lsblk output is not valid JSON! Output: "
+                      + LSBLKOUTPUT+"\n")
         return
 
     for disk in data["blockdevices"]:
