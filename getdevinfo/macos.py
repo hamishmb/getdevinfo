@@ -51,6 +51,7 @@ import plistlib
 #Define global variables to make pylint happy.
 DISKINFO = None
 PLIST = None
+ERRORS = []
 
 def get_info():
     """
@@ -84,7 +85,15 @@ def get_info():
     #Parse the plist (Property List).
     global PLIST
 
-    PLIST = plistlib.loads(stdout)
+    try:
+        PLIST = plistlib.loads(stdout)
+
+    except Exception as err:
+        #TODO find which specific exceptions to handle, not in docs.
+        ERRORS.append("macos.get_info(): Error parsing plist from diskutil list."
+                      + " Output: " +stdout+". Exception: "+str(err)+"\n")
+
+        return
 
     #Find the disks.
     for disk in PLIST["AllDisks"]:
@@ -95,7 +104,15 @@ def get_info():
             stdout = cmd.communicate()[0]
 
         #Parse the plist (Property List).
-        PLIST = plistlib.loads(stdout)
+        try:
+            PLIST = plistlib.loads(stdout)
+
+        except Exception as err:
+            #TODO find which specific exceptions to handle, not in docs.
+            ERRORS.append("macos.get_info(): Error parsing plist from diskutil info."
+                          + " Output: " +stdout+". Exception: "+str(err)+"\n")
+
+            return
 
         #Check if the disk is a partition.
         disk_is_partition = is_partition(disk)
@@ -506,8 +523,11 @@ def compute_block_size(disk, stdout):
     try:
         plist = plistlib.loads(stdout)
 
-    except:
+    except Exception as err:
         #TODO find which specific exceptions to handle, not in docs.
+        ERRORS.append("macos.compute_block_size(): Error parsing plist from diskutil info."
+                      + " Output: " +stdout+". Exception: "+str(err)+"\n")
+
         return None
 
     else:

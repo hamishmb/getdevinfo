@@ -150,8 +150,8 @@ def get_info():
     try:
         parse_lsblk_output()
 
-    except Exception as e:
-        ERRORS.append("linux.get_info(): Unhandled exception: "+str(e)
+    except Exception as err:
+        ERRORS.append("linux.get_info(): Unhandled exception: "+str(err)
                       + " while parsing lsblk output\n")
 
     #Find any LVM disks. Don't use -c because it doesn't give us enough information.
