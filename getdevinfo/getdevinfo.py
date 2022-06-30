@@ -82,25 +82,25 @@ def get_info(name_main=False):
 
     #Determine if running on Linux or Mac.
     if platform.system() == 'Linux':
-        linux = True
-        cygwin = False
+        is_linux = True
+        is_cygwin = False
 
     elif "CYGWIN" in platform.system():
-        linux = True
-        cygwin = True
+        is_linux = True
+        is_cygwin = True
 
     elif platform.system() == "Darwin":
-        linux = False
-        cygwin = False
+        is_linux = False
+        is_cygwin = False
 
     #Used to temporarily hold errors.
     temp_errors = []
 
-    if linux and not cygwin:
+    if is_linux and not is_cygwin:
         from . import linux
         get_info_platform = linux.get_info
 
-    elif cygwin:
+    elif is_cygwin:
         from . import cygwin
         get_info_platform = cygwin.get_info
 
@@ -115,11 +115,11 @@ def get_info(name_main=False):
         #Unhandled error!.
         temp_errors.append("getdevinfo.get_info(): Unhandled error: "+str(e)+"\n")
 
-    if linux and not cygwin:
+    if is_linux and not is_cygwin:
         diskinfo = linux.DISKINFO
         errors = linux.ERRORS
 
-    elif cygwin:
+    elif is_cygwin:
         diskinfo = cygwin.DISKINFO
         errors = cygwin.ERRORS
 
@@ -132,7 +132,7 @@ def get_info(name_main=False):
             errors.append(error)
 
     if name_main is False:
-        with open("/tmp/getdevinfo.errors", "w") as errors_file:
+        with open("/tmp/getdevinfo.errors", "w", encoding="utf-8") as errors_file:
             errors_file.writelines(errors)
 
         return diskinfo

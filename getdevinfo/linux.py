@@ -457,7 +457,8 @@ def assemble_lvm_disk_info(line_counter, testing=False):
             else:
                 DISKINFO[volume]["HostDevice"] = "Unknown"
 
-    #If there are any entries called "Unknown" (disks that we couldn't get the name for), remove them now to prevent issues.
+    #If there are any entries called "Unknown" (disks that we couldn't get the name for),
+    #remove them now to prevent issues.
     if "Unknown" in DISKINFO:
         DISKINFO.pop("Unknown")
 
@@ -697,11 +698,11 @@ def get_capacity(node):
     """
 
     if hasattr(node, "size") and hasattr(node.size, "string"):
-        #XXX This is actually an int, despite the misleading name.
+        #This is actually an int, despite the misleading name.
         raw_capacity = str(node.size.string)
 
     elif hasattr(node, "capacity") and hasattr(node.capacity, "string"):
-        #XXX This is actually an int, despite the misleading name.
+        #This is actually an int, despite the misleading name.
         raw_capacity = str(node.capacity.string)
 
     else:

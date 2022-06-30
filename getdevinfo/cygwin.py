@@ -63,6 +63,7 @@ else:
 
 #Define global variables to make pylint happy.
 DISKINFO = None
+ERRORS = []
 
 def get_info():
     """
@@ -149,12 +150,21 @@ def get_device_info(host_disk):
         else:
             break
 
-    try:
-        data = json.loads(output)
+    if output == "":
+        #Fork error encountered.
+        ERRORS.append("cygwin.get_device_info(): Fork error encountered too many"
+                      + " times trying to run smartctl\n")
 
-    except ValueError:
-        #Not a valid JSON document!
-        return host_disk
+    else:
+        try:
+            data = json.loads(output)
+
+        except ValueError:
+            #Not a valid JSON document!
+            ERRORS.append("cygwin.get_device_info(): smartctl output is not valid JSON! Output: "
+                          + output+"\n")
+
+            return host_disk
 
     #Vendor and product.
     if "model_name" in data.keys():
@@ -192,6 +202,9 @@ def get_device_info(host_disk):
                 count += 1
 
                 if count >= 5:
+                    ERRORS.append("cygwin.get_device_info(): Fork error encountered too many"
+                                  + " times trying to run blkid\n")
+
                     raise subprocess.CalledProcessError(None, "Fork error encountered too many times") from error
 
             else:
@@ -383,7 +396,8 @@ def get_description(data, disk):
 
     except (subprocess.CalledProcessError, OSError):
         #Disk doesn't exist or no Windows equivelant.
-        pass
+        ERRORS.append("cygwin.get_description(): Disk "+disk+" doesn't exist or has no Windows"
+                      + " equivelant\n")
 
     else:
         output = cmd.stdout.decode("utf-8", errors="replace").strip()
@@ -654,6 +668,8 @@ def get_block_size(disk):
             count += 1
 
             if count >= 5:
+                ERRORS.append("cygwin.get_block_size(): Fork error encountered too many"
+                               + " times trying to run smartctl\n")
                 return None
 
         else:
@@ -679,7 +695,7 @@ def compute_block_size(stdout):
 
     Usage:
 
-    >>> compute_block_size(<stdoutFromBlockDev>)
+    >>> compute_block_size(<stdoutFromSmartctl>)
     """
 
     try:
@@ -687,6 +703,9 @@ def compute_block_size(stdout):
 
     except ValueError:
         #Not a valid JSON document!
+        ERRORS.append("cygwin.compute_block_size(): smartctl output is not valid JSON! Output: "
+                      + stdout+"\n")
+
         return None
 
     #If the information isn't available, just return none.
