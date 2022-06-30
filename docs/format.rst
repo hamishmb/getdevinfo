@@ -15,8 +15,8 @@ out here.
     On Linux and Cygwin, superuser/administrator privileges are required for
     GetDevInfo to work correctly.
 
-For each device and partition:
-==============================
+For each device and partition
+=============================
 
 A sub-dictionary is created with the name of that disk as its key.
 
@@ -25,8 +25,8 @@ For example:
 
     >>> DISKINFO['/dev/disk1s1']
 
-Inside this sub-dictionary (standard devices):
-==============================================
+Inside this sub-dictionary (standard devices)
+=============================================
 
 Various information is collected and organised here.
 
@@ -216,8 +216,8 @@ Various information is collected and organised here.
         Not yet available on macOS.
 
 
-Inside this sub-dictionary (specifics for LVM disks on Linux):
-==============================================================
+Inside this sub-dictionary (specifics for LVM disks on Linux)
+=============================================================
 
 These are keys that are only present for LVM disks (where "Product" is "LVM Partition").
 
@@ -263,8 +263,8 @@ These are keys that are only present for LVM disks (where "Product" is "LVM Part
     "HostPartition" and "HostDevice" may not be available for certain disks.
 
 
-Inside this sub-dictionary (NVME disks):
-==============================================
+Inside this sub-dictionary (NVME disks)
+=======================================
 
 .. warning::
     Various standard keys are not available for NVME disks as they aren't supported by lshw.

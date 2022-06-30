@@ -6,8 +6,8 @@ This is GetDevInfo's API documentation. Mostly this documentation is derived fro
 Running GetDevInfo
 ==================
 
-Calling GetDevInfo from the commandline:
-----------------------------------------
+Calling GetDevInfo from the commandline
+---------------------------------------
 
 Run with:
 
@@ -16,8 +16,8 @@ Run with:
 .. warning::
     Breaking change: Support for calling with "python3 -m getdevinfo.getdevinfo was removed in v2.0.0.
 
-Calling GetDevInfo from a Python program:
------------------------------------------
+Calling GetDevInfo from a Python program
+----------------------------------------
 
 Run with:
 
