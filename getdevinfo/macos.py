@@ -84,6 +84,8 @@ def get_info():
         ERRORS.append("macos.get_info(): Exception: "+str(err)+" while running "
                       + "diskutil list\n")
 
+        return
+
     else:
         #Get the output.
         stdout = cmd.stdout.decode("utf-8", errors="replace")
@@ -112,6 +114,8 @@ def get_info():
             ERRORS.append("macos.get_info(): Exception: "+str(err)+" while running "
                           + "diskutil info\n")
 
+            continue
+
         else:
             #Get the output.
             stdout = cmd.stdout.decode("utf-8", errors="replace")
@@ -125,7 +129,7 @@ def get_info():
             ERRORS.append("macos.get_info(): Error parsing plist from diskutil info."
                           + " Output: " +stdout+". Exception: "+str(err)+"\n")
 
-            return
+            continue
 
         #Check if the disk is a partition.
         disk_is_partition = is_partition(disk)

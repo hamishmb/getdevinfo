@@ -148,7 +148,7 @@ def get_device_info(host_disk):
             count += 1
 
         except subprocess.CalledProcessError as err:
-            ERRORS.append("cygwin.get_block_size(): Error encountered running smart ctl: "
+            ERRORS.append("cygwin.get_block_size(): Error encountered running smartctl: "
                           + str(err)+"\n")
 
         else:
@@ -211,10 +211,6 @@ def get_device_info(host_disk):
 
                     raise subprocess.CalledProcessError(None, "Fork error encountered too many times") from error
 
-            except subprocess.CalledProcessError as err:
-                ERRORS.append("cygwin.get_block_size(): Error encountered running smart ctl: "
-                              + str(err)+"\n")
-
             else:
                 break
 
@@ -237,7 +233,7 @@ def get_device_info(host_disk):
 
     #Don't try to get Boot Records for optical drives.
     if "/dev/cdrom" in host_disk or "/dev/sr" in host_disk or "/dev/dvd" in host_disk:
-        DISKINFO[host_disk]["BootRecord"], DISKINFO[host_disk]["BootRecordStrings"] = (b"N/A", [b"N/A"])
+        DISKINFO[host_disk]["BootRecord"], DISKINFO[host_disk]["BootRecordStrings"] = ("N/A", ["N/A"])
 
     else:
         DISKINFO[host_disk]["BootRecord"], DISKINFO[host_disk]["BootRecordStrings"] = get_boot_record(host_disk)
@@ -618,18 +614,18 @@ def get_boot_record(disk):
     return_value = cmd.returncode
 
     if return_value != 0:
-        return (b"Unknown", [b"Unknown"])
+        return ("Unknown", ["Unknown"])
 
     #Get the readable strings in the boot record.
     with subprocess.Popen(["strings"], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                            stderr=subprocess.STDOUT) as cmd:
 
         cmd.stdin.write(boot_record)
-        boot_record_strings = cmd.communicate()[0].replace(b" ", b"").split(b"\n")
+        boot_record_strings = cmd.communicate()[0].decode("utf-8", errors="replace").replace(" ", "").split("\n")
         return_value = cmd.returncode
 
     if return_value != 0:
-        return (boot_record, [b"Unknown"])
+        return (boot_record, ["Unknown"])
 
     return (boot_record, boot_record_strings)
 
@@ -686,6 +682,8 @@ def get_block_size(disk):
         except subprocess.CalledProcessError as err:
             ERRORS.append("cygwin.get_block_size(): Error encountered running smart ctl: "
                           + str(err)+"\n")
+
+            return None
 
         else:
             break

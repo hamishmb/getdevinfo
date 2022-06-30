@@ -1011,7 +1011,7 @@ def return_fake_disk_info_mac():
 def return_fake_lvm_disk_info():
     return {u'/dev/sda': {u'Product': u'FakeDisk', u'Vendor': u'ThereIsNone', u'Name': u'/dev/sda', u'RawCapacity': u'56483132', u'HostDevice': u'N/A', u'Capacity': u'200GB', u'Partitions': [u'/dev/sda1', u'/dev/sda2'], u'Type': u'Device', u'Description': u'Fake Hard Disk Drive', u'Flags': [u'removable', u'gpt']},
 
-           u'/dev/mapper/fakefedora-root': {u'LVName': u'root', u'VGName': u'fakefedora', u'HostPartition': u'/dev/sda3', u'Vendor': u'Linux', u'Name': u'/dev/mapper/fakefedora-root', u'Capacity': u'13.20 GiB', u'Product': u'LVM Partition', u'UUID': u'TWxt1j-g62o-GYju-3UpB-A4g3-9ZbB-HWb7jf', u'Partitioning': u'N/A', u'HostDevice': u'/dev/sda', u'BootRecord': b'Unknown', u'Flags': [], u'RawCapacity': u'Unknown', u'BootRecordStrings': [b'Unknown'], u'FileSystem': u'Unknown', u'Description': u'LVM partition root in volume group fakefedora', u'Aliases': [u'/dev/mapper/fakefedora-root', u'/dev/fakefedora/root'], u'Type': u'Partition', u'ID': u'dm-name-fakefedora-root', u'Partitions': []},
+           u'/dev/mapper/fakefedora-root': {u'LVName': u'root', u'VGName': u'fakefedora', u'HostPartition': u'/dev/sda3', u'Vendor': u'Linux', u'Name': u'/dev/mapper/fakefedora-root', u'Capacity': u'13.20 GiB', u'Product': u'LVM Partition', u'UUID': u'TWxt1j-g62o-GYju-3UpB-A4g3-9ZbB-HWb7jf', u'Partitioning': u'N/A', u'HostDevice': u'/dev/sda', u'BootRecord': 'Unknown', u'Flags': [], u'RawCapacity': u'Unknown', u'BootRecordStrings': ['Unknown'], u'FileSystem': u'Unknown', u'Description': u'LVM partition root in volume group fakefedora', u'Aliases': [u'/dev/mapper/fakefedora-root', u'/dev/fakefedora/root'], u'Type': u'Partition', u'ID': u'dm-name-fakefedora-root', u'Partitions': []},
 
            u'/dev/sda3': {u'Product': u'Host Device: FakeDisk', u'Vendor': u'FakeOS v3', u'Name': u'/dev/sda3', u'RawCapacity': u'564456313', u'HostDevice': u'/dev/sda', u'Capacity': u'25.5GB', u'Partitions': [], u'Type': u'Partition', u'Description': u'BTRFS Volume', u'Flags': [u'removable']},
 
@@ -1019,7 +1019,7 @@ def return_fake_lvm_disk_info():
 
            u'/dev/sda2': {u'Product': u'Host Device: FakeDisk', u'Vendor': u'FakeOS v3', u'Name': u'/dev/sda2', u'RawCapacity': u'564313', u'HostDevice': u'/dev/sda', u'Capacity': u'2.5GB', u'Partitions': [], u'Type': u'Partition', u'Description': u'EXT3 Volume', u'Flags': [u'removable', u'apm']},
 
-           u'/dev/mapper/fakefedora-swap': {u'LVName': u'swap', u'VGName': u'fakefedora', u'HostPartition': u'/dev/sda3', u'Vendor': u'Linux', u'Name': u'/dev/mapper/fakefedora-swap', u'Capacity': u'1.60 GiB', u'Product': u'LVM Partition', u'UUID': u'3e8urm-xsCG-iCAJ-Q3go-2247-OU5N-3AwlD1', u'Partitioning': u'N/A', u'HostDevice': u'/dev/sda', u'BootRecord': b'Unknown', u'Flags': [], u'RawCapacity': u'Unknown', u'BootRecordStrings': [b'Unknown'], u'FileSystem': u'Unknown', u'Description': u'LVM partition swap in volume group fakefedora', u'Aliases': [u'/dev/mapper/fakefedora-swap', u'/dev/fakefedora/swap'], u'Type': u'Partition', u'ID': u'dm-name-fakefedora-swap', u'Partitions': []}}
+           u'/dev/mapper/fakefedora-swap': {u'LVName': u'swap', u'VGName': u'fakefedora', u'HostPartition': u'/dev/sda3', u'Vendor': u'Linux', u'Name': u'/dev/mapper/fakefedora-swap', u'Capacity': u'1.60 GiB', u'Product': u'LVM Partition', u'UUID': u'3e8urm-xsCG-iCAJ-Q3go-2247-OU5N-3AwlD1', u'Partitioning': u'N/A', u'HostDevice': u'/dev/sda', u'BootRecord': 'Unknown', u'Flags': [], u'RawCapacity': u'Unknown', u'BootRecordStrings': ['Unknown'], u'FileSystem': u'Unknown', u'Description': u'LVM partition swap in volume group fakefedora', u'Aliases': [u'/dev/mapper/fakefedora-swap', u'/dev/fakefedora/swap'], u'Type': u'Partition', u'ID': u'dm-name-fakefedora-swap', u'Partitions': []}}
 
 def return_fake_diskutil_list_plist():
     return """<?xml version="1.0" encoding="UTF-8"?>
@@ -1689,7 +1689,7 @@ def return_fake_lvm_output():
    """.split("\n")
 
 def return_fake_lsuuid_output():
-    return b"""total 0
+    return """total 0
 lrwxrwxrwx 1 root root 15 Mar 23 08:16 8243-0631 -> ../../sda1
 lrwxrwxrwx 1 root root 15 Mar 23 08:16 9B4C-DEED -> ../../sda2
 lrwxrwxrwx 1 root root 15 Mar 23 08:16 EAC64F91C64F0CEF -> ../../sda4
@@ -1703,7 +1703,7 @@ lrwxrwxrwx 1 root root 11 Mar 23 08:16 b507c745-d3c9-4c43-8e88-0487913fbf00 -> .
 lrwxrwxrwx 1 root root 15 Mar 23 08:16 83788ffc-d36b-4f3a-b48f-18638f1591a8 -> ../../sdb2"""
 
 def return_fake_lsid_output():
-    return b"""total 0
+    return """total 0
 lrwxrwxrwx 1 root root  9 Oct 17 08:45 ata-HL-DT-ST_DVD+_-RW_GA50N_K0ADADE0046 -> ../../sr0
 lrwxrwxrwx 1 root root  9 Oct 17 08:45 ata-Samsung_SSD_850_EVO_500GB_S21JNXAGC48182L -> ../../sda
 lrwxrwxrwx 1 root root 10 Oct 17 08:45 ata-Samsung_SSD_850_EVO_500GB_S21JNXAGC48182L-part1 -> ../../sda1
@@ -1741,7 +1741,7 @@ def return_fake_block_dev_output():
     return ["No such file or device", "512", "1024", "2048", "4096", "8192"]
 
 def fake_get_boot_record(disk):
-    return (b"Unknown", [b"Unknown"])
+    return ("Unknown", ["Unknown"])
 
 def return_fake_lsblk_output_good_1():
     return """{
@@ -1773,7 +1773,7 @@ def return_fake_lsblk_output_good_1_diskinfo():
     diskinfo["/dev/nvme0n1"]["FileSystem"] = "N/A"
     diskinfo["/dev/nvme0n1"]["RawCapacity"] = "1000204886016"
     diskinfo["/dev/nvme0n1"]["Capacity"] = "1 TB"
-    diskinfo["/dev/nvme0n1"]["BootRecord"], diskinfo["/dev/nvme0n1"]["BootRecordStrings"] = (b"Unknown", [b"Unknown"])
+    diskinfo["/dev/nvme0n1"]["BootRecord"], diskinfo["/dev/nvme0n1"]["BootRecordStrings"] = ("Unknown", ["Unknown"])
     diskinfo["/dev/nvme0n1"]["Description"] = "NVME Disk"
     diskinfo["/dev/nvme0n1"]["Flags"] = "Unknown"
     diskinfo["/dev/nvme0n1"]["Partitioning"] = "Unknown"
@@ -1792,7 +1792,7 @@ def return_fake_lsblk_output_good_1_diskinfo():
     diskinfo["/dev/nvme0n1p1"]["FileSystem"] = "vfat"
     diskinfo["/dev/nvme0n1p1"]["RawCapacity"] = "524288000"
     diskinfo["/dev/nvme0n1p1"]["Capacity"] = "524 MB"
-    diskinfo["/dev/nvme0n1p1"]["BootRecord"], diskinfo["/dev/nvme0n1p1"]["BootRecordStrings"] = (b"Unknown", [b"Unknown"])
+    diskinfo["/dev/nvme0n1p1"]["BootRecord"], diskinfo["/dev/nvme0n1p1"]["BootRecordStrings"] = ("Unknown", ["Unknown"])
     diskinfo["/dev/nvme0n1p1"]["Description"] = "N/A"
     diskinfo["/dev/nvme0n1p1"]["Flags"] = "Unknown"
     diskinfo["/dev/nvme0n1p1"]["Partitioning"] = "N/A"
@@ -1810,7 +1810,7 @@ def return_fake_lsblk_output_good_1_diskinfo():
     diskinfo["/dev/nvme1n1"]["FileSystem"] = "N/A"
     diskinfo["/dev/nvme1n1"]["RawCapacity"] = "1000204886016"
     diskinfo["/dev/nvme1n1"]["Capacity"] = "1 TB"
-    diskinfo["/dev/nvme1n1"]["BootRecord"], diskinfo["/dev/nvme1n1"]["BootRecordStrings"] = (b"Unknown", [b"Unknown"])
+    diskinfo["/dev/nvme1n1"]["BootRecord"], diskinfo["/dev/nvme1n1"]["BootRecordStrings"] = ("Unknown", ["Unknown"])
     diskinfo["/dev/nvme1n1"]["Description"] = "NVME Disk"
     diskinfo["/dev/nvme1n1"]["Flags"] = "Unknown"
     diskinfo["/dev/nvme1n1"]["Partitioning"] = "Unknown"
@@ -1845,7 +1845,7 @@ def return_fake_lsblk_output_bad_1_diskinfo():
     diskinfo["/dev/nvme0n1"]["FileSystem"] = "N/A"
     diskinfo["/dev/nvme0n1"]["RawCapacity"] = "1000204886016"
     diskinfo["/dev/nvme0n1"]["Capacity"] = "1 TB"
-    diskinfo["/dev/nvme0n1"]["BootRecord"], diskinfo["/dev/nvme0n1"]["BootRecordStrings"] = (b"Unknown", [b"Unknown"])
+    diskinfo["/dev/nvme0n1"]["BootRecord"], diskinfo["/dev/nvme0n1"]["BootRecordStrings"] = ("Unknown", ["Unknown"])
     diskinfo["/dev/nvme0n1"]["Description"] = "NVME Disk"
     diskinfo["/dev/nvme0n1"]["Flags"] = "Unknown"
     diskinfo["/dev/nvme0n1"]["Partitioning"] = "Unknown"
@@ -1863,7 +1863,7 @@ def return_fake_lsblk_output_bad_1_diskinfo():
     diskinfo["/dev/nvme1n1"]["FileSystem"] = "N/A"
     diskinfo["/dev/nvme1n1"]["RawCapacity"] = "Unknown"
     diskinfo["/dev/nvme1n1"]["Capacity"] = "Unknown"
-    diskinfo["/dev/nvme1n1"]["BootRecord"], diskinfo["/dev/nvme1n1"]["BootRecordStrings"] = (b"Unknown", [b"Unknown"])
+    diskinfo["/dev/nvme1n1"]["BootRecord"], diskinfo["/dev/nvme1n1"]["BootRecordStrings"] = ("Unknown", ["Unknown"])
     diskinfo["/dev/nvme1n1"]["Description"] = "NVME Disk"
     diskinfo["/dev/nvme1n1"]["Flags"] = "Unknown"
     diskinfo["/dev/nvme1n1"]["Partitioning"] = "Unknown"
@@ -1900,7 +1900,7 @@ def return_fake_lsblk_output_bad_2_diskinfo():
     diskinfo["/dev/nvme0n1"]["FileSystem"] = "N/A"
     diskinfo["/dev/nvme0n1"]["RawCapacity"] = "1000204886016"
     diskinfo["/dev/nvme0n1"]["Capacity"] = "1 TB"
-    diskinfo["/dev/nvme0n1"]["BootRecord"], diskinfo["/dev/nvme0n1"]["BootRecordStrings"] = (b"Unknown", [b"Unknown"])
+    diskinfo["/dev/nvme0n1"]["BootRecord"], diskinfo["/dev/nvme0n1"]["BootRecordStrings"] = ("Unknown", ["Unknown"])
     diskinfo["/dev/nvme0n1"]["Description"] = "NVME Disk"
     diskinfo["/dev/nvme0n1"]["Flags"] = "Unknown"
     diskinfo["/dev/nvme0n1"]["Partitioning"] = "Unknown"
@@ -1919,7 +1919,7 @@ def return_fake_lsblk_output_bad_2_diskinfo():
     diskinfo["/dev/nvme0n1p1"]["FileSystem"] = "vfat"
     diskinfo["/dev/nvme0n1p1"]["RawCapacity"] = "524288000"
     diskinfo["/dev/nvme0n1p1"]["Capacity"] = "524 MB"
-    diskinfo["/dev/nvme0n1p1"]["BootRecord"], diskinfo["/dev/nvme0n1p1"]["BootRecordStrings"] = (b"Unknown", [b"Unknown"])
+    diskinfo["/dev/nvme0n1p1"]["BootRecord"], diskinfo["/dev/nvme0n1p1"]["BootRecordStrings"] = ("Unknown", ["Unknown"])
     diskinfo["/dev/nvme0n1p1"]["Description"] = "N/A"
     diskinfo["/dev/nvme0n1p1"]["Flags"] = "Unknown"
     diskinfo["/dev/nvme0n1p1"]["Partitioning"] = "N/A"
@@ -1938,7 +1938,7 @@ def return_fake_lsblk_output_bad_2_diskinfo():
     diskinfo["/dev/nvme0n1p2"]["FileSystem"] = "Unknown"
     diskinfo["/dev/nvme0n1p2"]["RawCapacity"] = "Unknown"
     diskinfo["/dev/nvme0n1p2"]["Capacity"] = "Unknown"
-    diskinfo["/dev/nvme0n1p2"]["BootRecord"], diskinfo["/dev/nvme0n1p2"]["BootRecordStrings"] = (b"Unknown", [b"Unknown"])
+    diskinfo["/dev/nvme0n1p2"]["BootRecord"], diskinfo["/dev/nvme0n1p2"]["BootRecordStrings"] = ("Unknown", ["Unknown"])
     diskinfo["/dev/nvme0n1p2"]["Description"] = "N/A"
     diskinfo["/dev/nvme0n1p2"]["Flags"] = "Unknown"
     diskinfo["/dev/nvme0n1p2"]["Partitioning"] = "N/A"
@@ -1957,7 +1957,7 @@ def return_fake_lsblk_output_bad_2_diskinfo():
     diskinfo["/dev/nvme0n1p3"]["FileSystem"] = "Unknown"
     diskinfo["/dev/nvme0n1p3"]["RawCapacity"] = "9376366592"
     diskinfo["/dev/nvme0n1p3"]["Capacity"] = "9 GB"
-    diskinfo["/dev/nvme0n1p3"]["BootRecord"], diskinfo["/dev/nvme0n1p3"]["BootRecordStrings"] = (b"Unknown", [b"Unknown"])
+    diskinfo["/dev/nvme0n1p3"]["BootRecord"], diskinfo["/dev/nvme0n1p3"]["BootRecordStrings"] = ("Unknown", ["Unknown"])
     diskinfo["/dev/nvme0n1p3"]["Description"] = "N/A"
     diskinfo["/dev/nvme0n1p3"]["Flags"] = "Unknown"
     diskinfo["/dev/nvme0n1p3"]["Partitioning"] = "N/A"

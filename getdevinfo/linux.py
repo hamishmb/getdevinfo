@@ -87,6 +87,7 @@ def get_info():
 
     except (OSError, subprocess.CalledProcessError) as err:
         ERRORS.append("linux.get_info(): Exception: "+str(err)+" while running lshw\n")
+        return
 
     else:
         #Get the output.
@@ -105,6 +106,7 @@ def get_info():
 
     except (OSError, subprocess.CalledProcessError) as err:
         ERRORS.append("linux.get_info(): Exception: "+str(err)+" while running ls -l\n")
+        return
 
     else:
         LSUUIDOUTPUT = cmd.stdout.decode("utf-8", errors="replace")
@@ -118,6 +120,7 @@ def get_info():
 
     except (OSError, subprocess.CalledProcessError) as err:
         ERRORS.append("linux.get_info(): Exception: "+str(err)+" while running ls -l\n")
+        return
 
     else:
         LSIDOUTPUT = cmd.stdout.decode("utf-8", errors="replace")
@@ -160,6 +163,7 @@ def get_info():
 
     except (OSError, subprocess.CalledProcessError) as err:
         ERRORS.append("linux.get_info(): Exception: "+str(err)+" while running lsblk\n")
+        return
 
     else:
         LSBLKOUTPUT = cmd.stdout.decode("utf-8", errors="replace")
@@ -184,9 +188,10 @@ def get_info():
 
     except (OSError, subprocess.CalledProcessError) as err:
         ERRORS.append("linux.get_info(): Exception: "+str(err)+" while running lvdisplay --maps\n")
+        return
 
     else:
-        LVMOUTPUT = cmd.stdout.decode("utf-8", errors="replace").split(b"\n")
+        LVMOUTPUT = cmd.stdout.decode("utf-8", errors="replace").split("\n")
 
     parse_lvm_output()
 
@@ -255,7 +260,7 @@ def get_device_info(node):
 
     #Don't try to get Boot Records for optical drives.
     if "/dev/cdrom" in host_disk or "/dev/sr" in host_disk or "/dev/dvd" in host_disk:
-        DISKINFO[host_disk]["BootRecord"], DISKINFO[host_disk]["BootRecordStrings"] = (b"N/A", [b"N/A"])
+        DISKINFO[host_disk]["BootRecord"], DISKINFO[host_disk]["BootRecordStrings"] = ("N/A", ["N/A"])
 
     else:
         DISKINFO[host_disk]["BootRecord"], DISKINFO[host_disk]["BootRecordStrings"] = get_boot_record(host_disk)
@@ -953,15 +958,8 @@ def get_uuid(disk):
     uuid = "Unknown"
 
     #Try to get the UUID from ls's output.
-    for line in LSUUIDOUTPUT.split(b'\n'):
-        try:
-            line = line.decode("utf-8", errors="replace").replace("'", "")
-
-        except AttributeError:
-            line = line.replace("'", "")
-
-        except UnicodeError:
-            pass
+    for line in LSUUIDOUTPUT.split('\n'):
+        line = line.replace("'", "")
 
         try:
             split_line = line.split()
@@ -998,15 +996,8 @@ def get_id(disk):
     disk_id = "Unknown"
 
     #Try to get the ID from ls's output.
-    for line in LSIDOUTPUT.split(b'\n'):
-        try:
-            line = line.decode("utf-8", errors="replace").replace("'", "")
-
-        except AttributeError:
-            line = line.replace("'", "")
-
-        except UnicodeError:
-            pass
+    for line in LSIDOUTPUT.split('\n'):
+        line = line.replace("'", "")
 
         try:
             split_line = line.split()
@@ -1047,24 +1038,25 @@ def get_boot_record(disk):
 
     except (OSError, subprocess.CalledProcessError) as err:
         ERRORS.append("linux.get_boot_record(): Exception: "+str(err)+" while running dd\n")
+        return_value = 1
 
     else:
         boot_record = cmd.stdout.decode("utf-8", errors="replace")
         return_value = cmd.returncode
 
     if return_value != 0:
-        return (b"Unknown", [b"Unknown"])
+        return ("Unknown", ["Unknown"])
 
     #Get the readable strings in the boot record.
     with subprocess.Popen(["strings"], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                           stderr=subprocess.STDOUT) as cmd:
 
-        cmd.stdin.write(boot_record)
-        boot_record_strings = cmd.communicate()[0].decode("utf-8", errors="replace").replace(b" ", b"").split(b"\n")
+        cmd.stdin.write(bytes(boot_record, encoding="utf-8"))
+        boot_record_strings = cmd.communicate()[0].decode("utf-8", errors="replace").replace(" ", "").split("\n")
         return_value = cmd.returncode
 
     if return_value != 0:
-        return (boot_record, [b"Unknown"])
+        return (boot_record, ["Unknown"])
 
     return (boot_record, boot_record_strings)
 
@@ -1093,6 +1085,7 @@ def get_lv_file_system(disk):
 
     except (OSError, subprocess.CalledProcessError) as err:
         ERRORS.append("linux.get_lv_file_system(): Exception: "+str(err)+" while running blkid\n")
+        return "Unknown"
 
     else:
         output = cmd.stdout.decode("utf-8", errors="replace")

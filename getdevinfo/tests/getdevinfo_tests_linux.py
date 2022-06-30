@@ -308,8 +308,8 @@ class TestParseLSBLKOutput(unittest.TestCase):
     def test_parse_lsblk_output_1(self):
         """Test #1: Test that this returns expected results with good data in normal circumstances"""
         linux.LSBLKOUTPUT = data.return_fake_lsblk_output_good_1()
-        linux.LSUUIDOUTPUT = b""
-        linux.LSIDOUTPUT = b""
+        linux.LSUUIDOUTPUT = ""
+        linux.LSIDOUTPUT = ""
 
         diskinfo = data.return_fake_lsblk_output_good_1_diskinfo()
 
@@ -323,8 +323,8 @@ class TestParseLSBLKOutput(unittest.TestCase):
     def test_parse_lsblk_output_2(self):
         """Test #2: Test that this returns expected results with missing vendor, model and size elements for devices"""
         linux.LSBLKOUTPUT = data.return_fake_lsblk_output_bad_1()
-        linux.LSUUIDOUTPUT = b""
-        linux.LSIDOUTPUT = b""
+        linux.LSUUIDOUTPUT = ""
+        linux.LSIDOUTPUT = ""
 
         diskinfo = data.return_fake_lsblk_output_bad_1_diskinfo()
 
@@ -338,8 +338,8 @@ class TestParseLSBLKOutput(unittest.TestCase):
     def test_parse_lsblk_output_3(self):
         """Test #3: Test that this returns expected results with missing uuid, fstype, and size elements for children"""
         linux.LSBLKOUTPUT = data.return_fake_lsblk_output_bad_2()
-        linux.LSUUIDOUTPUT = b""
-        linux.LSIDOUTPUT = b""
+        linux.LSUUIDOUTPUT = ""
+        linux.LSIDOUTPUT = ""
 
         diskinfo = data.return_fake_lsblk_output_bad_2_diskinfo()
 
@@ -350,8 +350,8 @@ class TestParseLSBLKOutput(unittest.TestCase):
     def test_parse_lsblk_output_4(self):
         """Test #4: Test that this returns nothing when lsblk returns invalid JSON"""
         linux.LSBLKOUTPUT = data.return_fake_lsblk_output_bad_3()
-        linux.LSUUIDOUTPUT = b""
-        linux.LSIDOUTPUT = b""
+        linux.LSUUIDOUTPUT = ""
+        linux.LSIDOUTPUT = ""
 
         diskinfo = {}
 
