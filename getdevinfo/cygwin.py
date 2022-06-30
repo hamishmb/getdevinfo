@@ -147,12 +147,16 @@ def get_device_info(host_disk):
         except OSError:
             count += 1
 
+        except subprocess.CalledProcessError as err:
+            ERRORS.append("cygwin.get_block_size(): Error encountered running smart ctl: "
+                          + str(err)+"\n")
+
         else:
             break
 
     if output == "":
-        #Fork error encountered.
-        ERRORS.append("cygwin.get_device_info(): Fork error encountered too many"
+        #Fork/other error encountered.
+        ERRORS.append("cygwin.get_device_info(): Fork or other error encountered too many"
                       + " times trying to run smartctl\n")
 
     else:
@@ -207,10 +211,17 @@ def get_device_info(host_disk):
 
                     raise subprocess.CalledProcessError(None, "Fork error encountered too many times") from error
 
+            except subprocess.CalledProcessError as err:
+                ERRORS.append("cygwin.get_block_size(): Error encountered running smart ctl: "
+                              + str(err)+"\n")
+
             else:
                 break
 
-    except subprocess.CalledProcessError:
+    except subprocess.CalledProcessError as err:
+        ERRORS.append("cygwin.get_device_info(): subprocess.CalledProcessError encountered"
+                      + " trying to run blkid. Error: "+str(err)+"\n")
+
         DISKINFO[host_disk]["Partitioning"] = "Unknown"
         DISKINFO[host_disk]["FileSystem"] = "Unknown"
         DISKINFO[host_disk]["UUID"] = "Unknown"
@@ -668,9 +679,13 @@ def get_block_size(disk):
             count += 1
 
             if count >= 5:
-                ERRORS.append("cygwin.get_block_size(): Fork error encountered too many"
+                ERRORS.append("cygwin.get_block_size(): Fork/other error encountered too many"
                                + " times trying to run smartctl\n")
                 return None
+
+        except subprocess.CalledProcessError as err:
+            ERRORS.append("cygwin.get_block_size(): Error encountered running smart ctl: "
+                          + str(err)+"\n")
 
         else:
             break
