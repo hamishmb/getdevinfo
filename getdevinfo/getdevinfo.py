@@ -108,12 +108,7 @@ def get_info(name_main=False):
         from . import macos
         get_info_platform = macos.get_info
 
-    #try:
     get_info_platform()
-
-    #except Exception as e:
-    #    #Unhandled error!.
-    #    temp_errors.append("getdevinfo.get_info(): Unhandled error: "+str(e)+"\n")
 
     if is_linux and not is_cygwin:
         diskinfo = linux.DISKINFO
