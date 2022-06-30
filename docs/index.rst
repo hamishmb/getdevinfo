@@ -9,13 +9,14 @@ Welcome to GetDevInfo's API documentation!
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+    :maxdepth: 2
 
-   format
-   getdevinfo
-   linux
-   cygwin
-   macos
+    introduction
+    format
+    getdevinfo
+    linux
+    cygwin
+    macos
 
 
 Indices and tables

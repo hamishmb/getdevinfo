@@ -207,7 +207,10 @@ Various information is collected and organised here.
 
 'BootRecord', 'BootRecordStrings':
     The MBR/PBR of the disk. Can be useful in identifying the bootloader that
-    resides there, if any.
+    resides there, if any. Stored as a string.
+
+    .. warning::
+        Breaking change: This was a bytestring until GetDevInfo v2.0.0.
 
     .. note::
         Not yet available on macOS.
