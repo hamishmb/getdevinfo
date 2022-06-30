@@ -21,5 +21,9 @@ The GetDevInfo module.
 from __future__ import absolute_import
 from . import getdevinfo
 
+def get_info():
+    """Wrapper for getdevinfo.get_info()"""
+    return getdevinfo.get_info()
+
 if __name__ == "__main__":
     getdevinfo.run()
