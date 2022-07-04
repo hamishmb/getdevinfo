@@ -56,7 +56,6 @@ setup(
 
     url='https://www.hamishmb.com/',
     author='Hamish McIntyre-Bhatty',
-    author_email='support@hamishmb.com',
     license='GPLv3+',
 
     classifiers=[
