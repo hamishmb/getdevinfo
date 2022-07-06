@@ -88,7 +88,8 @@ def get_info():
 
     else:
         #Get the output.
-        stdout = cmd.stdout.decode("utf-8", errors="replace")
+        #Keep this in bytes as plistlib.loads requires bytes (misleading function name)
+        stdout = cmd.stdout
 
     #Parse the plist (Property List).
     global PLIST
@@ -99,7 +100,7 @@ def get_info():
     except Exception as err:
         #TODO find which specific exceptions to handle, not in docs.
         ERRORS.append("macos.get_info(): Error parsing plist from diskutil list."
-                      + " Output: " +stdout+". Exception: "+str(err)+"\n")
+                      + " Output: " +stdout.decode("utf-8", errors="replace")+". Exception: "+str(err)+"\n")
 
         return
 
@@ -118,7 +119,8 @@ def get_info():
 
         else:
             #Get the output.
-            stdout = cmd.stdout.decode("utf-8", errors="replace")
+            #Keep this in bytes as plistlib.loads requires bytes (misleading function name)
+            stdout = cmd.stdout
 
         #Parse the plist (Property List).
         try:
@@ -127,7 +129,7 @@ def get_info():
         except Exception as err:
             #TODO find which specific exceptions to handle, not in docs.
             ERRORS.append("macos.get_info(): Error parsing plist from diskutil info."
-                          + " Output: " +stdout+". Exception: "+str(err)+"\n")
+                          + " Output: " +stdout.decode("utf-8", errors="replace")+". Exception: "+str(err)+"\n")
 
             continue
 
@@ -522,7 +524,8 @@ def get_block_size(disk):
 
     else:
         #Get the output and pass it to compute_block_size.
-        return compute_block_size(disk, cmd.stdout.decode("utf-8", errors="replace"))
+        #Keep this in bytes as plistlib.loads requires bytes (misleading function name)
+        return compute_block_size(disk, cmd.stdout)
 
 def compute_block_size(disk, stdout):
     """
@@ -551,7 +554,7 @@ def compute_block_size(disk, stdout):
     except Exception as err:
         #TODO find which specific exceptions to handle, not in docs.
         ERRORS.append("macos.compute_block_size(): Error parsing plist from diskutil info."
-                      + " Output: " +stdout+". Exception: "+str(err)+"\n")
+                      + " Output: " +stdout.decode("utf-8", errors="replace")+". Exception: "+str(err)+"\n")
 
         return None
 
