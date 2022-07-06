@@ -248,7 +248,7 @@ class TestComputeBlockSize(unittest.TestCase):
         """
 
         for testdata in self.block_sizes:
-            self.assertEqual(macos.compute_block_size("FakeDisk", bytes(testdata)), self.correct_results[self.block_sizes.index(testdata)])
+            self.assertEqual(macos.compute_block_size("FakeDisk", bytes(testdata, "utf-8")), self.correct_results[self.block_sizes.index(testdata)])
 
 class TestGetInfo(unittest.TestCase):
     def test_get_info(self):
