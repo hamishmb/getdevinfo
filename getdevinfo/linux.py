@@ -120,7 +120,7 @@ def get_info():
 
     except (OSError, subprocess.CalledProcessError) as err:
         ERRORS.append("linux.get_info(): Exception: "+str(err)+" while running ls -l\n")
-        return
+        LSIDOUTPUT = ()
 
     else:
         LSIDOUTPUT = cmd.stdout.decode("utf-8", errors="replace")
