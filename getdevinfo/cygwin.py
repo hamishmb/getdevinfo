@@ -159,6 +159,8 @@ def get_device_info(host_disk):
         ERRORS.append("cygwin.get_device_info(): Fork or other error encountered too many"
                       + " times trying to run smartctl\n")
 
+        return host_disk
+
     else:
         try:
             data = json.loads(output)
