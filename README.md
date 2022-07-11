@@ -34,28 +34,28 @@ Source Distribution
 
 Run:
 
-"python setup.py sdist"
+```python setup.py sdist```
 
 Wheels
 ------
 
 Make sure you've installed the "wheel" package:
 
-"pip3 install wheel"
+```pip3 install wheel```
 
 Universal Wheel
 ---------------
 
 This is the recommended choice, though GetDevInfo no longer runs on Python 2 from version 1.0.7 onwards,
 
-"python3 setup.py bdist_wheel --universal"
+```python3 setup.py bdist_wheel --universal```
 
 Pure Python Wheel
 -----------------
 
 Not sure why you'd do this, but you can run:
 
-"python3 setup.py bdist_wheel"
+```python3 setup.py bdist_wheel```
 
 to acheive this if you want.
 
@@ -74,7 +74,7 @@ Running directly from the command line
 
 Run:
 
-"sudo python3 -m getdevinfo"
+```sudo python3 -m getdevinfo```
 
 Running The Tests
 =================
@@ -87,7 +87,7 @@ Without Coverage Reporting
 --------------------------
 Change directory to the getdevinfo subfolder, and run:
 
-"sudo python3 ./tests.py"
+```sudo python3 ./tests.py```
 
 With Coverage Reporting
 -----------------------
@@ -95,10 +95,10 @@ Make sure you have installed Coverage.py using pip or your package manager.
 
 Change directory to the getdevinfo subfolder, and run:
 
-"sudo python3 -m coverage run --rcfile=../.coveragerc ./tests.py"
+```sudo python3 -m coverage run --rcfile=../.coveragerc ./tests.py```
 
 To run the tests. Then run:
 
-"sudo python3 -m coverage report"
+```sudo python3 -m coverage report```
 
 To see the report.
