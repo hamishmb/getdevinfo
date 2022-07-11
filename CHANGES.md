@@ -1,4 +1,29 @@
-GetDevInfo(1.1.1)
+GetDevInfo (2.0.0):
+  * Backwards-incompatible changes sinse v1.1.1:
+
+  * Bytestrings are no longer used for the BootRecord and BootRecordStrings values, in favour of unicode strings.
+  * GetDevInfo must now be called with `python3 -m getdevinfo`.
+  * Error logging has been improved. When run imported as a Python module, errors are logged to /tmp/getdevinfo.errors now, so they can be debugged and handled better.
+  * The API documentation is now licensed under as GFDLv1.3+, instead of being GPLv3+.
+  * Python 3.10 is now officially supported.
+
+  * Other changes:
+
+  * Avoid unnecessary use of shell=True on macOS.
+  * Clean up of macOS code.
+  * Clean up of Cygwin code.
+  * Ignore loop, zram, and nbd devices on Linux.
+  * Add more useful descriptions for devices not found by lshw on Linux.
+  * Various code quality improvements.
+  * Remove all use of shell=True.
+  * Fix a bug where the size of LVM disks may be reported incorrectly.
+  * Improved detection of filesystems for LVM disks.
+  * General improvements to error handling on Linux, macOS and Cygwin.
+  * Improved filesystem detection on Linux.
+  * Various improvements to the documentation (both code and API documentation).
+  * Improve disk descriptions on macOS.
+
+GetDevInfo (1.1.1)
   * Changes since v1.1.0:
 
   * Use correct Cygwin package names in README.md.
