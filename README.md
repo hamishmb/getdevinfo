@@ -67,7 +67,7 @@ You can find these at https://www.launchpad.net/getdevinfo or https://www.hamish
 
 Documentation
 =============
-This can be found at https://www.hamishmb.com/html/Docs/getdevinfo.php.
+This can be found at https://www.hamishmb.com/support/getdevinfo.php.
 
 Running directly from the command line
 ======================================
