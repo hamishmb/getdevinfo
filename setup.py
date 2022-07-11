@@ -53,6 +53,7 @@ setup(
     version='2.0.0',
     description='A device information gatherer for Linux, macOS, and Cygwin/Windows',
     long_description=long_description,
+    long_description_content_type='text/markdown',
 
     url='https://www.hamishmb.com/',
     author='Hamish McIntyre-Bhatty',

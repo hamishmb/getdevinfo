@@ -12,7 +12,7 @@ Description of Package
 ======================
 A device information gatherer for Linux, macOS and Cygwin/Windows.
 
-Working on both Linux, macOS and Cygwin, this script makes use of lshw, lvdisplay, and blkid (Linux), as well as diskutil (macOS) and smartctl and blkid (Cygwin) to get a comprehensive amount of disk information. This information is available in a structured dictionary for ease of use.
+Working on Linux, macOS and Cygwin, this script makes use of lshw, lvdisplay, and blkid (Linux), as well as diskutil (macOS) and smartctl and blkid (Cygwin) to get a comprehensive amount of disk information. This information is available in a structured dictionary for ease of use.
 
 NOTE: Cygwin is supported since v1.1.0, Python 2 is unsupported since v1.0.7.
 
@@ -24,7 +24,11 @@ Uses the operating system\'s built-in tools to gather lots of helpful informatio
 Dependencies:
 -------------
 
-On Linux it requires lshw, blkid, lvdisplay, and blockdev to be installed. On Cygwin, you need the smartmontools and util-linux packages. On Linux and Cygwin, you also need the beautifulsoup4 (bs4), and lxml python packages to use this tool. On macOS, nothing beyond a standard python3.x install is required, but you still need bs4 and lxml if you want to install using the python wheel/through pip.
+Linux: The lshw, blkid, lvdisplay, and blockdev commands need to be installed, as well as the beautifulsoup4 (bs4) and lxml Python modules.
+
+macOS: Nothing beyond a default install of Python 3 is needed. bs4 and lxml will still be installed if you install with the Python wheel or with pip.
+
+Cygwin: The smartmontools and util-linux packages need to be installed, as well as the beautifulsoup4 (bs4) and lxml Python modules.
 
 Building
 ========
