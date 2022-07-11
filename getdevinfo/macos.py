@@ -423,7 +423,7 @@ def get_description(disk):
         apfs_string = " (APFS Volume)"
 
     #Assemble info into a string.
-    if bus_protocol != "Unknown":
+    if bus_protocol not in ("Unknown", "", " "):
         return internal_or_external+disk_type+"(Connected through "+bus_protocol+")"+apfs_string
 
     if disk_type != "Unknown ":
