@@ -825,7 +825,7 @@ def generate_description(disk):
     """
 
     if "nvme" in disk:
-        return "NVME Disk"
+        return "NVME SSD"
 
     if "cdrom" in disk or "sr" in disk or "scd" in disk:
         return "Optical Drive"
