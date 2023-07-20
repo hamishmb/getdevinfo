@@ -599,6 +599,7 @@ def parse_lsblk_output():
                 try:
                     if child["uuid"] is None:
                         DISKINFO[child_disk]["UUID"] = "Unknown"
+
                     else:
                         DISKINFO[child_disk]["UUID"] = child["uuid"]
 
