@@ -1273,5 +1273,3 @@ def compute_block_size(stdout):
     else:
         #It did.
         return result
-
-#End Main Class.
