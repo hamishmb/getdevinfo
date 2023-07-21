@@ -388,7 +388,7 @@ def get_description(data, disk):
 
     Returns:
         string. The description: This may contain various bits of info, or not,
-                                 depending on what macOS knows about the disk.
+                                 depending on what smartctl knows about the disk.
 
     Usage:
 
@@ -644,7 +644,7 @@ def get_block_size(disk):
     This function uses the smartctl command to get the block size
     of the given device.
 
-    .. warning:
+    .. warning::
         Does not yet work for all devices on Cygwin.
 
     Args:
