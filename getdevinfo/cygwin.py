@@ -682,7 +682,7 @@ def get_block_size(disk):
                 return None
 
         except subprocess.CalledProcessError as err:
-            ERRORS.append("cygwin.get_block_size(): Error encountered running smart ctl: "
+            ERRORS.append("cygwin.get_block_size(): Error encountered running smartctl: "
                           + str(err)+"\n")
 
             return None
@@ -728,5 +728,3 @@ def compute_block_size(stdout):
         return None
 
     return str(data["logical_block_size"])
-
-#End Main Class.
