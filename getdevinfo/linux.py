@@ -367,8 +367,8 @@ def parse_lvm_output(testing=False):
     This function is used to get LVM partition information from the
     output of lvdisplay --maps.
 
-    Kwargs:
-        testing (bool):     Used during unit tests. Default = False.
+    Args:
+        testing(=False) (bool):     Used during unit tests.
 
     Usage:
 
@@ -403,11 +403,10 @@ def assemble_lvm_disk_info(line_counter, testing=False):
     helper functions here.
 
     Args:
-        line_counter (int):   The line in the output that informtion for a
-                              particular logical volume begins.
+        line_counter (int):     The line in the output that informtion for a
+                                particular logical volume begins.
 
-    Kwargs:
-        testing (bool):       Used during unit tests. Default = False.
+        testing(=False) (bool): Used during unit tests.
 
     Usage:
 
