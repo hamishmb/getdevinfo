@@ -17,8 +17,7 @@
 
 """
 This is the part of the package that you would normally import and use.
-It detects your platform (Linux or macOS), and runs the correct tools
-for that platform.
+It detects your platform, and runs the correct tools for that platform.
 
 For example:
 
